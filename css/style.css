@@ -1,0 +1,208 @@
+:root {
+  --sky: #bfe6ff;
+  --ink: #3b3247;
+  --accent: #f6a05a;
+  --accent-dark: #e0843c;
+  --panel: #fffaf2;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--sky);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Noto Sans HK", "PingFang HK", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; }
+
+#scene { position: fixed; inset: 0; overflow: hidden; }
+#bg, #night { position: absolute; inset: 0; }
+#bg svg, #night svg { width: 100%; height: 100%; display: block; }
+#night { opacity: 0; transition: opacity 2.5s ease; pointer-events: none; z-index: 2; }
+#scene.is-night #night { opacity: 1; }
+
+.sun { transition: opacity 2.5s; }
+#scene.is-night .sun { opacity: 0; }
+.cloud { animation: drift 60s linear infinite alternate; }
+.cloud-b { animation-duration: 80s; }
+@keyframes drift { from { transform: translateX(-40px); } to { transform: translateX(60px); } }
+
+/* ---------- 開始畫面 ---------- */
+#start-screen { position: absolute; inset: 0; z-index: 10; }
+#start-mama { position: absolute; left: 4vw; bottom: 6vh; width: min(42vw, 60vh); }
+#start-egg { position: absolute; right: 8vw; bottom: 8vh; width: min(12vw, 16vh); animation: rock 3s ease-in-out infinite; }
+@media (orientation: portrait) {
+  #start-mama { width: 70vw; left: 6vw; }
+  #start-btn { --top: 32%; --left: 50%; }
+}
+#start-btn {
+  position: absolute; left: var(--left, 66%); top: var(--top, 42%);
+  width: 168px; height: 168px; margin: -84px 0 0 -84px;
+  border-radius: 50%; border: 8px solid #fff;
+  background: radial-gradient(circle at 35% 30%, #ffc48a, var(--accent) 60%, var(--accent-dark));
+  box-shadow: 0 10px 0 rgba(0,0,0,.08), 0 14px 30px rgba(224,132,60,.35);
+  padding: 30px;
+  animation: breathe 2.6s ease-in-out infinite;
+}
+#start-btn:active { transform: scale(.95); }
+body:not([data-screen="start"]) #start-screen { display: none; }
+
+@keyframes breathe { 50% { transform: scale(1.06); } }
+@keyframes rock { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+
+/* ---------- 恐龍媽媽 + 巢 ---------- */
+#home {
+  position: absolute; z-index: 3;
+  display: flex; pointer-events: none;
+}
+body[data-screen="start"] #home, body[data-screen="start"] #field { display: none; }
+
+/* 橫向：左邊一欄 */
+@media (orientation: landscape) {
+  #home { left: 0; bottom: 0; top: 0; width: 34vw; flex-direction: column; justify-content: flex-end; align-items: center; padding: 0 1vw 3vh 2vw; }
+  #mama { width: 100%; max-height: 52vh; }
+  #nest { width: 96%; }
+}
+/* 直向：底部一行 */
+@media (orientation: portrait) {
+  #home { left: 0; right: 0; bottom: 0; height: 30vh; flex-direction: row; align-items: flex-end; padding: 0 3vw 2vh; gap: 2vw; }
+  #mama { width: 42%; max-height: 100%; }
+  #nest { flex: 1; }
+}
+
+#mama svg { width: 100%; height: 100%; max-height: inherit; display: block; overflow: visible; }
+#mama { transform-origin: 50% 100%; }
+.mama-head { transform-origin: 200px 80px; transform-box: view-box; }
+.mama-mouth-open { opacity: 0; transform-origin: 247px 75px; transform-box: view-box; }
+#mama.talking .mama-mouth-open { animation: talk .32s ease-in-out infinite alternate; }
+#mama.talking .mama-head { animation: nod 1.2s ease-in-out infinite; }
+#mama.happy { animation: hop .7s ease-in-out 2; }
+@keyframes talk { from { opacity: 0; transform: scaleY(.3); } to { opacity: 1; transform: scaleY(1); } }
+@keyframes nod { 50% { transform: rotate(-4deg); } }
+@keyframes hop { 50% { transform: translateY(-14px); } }
+
+#nest { position: relative; }
+#nest-art { position: relative; height: clamp(46px, 9vmin, 80px); }
+#nest-art svg { width: 100%; height: 100%; display: block; }
+#slots {
+  position: relative; z-index: 1;
+  display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-end;
+  gap: 4px; margin-bottom: calc(clamp(46px, 9vmin, 80px) * -0.55);
+  padding: 0 6%;
+}
+.slot {
+  width: clamp(40px, 8vmin, 72px); height: clamp(50px, 9.9vmin, 89px);
+  border-radius: 50% 50% 46% 46% / 58% 58% 42% 42%;
+  border: 3px dashed rgba(138,100,64,.35);
+  background: rgba(255,255,255,.25);
+  transition: transform .3s;
+}
+.slot svg { width: 100%; height: 100%; display: block; }
+.slot.filled { border-color: transparent; background: none; animation: settle .35s ease-out; }
+.slot.hatched { animation: hatch .5s cubic-bezier(.3,1.6,.5,1); }
+.slot.hatched svg { animation: babybob 1.4s ease-in-out infinite; transform-origin: 50% 100%; }
+.slot:nth-child(2n).hatched svg { animation-delay: .35s; }
+#slots.leaving .slot { transition: transform .7s ease-in, opacity .7s; transform: translateY(-30px); opacity: 0; }
+@keyframes settle { 0% { transform: scale(1.25); } 100% { transform: scale(1); } }
+@keyframes hatch { 0% { transform: scale(.6); } 100% { transform: scale(1.15); } }
+@keyframes babybob { 50% { transform: translateY(-5px) rotate(-3deg); } }
+
+/* ---------- 搵蛋區 ---------- */
+#field { position: absolute; inset: 0; z-index: 4; }
+.egg {
+  position: absolute;
+  transform: scale(0);
+  transition: transform .45s cubic-bezier(.3,1.6,.5,1), filter .2s;
+  touch-action: none;
+  z-index: 1;
+}
+.egg::before { content: ""; position: absolute; inset: -14px; }  /* 加大觸控範圍 */
+.egg svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.egg.in { transform: scale(1); }
+.egg.in:active { transform: scale(.94); }
+.egg.picked { transform: scale(1.12) translateY(-10px); filter: drop-shadow(0 0 14px #fff6b0) drop-shadow(0 0 4px #ffd36e); z-index: 3; }
+.egg.flying { transition: none; z-index: 6; }
+.egg.wiggle svg { animation: wiggle .8s ease-in-out; transform-origin: 50% 90%; }
+@keyframes wiggle { 20% { transform: rotate(-8deg); } 40% { transform: rotate(7deg); } 60% { transform: rotate(-5deg); } 80% { transform: rotate(3deg); } }
+#mama.wiggle { animation: wiggle .8s ease-in-out; }
+
+.cover { position: absolute; z-index: 2; pointer-events: none; transition: opacity .4s; }
+.cover svg { width: 100%; height: 100%; display: block; }
+.cover.fade { opacity: .35; }
+
+/* ---------- 結束 ---------- */
+#again-btn {
+  position: absolute; z-index: 8; left: 50%; top: 42%;
+  width: 140px; height: 140px; margin: -70px 0 0 -70px;
+  border-radius: 50%; border: 7px solid #fff;
+  background: radial-gradient(circle at 35% 30%, #ffc48a, var(--accent) 60%, var(--accent-dark));
+  padding: 26px;
+  opacity: 0; pointer-events: none; transition: opacity 1s;
+}
+body.show-again #again-btn { opacity: 1; pointer-events: auto; }
+.eye-closed { display: none; }
+
+/* 瞓覺：恐龍媽媽同BB閉眼慢慢呼吸，Zzz 慢慢飄 */
+body[data-screen="sleep"] .eye-open,
+body[data-screen="sleep"] .mama-mouth-open { display: none; }
+body[data-screen="sleep"] .eye-closed { display: inline; }
+body[data-screen="sleep"] #mama { animation: sleepy 4s ease-in-out infinite; }
+body[data-screen="sleep"] .slot.hatched svg { animation: sleepy 4s ease-in-out infinite; }
+body[data-screen="sleep"] #home::after {
+  content: "z z z"; position: absolute; top: 18%; left: 58%;
+  font-size: clamp(24px, 4vmin, 40px); font-weight: 700; letter-spacing: .3em; color: #fff6c9;
+  animation: zzz 4s ease-in-out infinite; z-index: 6;
+}
+@media (orientation: portrait) { body[data-screen="sleep"] #home::after { top: -10%; left: 30%; } }
+@keyframes sleepy { 50% { transform: scaleY(.97); } }
+@keyframes zzz { 0% { opacity: 0; transform: translateY(10px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(-30px); } }
+
+/* ---------- 家長掣 ---------- */
+#parent-btn {
+  position: fixed; z-index: 20; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right));
+  width: 44px; height: 44px; padding: 9px;
+  border: none; border-radius: 50%;
+  background: rgba(255,255,255,.35); color: rgba(59,50,71,.35);
+  touch-action: none;
+}
+#parent-icon, #parent-icon svg { display: block; width: 100%; height: 100%; }
+#parent-btn .ring { position: absolute; inset: 0; width: 44px; height: 44px; transform: rotate(-90deg); pointer-events: none; }
+#parent-btn .ring circle { fill: none; stroke: var(--accent); stroke-width: 4; stroke-dasharray: 120; stroke-dashoffset: 120; }
+#parent-btn.holding .ring circle { transition: stroke-dashoffset 3s linear; stroke-dashoffset: 0; }
+
+#parent-panel {
+  position: fixed; inset: 0; z-index: 30;
+  background: rgba(40,40,60,.45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  user-select: text; -webkit-user-select: text;
+}
+#parent-panel[hidden] { display: none; }
+.panel-card {
+  background: var(--panel); border-radius: 18px;
+  width: min(560px, 100%); max-height: 100%; overflow: auto;
+  padding: 18px 20px; font-size: 16px; line-height: 1.5;
+}
+.panel-card h2 { margin: 0 0 8px; font-size: 20px; }
+.panel-card h3 { margin: 14px 0 6px; font-size: 16px; color: #8a6440; }
+.panel-card .row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
+.panel-card button { min-height: 40px; min-width: 40px; padding: 4px 14px; border-radius: 10px; border: 1px solid #d9cbb6; background: #fff; }
+.panel-card button.primary { width: 100%; margin-top: 14px; background: var(--accent); border-color: var(--accent-dark); color: #fff; font-weight: 600; }
+.panel-card button.danger { color: #b2403a; }
+.panel-card select { flex: 1; min-width: 0; min-height: 40px; font-size: 15px; border-radius: 10px; }
+.panel-card .note { font-size: 13px; color: #776; margin: 4px 0 8px; }
+.panel-card .warn { font-size: 14px; background: #fff1d6; border-radius: 10px; padding: 8px 10px; }
+.panel-card pre { font-size: 12px; white-space: pre-wrap; max-height: 160px; overflow: auto; background: #f4efe6; padding: 8px; border-radius: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}

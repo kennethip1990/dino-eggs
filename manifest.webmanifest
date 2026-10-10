@@ -1,0 +1,18 @@
+{
+  "name": "恐龍搵蛋",
+  "short_name": "恐龍搵蛋",
+  "description": "幫恐龍媽媽搵蛋，學數數（廣東話 + English）",
+  "lang": "zh-HK",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#bfe6ff",
+  "theme_color": "#bfe6ff",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

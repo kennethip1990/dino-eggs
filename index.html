@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>恐龍搵蛋</title>
+  <meta name="theme-color" content="#bfe6ff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-screen="start">
+  <div id="scene">
+    <div id="bg"></div>
+    <div id="night"></div>
+
+    <!-- 開始畫面 -->
+    <div id="start-screen">
+      <div id="start-mama"></div>
+      <div id="start-egg"></div>
+      <button id="start-btn" aria-label="開始"></button>
+    </div>
+
+    <!-- 遊戲畫面 -->
+    <div id="field"></div>
+    <div id="home">
+      <div id="mama"></div>
+      <div id="nest">
+        <div id="slots"></div>
+        <div id="nest-art"></div>
+      </div>
+    </div>
+
+    <!-- 結束：再玩 -->
+    <button id="again-btn" aria-label="再玩"></button>
+  </div>
+
+  <!-- 家長掣：長按 3 秒 -->
+  <button id="parent-btn" aria-label="家長設定（長按三秒）">
+    <span id="parent-icon"></span>
+    <svg class="ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="19"/></svg>
+  </button>
+
+  <div id="parent-panel" hidden>
+    <div class="panel-card">
+      <h2>家長設定</h2>
+
+      <section>
+        <h3>進度</h3>
+        <div class="row">每局蛋數 <button id="p-level-dn">−</button> <b id="p-level"></b> <button id="p-level-up">＋</button></div>
+        <div class="row">每節局數 <button id="p-rounds-dn">−</button> <b id="p-rounds"></b> <button id="p-rounds-up">＋</button></div>
+        <p class="note">每節第一局會少一隻蛋做熱身；同一個數量完成 2 局就加一隻，最多 10 隻。</p>
+        <button id="p-reset" class="danger">重設進度</button>
+      </section>
+
+      <section>
+        <h3>聲音</h3>
+        <div class="row">廣東話語音：<span id="p-yue"></span></div>
+        <div id="p-yue-help" class="warn" hidden>
+          未有錄音嘅句子會用內置語音讀，冇廣東話語音就可能讀錯。Samsung tablet 設定方法：<br>
+          設定 → 一般管理 → 語言（或「語言和輸入」）→ 文字轉語音 → 偏好的引擎揀「Google 語音服務」→ 撳齒輪 → 安裝語音數據 → 揀「中文（香港）」/「粵語」下載。<br>
+          裝完之後完全關閉 Chrome（或呢個 app）再開。
+        </div>
+        <div class="row">英文語音：<span id="p-en"></span></div>
+        <div class="row">錄音檔：<b id="p-rec"></b>（🎙 = 錄音，🤖 = 內置語音）</div>
+        <div class="row">
+          <select id="p-key"></select>
+          <button id="p-play">▶ 試聽</button>
+        </div>
+        <div class="row">
+          <button id="p-count">▶ 數 1 至 10</button>
+          <button id="p-stop">■ 停</button>
+        </div>
+        <details>
+          <summary>偵測到嘅語音</summary>
+          <pre id="p-voices"></pre>
+        </details>
+      </section>
+
+      <button id="panel-close" class="primary">返回遊戲</button>
+    </div>
+  </div>
+
+  <script src="js/version.js"></script>
+  <script src="js/voices.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
