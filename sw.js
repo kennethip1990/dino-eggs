@@ -31,18 +31,25 @@ self.addEventListener('activate', (e) => {
   })());
 });
 
+// 程式檔：有網就攞最新（network-first），冇網先用 cache —— 咁更新一 push 就見到
+// 錄音 mp3：cache-first（大、少改）
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  const isAudio = new URL(req.url).pathname.endsWith('.mp3');
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
-    const hit = await cache.match(req, { ignoreSearch: true });
-    if (hit) return hit;
+    if (isAudio) {
+      const hit = await cache.match(req, { ignoreSearch: true });
+      if (hit) return hit;
+    }
     try {
-      const res = await fetch(req);
+      const res = await fetch(req, isAudio ? undefined : { cache: 'no-cache' });
       if (res.ok) cache.put(req, res.clone());
       return res;
     } catch (err) {
+      const hit = await cache.match(req, { ignoreSearch: true });
+      if (hit) return hit;
       if (req.mode === 'navigate') return (await cache.match('index.html')) || Response.error();
       return Response.error();
     }

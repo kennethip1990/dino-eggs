@@ -465,7 +465,14 @@
   const devHost = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && !/[?&]sw=1/.test(location.search);
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     if (devHost) navigator.serviceWorker.getRegistrations().then((rs) => rs.forEach((r) => r.unregister()));
-    else addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    else {
+      addEventListener('load', () => navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {}));
+      // 新版 service worker 接手 → 如果仲喺開始畫面就即刻 reload 用新版（玩緊就唔打擾）
+      const hadController = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (hadController && document.body.dataset.screen === 'start') location.reload();
+      });
+    }
   }
   // 預先 load 錄音（AudioContext 未解鎖都可以 decode）
   Sound.loadRecordings();

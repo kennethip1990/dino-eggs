@@ -93,7 +93,7 @@ python -m http.server 8765
    git commit -m "Add recordings"
    git push
    ```
-4. Tablet 開一次 app（要有網），閂咗再開一次就會用新版
+4. Tablet 有網開 app 就會自動用新版（程式檔係 network-first）；錄音要 version +1 先會重新 cache
 
 ---
 
