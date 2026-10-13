@@ -26,6 +26,13 @@
   clips.praise_2 = { lang: 'yue', text: '多謝你幫我搵返啲蛋！' };
   clips.praise_3 = { lang: 'en',  text: 'Great job!' };
   clips.praise_4 = { lang: 'en',  text: 'You did it!' };
+  // 揀恐龍嗰陣讀佢個名
+  clips.yue_dino_brachio = { lang: 'yue', text: '腕龍' };
+  clips.en_dino_brachio  = { lang: 'en',  text: 'Brachiosaurus' };
+  clips.yue_dino_trex    = { lang: 'yue', text: '暴龍' };
+  clips.en_dino_trex     = { lang: 'en',  text: 'T-Rex' };
+  clips.yue_dino_trice   = { lang: 'yue', text: '三角龍' };
+  clips.en_dino_trice    = { lang: 'en',  text: 'Triceratops' };
   clips.yue_bye  = { lang: 'yue', text: '恐龍BB要瞓覺喇，拜拜！' };
   clips.en_bye   = { lang: 'en',  text: 'Good night, little dinos!' };
 

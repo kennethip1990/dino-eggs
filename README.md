@@ -30,12 +30,12 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 
 ## 點樣玩
 
-1. 撳中間個橙色 ▶（呢一下同時會解鎖聲音，同埋開全螢幕）
+1. 開始畫面有 3 隻恐龍：**腕龍、暴龍（T-Rex）、三角龍**。撳邊隻，就由嗰隻做恐龍媽媽，同時讀出佢個名（「暴龍……T-Rex」）。呢一下同時會解鎖聲音同開全螢幕；孵出嚟嘅 BB 都係同一種恐龍。上次揀咗邊隻會有黃色框。
 2. 恐龍媽媽講「幫我搵返 N 隻蛋呀！Help me find N eggs!」
 3. 撳蛋 → 蛋發光 → 輪到佢嗰陣飛入巢，同時讀「一……one」
    - 連續快撳都唔會亂：每隻蛋排隊，數到佢先飛，數字同蛋一定對得上
 4. 搵齊 → 孵出恐龍 BB → 「五隻蛋！Five eggs!」+ 讚佢
-5. 5 局之後天黑、恐龍瞓覺 →「再玩」掣（🔄）
+5. 5 局之後天黑、恐龍瞓覺 →「再玩」掣（🔄）→ 返去揀恐龍
 
 **撳錯位**：唔會有任何負面聲，最多附近嗰隻蛋輕輕搖一搖。靜咗 9 秒，未搵到嘅蛋都會搖一搖做提示。
 
@@ -125,7 +125,7 @@ python -m http.server 8765
 
 ---
 
-## 錄音清單（66 個檔）
+## 錄音清單（72 個檔）
 
 放喺 `audio/` folder，**檔名要一模一樣**（細楷、底線、`.mp3`）。唔使一次錄晒，錄咗邊個就用邊個，未錄嘅照用內置語音。
 
@@ -224,13 +224,23 @@ python -m http.server 8765
 | `praise_3.mp3` | English | Great job! |
 | `praise_4.mp3` | English | You did it! |
 
+**恐龍名（揀恐龍時）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `yue_dino_trice.mp3` | 廣東話 | 三角龍 |
+| `yue_dino_trex.mp3` | 廣東話 | 暴龍 |
+| `yue_dino_brachio.mp3` | 廣東話 | 腕龍 |
+| `en_dino_brachio.mp3` | English | Brachiosaurus |
+| `en_dino_trex.mp3` | English | T-Rex |
+| `en_dino_trice.mp3` | English | Triceratops |
+
 **結束（瞓覺）**
 
 | 檔名 | 語言 | 要讀 |
 |---|---|---|
 | `yue_bye.mp3` | 廣東話 | 恐龍BB要瞓覺喇，拜拜！ |
 | `en_bye.mp3` | English | Good night, little dinos! |
-
 
 ---
 

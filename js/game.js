@@ -8,7 +8,7 @@
 
   // ---------- 進度（localStorage） ----------
   const STORE_KEY = 'dinoEggs.v1';
-  const DEFAULTS = { level: 5, streak: 0, rounds: 5 };
+  const DEFAULTS = { level: 5, streak: 0, rounds: 5, dino: 'trex' };
   const MIN_EGGS = 3, MAX_EGGS = 10, LEVEL_UP_AFTER = 2;
   let progress = load();
   function load() {
@@ -22,13 +22,11 @@
   const mamaEl = $('#mama'), homeEl = $('#home');
   put($('#bg'), Art.background());
   put($('#night'), Art.night());
-  put(mamaEl, Art.mama());
+  if (!Art.SPECIES.includes(progress.dino)) progress.dino = 'trex';
+  put(mamaEl, Art.mama(progress.dino));
   put($('#nest-art'), Art.nest());
-  put($('#start-btn'), Art.icons.play);
   put($('#again-btn'), Art.icons.again);
   put($('#parent-icon'), Art.icons.gear);
-  put($('#start-mama'), Art.mama());
-  put($('#start-egg'), Art.egg(0));
 
   // ---------- 狀態 ----------
   let round = null;        // { n, eggs:[], picked, token, warmup }
@@ -38,23 +36,63 @@
 
   function setScreen(name) { document.body.dataset.screen = name; }
 
-  // ---------- 開始 ----------
-  $('#start-btn').addEventListener('click', begin);
-  $('#again-btn').addEventListener('click', begin);
+  // ---------- 開始畫面：揀恐龍 ----------
+  const picker = $('#picker');
+  const NAMES = { brachio: '腕龍', trex: '暴龍', trice: '三角龍' };
+  let picking = false;
+  for (const sp of Art.SPECIES) {
+    const b = document.createElement('button');
+    b.className = 'pick';
+    b.dataset.sp = sp;
+    b.setAttribute('aria-label', NAMES[sp]);
+    put(b, Art.mama(sp));
+    b.addEventListener('click', () => pick(sp, b));
+    picker.appendChild(b);
+  }
+  function markChosen() {
+    for (const b of picker.children) b.classList.toggle('chosen', b.dataset.sp === progress.dino);
+  }
+  markChosen();
 
-  async function begin() {
+  // 撳恐龍 = 開始（呢個 tap 同時解鎖聲音）
+  async function pick(sp, btn) {
+    if (picking) return;
+    picking = true;
     Sound.unlock();
     goFullscreen();
     keepAwake();
     trapBack();
+    progress.dino = sp;
+    save();
+    markChosen();
+    btn.classList.add('picked');
+    put(mamaEl, Art.mama(sp));
+    // 讀出恐龍名：「暴龍……T-Rex」；錄音最多等 1.5 秒
+    await Promise.race([Sound.loadRecordings(), wait(1500)]);
+    await Sound.say(['yue_dino_' + sp, { pause: self.VOICES.gapMs }, 'en_dino_' + sp, { pause: 300 }]);
+    btn.classList.remove('picked');
+    picking = false;
+    begin();
+  }
+
+  function begin() {
     document.body.classList.remove('show-again');
     scene.classList.remove('is-night');
     setScreen('play');
     sessionRound = 0;
-    // 錄音最多等 1.5 秒，未 load 完都照開始（用住 TTS）
-    await Promise.race([Sound.loadRecordings(), wait(1500)]);
     nextRound();
   }
+
+  // 再玩：返去揀恐龍
+  $('#again-btn').addEventListener('click', () => {
+    Sound.clear();
+    roundToken++;
+    clearField();
+    document.body.classList.remove('show-again');
+    scene.classList.remove('is-night');
+    setScreen('start');
+    keepAwake();
+  });
 
   function eggsForRound() {
     // 每節第一局 warm-up：少一隻
@@ -227,7 +265,7 @@
     const n = round.n;
     [...slots.children].forEach((s, i) => setTimeout(() => {
       if (token !== roundToken) return;
-      put(s, Art.baby(i));
+      put(s, Art.baby(i, progress.dino));
       s.classList.add('hatched');
       if (i % 3 === 0) Sound.sfx.hatch();
     }, 160 * i));
@@ -268,7 +306,7 @@
     clearField();
     // 三隻恐龍BB喺巢入面瞓覺
     buildSlots(3);
-    [...slots.children].forEach((s, i) => { put(s, Art.baby(i)); s.classList.add('hatched'); });
+    [...slots.children].forEach((s, i) => { put(s, Art.baby(i, progress.dino)); s.classList.add('hatched'); });
     scene.classList.add('is-night');
     setScreen('sleep');
     await wait(1200);
@@ -418,7 +456,7 @@
   $('#p-rounds-up').addEventListener('click', bump('rounds', +1, 2, 10));
   $('#p-reset').addEventListener('click', () => {
     if (!confirm('重設進度？（返去 5 隻蛋開始）')) return;
-    progress = Object.assign({}, DEFAULTS);
+    progress = Object.assign({}, DEFAULTS, { dino: progress.dino });
     save(); renderPanel();
   });
 

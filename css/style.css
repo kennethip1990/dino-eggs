@@ -36,25 +36,32 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .cloud-b { animation-duration: 80s; }
 @keyframes drift { from { transform: translateX(-40px); } to { transform: translateX(60px); } }
 
-/* ---------- 開始畫面 ---------- */
-#start-screen { position: absolute; inset: 0; z-index: 10; }
-#start-mama { position: absolute; left: 4vw; bottom: 6vh; width: min(42vw, 60vh); }
-#start-egg { position: absolute; right: 8vw; bottom: 8vh; width: min(12vw, 16vh); animation: rock 3s ease-in-out infinite; }
+/* ---------- 開始畫面：揀恐龍 ---------- */
+#start-screen { position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; padding: 72px 16px 24px; }
+#picker { display: flex; gap: 3vmin; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.pick {
+  flex: 1 1 0; max-width: 34vw; max-height: 100%;
+  aspect-ratio: 280 / 250;
+  border: 6px solid rgba(255,255,255,.9); border-radius: 28px;
+  background: rgba(255,255,255,.45);
+  box-shadow: 0 8px 0 rgba(0,0,0,.06);
+  padding: 4% 4% 2%;
+  animation: bob 3s ease-in-out infinite;
+  touch-action: manipulation;
+}
+.pick:nth-child(2) { animation-delay: -1s; }
+.pick:nth-child(3) { animation-delay: -2s; }
+.pick svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.pick.chosen { border-color: #ffd36e; background: rgba(255,246,214,.75); box-shadow: 0 0 0 6px rgba(255,211,110,.35), 0 8px 0 rgba(0,0,0,.06); }
+.pick:active { transform: scale(.96); }
+.pick.picked { animation: hop .6s ease-in-out infinite; border-color: #ffd36e; }
+.pick.picked .mama-mouth-open { animation: talk .32s ease-in-out infinite alternate; }
 @media (orientation: portrait) {
-  #start-mama { width: 70vw; left: 6vw; }
-  #start-btn { --top: 32%; --left: 50%; }
+  #picker { flex-direction: column; align-items: center; }
+  .pick { max-width: 72vw; max-height: 27vh; width: auto; height: 27vh; flex: 0 0 auto; }
 }
-#start-btn {
-  position: absolute; left: var(--left, 66%); top: var(--top, 42%);
-  width: 168px; height: 168px; margin: -84px 0 0 -84px;
-  border-radius: 50%; border: 8px solid #fff;
-  background: radial-gradient(circle at 35% 30%, #ffc48a, var(--accent) 60%, var(--accent-dark));
-  box-shadow: 0 10px 0 rgba(0,0,0,.08), 0 14px 30px rgba(224,132,60,.35);
-  padding: 30px;
-  animation: breathe 2.6s ease-in-out infinite;
-}
-#start-btn:active { transform: scale(.95); }
 body:not([data-screen="start"]) #start-screen { display: none; }
+@keyframes bob { 50% { transform: translateY(-8px); } }
 
 @keyframes breathe { 50% { transform: scale(1.06); } }
 @keyframes rock { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
@@ -81,8 +88,8 @@ body[data-screen="start"] #home, body[data-screen="start"] #field { display: non
 
 #mama svg { width: 100%; height: 100%; max-height: inherit; display: block; overflow: visible; }
 #mama { transform-origin: 50% 100%; }
-.mama-head { transform-origin: 200px 80px; transform-box: view-box; }
-.mama-mouth-open { opacity: 0; transform-origin: 247px 75px; transform-box: view-box; }
+.mama-head { transform-origin: center; transform-box: fill-box; }
+.mama-mouth-open { opacity: 0; transform-origin: center; transform-box: fill-box; }
 #mama.talking .mama-mouth-open { animation: talk .32s ease-in-out infinite alternate; }
 #mama.talking .mama-head { animation: nod 1.2s ease-in-out infinite; }
 #mama.happy { animation: hop .7s ease-in-out 2; }
