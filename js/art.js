@@ -259,6 +259,7 @@ const Art = (() => {
   const icons = {
     play: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M38 28 L74 50 L38 72Z" fill="#fff" stroke="#fff" stroke-width="8" stroke-linejoin="round"/></svg>`,
     again: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M70 36 A26 26 0 1 0 76 58" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M58 22 L78 34 L62 50Z" fill="#fff" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></svg>`,
+    home: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M18 50 L50 20 L82 50" stroke="#f6a05a" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 46 V80 H72 V46" fill="#ffe9c9" stroke="#f6a05a" stroke-width="8" stroke-linejoin="round"/><rect x="43" y="58" width="14" height="22" rx="4" fill="#f6a05a"/></svg>`,
     gear: `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="14" fill="none" stroke="currentColor" stroke-width="8"/><g stroke="currentColor" stroke-width="10" stroke-linecap="round"><path d="M50 14v10M50 76v10M14 50h10M76 50h10M25 25l7 7M68 68l7 7M25 75l7-7M68 32l7-7"/></g></svg>`
   };
 

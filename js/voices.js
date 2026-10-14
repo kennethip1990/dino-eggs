@@ -33,6 +33,19 @@
   clips.en_dino_trex     = { lang: 'en',  text: 'T-Rex' };
   clips.yue_dino_trice   = { lang: 'yue', text: '三角龍' };
   clips.en_dino_trice    = { lang: 'en',  text: 'Triceratops' };
+  // ---- 英雄認字（淨係廣東話）----
+  if (root.WORD_UNIT) {
+    for (const w of root.WORD_UNIT.words) clips['word_' + w.id] = { lang: 'yue', text: w.text };
+  }
+  clips.hero_hi     = { lang: 'yue', text: '我係機械人英雄！壞蛋偷咗我啲裝備，幫我搵返啦！' };
+  clips.hero_find   = { lang: 'yue', text: '幫我搵' };
+  clips.hero_where  = { lang: 'yue', text: '呢個字喺我身上邊度呀？' };
+  clips.hero_yes_1  = { lang: 'yue', text: '啱喇！' };
+  clips.hero_yes_2  = { lang: 'yue', text: '好叻呀！' };
+  clips.hero_yes_3  = { lang: 'yue', text: '好犀利！' };
+  clips.hero_power  = { lang: 'yue', text: '裝備齊晒，變身！' };
+  clips.hero_test   = { lang: 'yue', text: '而家考吓你！' };
+  clips.hero_bye    = { lang: 'yue', text: '多謝你幫我！英雄要去救人喇，拜拜！' };
   clips.yue_bye  = { lang: 'yue', text: '恐龍BB要瞓覺喇，拜拜！' };
   clips.en_bye   = { lang: 'en',  text: 'Good night, little dinos!' };
 

@@ -12,14 +12,30 @@
   <link rel="icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/hero.css">
 </head>
-<body data-screen="start">
+<body data-screen="menu">
   <div id="scene">
     <div id="bg"></div>
     <div id="night"></div>
 
+    <!-- 主選單：揀 game（撳 = 解鎖聲音） -->
+    <div id="menu-screen">
+      <button id="go-dino" class="choose" aria-label="恐龍搵蛋"></button>
+      <button id="go-hero" class="choose" aria-label="英雄裝備站"></button>
+    </div>
+
+    <!-- 英雄裝備站 -->
+    <div id="hero-screen">
+      <div id="hero-city"></div>
+      <div id="hero-stage"></div>
+      <div id="hero-cards"></div>
+      <button id="hero-again" aria-label="返主選單"></button>
+    </div>
+
     <!-- 開始畫面：揀恐龍（撳邊隻就開始，同時解鎖聲音） -->
     <div id="start-screen">
+      <button id="picker-home" class="home-btn" aria-label="返主選單"></button>
       <div id="picker"></div>
     </div>
 
@@ -56,6 +72,13 @@
       </section>
 
       <section>
+        <h3>英雄認字記錄（第一下就啱 / 次數）</h3>
+        <table class="stats"><thead><tr><th>字</th><th>聽字揀卡</th><th>睇字搵位</th></tr></thead><tbody id="p-hero-stats"></tbody></table>
+        <p class="note">★ = 老師未剔，會出多啲。「睇字搵位」先係真正自己睇字，填工作紙「家長評估」可以參考呢欄。</p>
+        <button id="p-hero-reset" class="danger">重設認字記錄</button>
+      </section>
+
+      <section>
         <h3>聲音</h3>
         <div class="row">廣東話語音：<span id="p-yue"></span></div>
         <div id="p-yue-help" class="warn" hidden>
@@ -84,9 +107,12 @@
   </div>
 
   <script src="js/version.js"></script>
+  <script src="js/words.js"></script>
   <script src="js/voices.js"></script>
   <script src="js/art.js"></script>
   <script src="js/audio.js"></script>
+  <script src="js/hero-art.js"></script>
+  <script src="js/hero.js"></script>
   <script src="js/game.js"></script>
 </body>
 </html>

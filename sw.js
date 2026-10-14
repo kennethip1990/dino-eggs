@@ -1,9 +1,10 @@
 /* 離線支援：cache-first。更新內容 → 改 js/version.js 個數字 */
-importScripts('js/version.js', 'js/voices.js');
+importScripts('js/version.js', 'js/words.js', 'js/voices.js');
 const CACHE = 'dino-eggs-v' + self.APP_VERSION;
 const CORE = [
   './', 'index.html', 'css/style.css', 'manifest.webmanifest',
-  'js/version.js', 'js/voices.js', 'js/art.js', 'js/audio.js', 'js/game.js',
+  'css/hero.css', 'fonts/wenkai-subset.woff2',
+  'js/version.js', 'js/words.js', 'js/voices.js', 'js/art.js', 'js/audio.js', 'js/hero-art.js', 'js/hero.js', 'js/game.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'
 ];
 

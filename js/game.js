@@ -58,10 +58,7 @@
   async function pick(sp, btn) {
     if (picking) return;
     picking = true;
-    Sound.unlock();
-    goFullscreen();
-    keepAwake();
-    trapBack();
+    prepare();
     progress.dino = sp;
     save();
     markChosen();
@@ -83,16 +80,40 @@
     nextRound();
   }
 
-  // 再玩：返去揀恐龍
-  $('#again-btn').addEventListener('click', () => {
+  // 每個 tap 開始都做：解鎖聲音、全螢幕、唔熄 mon、攔 back 掣
+  function prepare() {
+    Sound.unlock();
+    goFullscreen();
+    keepAwake();
+    trapBack();
+  }
+
+  // ---------- 主選單：恐龍搵蛋 / 英雄裝備站 ----------
+  put($('#go-dino'), `<div class="choose-art">${Art.mama('trex')}</div><div class="choose-egg">${Art.egg(1)}</div>`);
+  put($('#go-hero'), `<div class="choose-art">${HeroArt.icon()}</div>`);
+  $('#go-dino').addEventListener('click', () => { prepare(); setScreen('start'); });
+  $('#go-hero').addEventListener('click', async () => {
+    prepare();
+    await Promise.race([Sound.loadRecordings(), wait(1500)]);
+    HeroGame.start();
+  });
+
+  function goHome() {
     Sound.clear();
     roundToken++;
+    HeroGame.stop();
     clearField();
-    document.body.classList.remove('show-again');
+    document.body.classList.remove('show-again', 'hero-done');
     scene.classList.remove('is-night');
-    setScreen('start');
+    setScreen('menu');
     keepAwake();
-  });
+  }
+  window.App = { goHome };
+  put($('#picker-home'), Art.icons.home);
+  $('#picker-home').addEventListener('click', goHome);
+
+  // 再玩：返主選單
+  $('#again-btn').addEventListener('click', goHome);
 
   function eggsForRound() {
     // 每節第一局 warm-up：少一隻
@@ -368,7 +389,7 @@
   }
   function releaseAwake() { try { if (wakeLock) wakeLock.release(); } catch (e) {} wakeLock = null; }
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && document.body.dataset.screen === 'play') keepAwake();
+    if (document.visibilityState === 'visible' && /^(play|hero)$/.test(document.body.dataset.screen)) keepAwake();
   });
   let trapped = false;
   function trapBack() {
@@ -402,6 +423,7 @@
     Sound.refreshVoices();
     roundToken++;                       // 暫停遊戲
     resumeAfterPanel = document.body.dataset.screen;
+    dispatchEvent(new CustomEvent('panel-open'));
     Sound.clear();
     talk(false);
     renderPanel();
@@ -413,12 +435,19 @@
     // 本來喺遊戲中 → 重新開始呢一局
     if (resumeAfterPanel === 'play') nextRound();
     if (resumeAfterPanel === 'sleep') document.body.classList.add('show-again');
+    dispatchEvent(new CustomEvent('panel-close', { detail: resumeAfterPanel }));
+  });
+  $('#p-hero-reset').addEventListener('click', () => {
+    if (!confirm('重設英雄認字記錄？')) return;
+    HeroGame.resetStats();
+    renderPanel();
   });
 
   function renderPanel() {
     const st = Sound.status();
     $('#p-level').textContent = progress.level;
     $('#p-rounds').textContent = progress.rounds;
+    HeroGame.renderStats($('#p-hero-stats'));
     $('#p-yue').textContent = st.yueVoice ? '✅ ' + st.yueVoice : '⚠️ 搵唔到廣東話語音';
     $('#p-yue-help').hidden = !!st.yueVoice;
     $('#p-en').textContent = st.enVoice ? '✅ ' + st.enVoice : '⚠️ 搵唔到英文語音（會用系統預設）';

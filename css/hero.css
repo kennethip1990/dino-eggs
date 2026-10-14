@@ -1,0 +1,87 @@
+/* 英雄裝備站 */
+@font-face {
+  font-family: "WenKai";
+  src: url("../fonts/wenkai-subset.woff2") format("woff2");
+  font-weight: 700;
+  font-display: block;
+}
+
+#hero-screen { position: absolute; inset: 0; z-index: 10; display: none; }
+body[data-screen="hero"] #hero-screen { display: grid; }
+
+#hero-city { position: absolute; left: 0; right: 0; bottom: 0; height: 45%; pointer-events: none; }
+#hero-city svg { width: 100%; height: 100%; display: block; }
+
+/* 橫向：左邊英雄，右邊字卡 */
+@media (orientation: landscape) {
+  #hero-screen { grid-template-columns: 58% 42%; padding: 64px 3vw 3vh 2vw; }
+  #hero-cards { flex-direction: column; }
+}
+/* 直向：上面英雄，下面字卡 */
+@media (orientation: portrait) {
+  #hero-screen { grid-template-rows: 60% 40%; padding: 64px 3vw 3vh; }
+  #hero-cards { flex-direction: row; flex-wrap: wrap; }
+}
+
+#hero-stage { position: relative; min-height: 0; display: flex; align-items: center; justify-content: center; }
+#hero-stage svg { width: 100%; height: 100%; max-height: 100%; display: block; overflow: visible; }
+#hero-stage .hit { pointer-events: all; }
+
+.part { transform-box: fill-box; transform-origin: center; transition: opacity .5s ease; }
+.part.off { opacity: .16; }
+.part.pop { animation: partpop .6s cubic-bezier(.3,1.6,.5,1); }
+.part.wiggle { animation: partwiggle .6s ease-in-out; }
+.part.hint { animation: parthint 1.6s ease-in-out infinite; }
+#hero-stage.asking .part { cursor: pointer; }
+@keyframes partpop { 0% { transform: scale(.7); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+@keyframes partwiggle { 25% { transform: rotate(-6deg); } 50% { transform: rotate(5deg); } 75% { transform: rotate(-3deg); } }
+@keyframes parthint { 50% { transform: scale(1.1); } }
+
+/* 變身 + 飛走 */
+#hero-stage.powered svg { animation: power 1.4s ease-in-out; filter: drop-shadow(0 0 18px #fff6b0) drop-shadow(0 0 6px #ffd36e); }
+#hero-stage.fly svg { animation: fly 3.5s ease-in forwards; }
+@keyframes power { 30% { transform: translateY(-24px) scale(1.04); } 60% { transform: translateY(0) scale(1); } 80% { transform: translateY(-10px); } }
+@keyframes fly { 0% { transform: translateY(0); } 20% { transform: translateY(14px); } 100% { transform: translateY(-130vh); } }
+
+/* 字卡 */
+#hero-cards { display: flex; align-items: center; justify-content: center; gap: 3vmin; min-height: 0; }
+.wcard {
+  font-family: "WenKai", "Kaiti TC", "STKaiti", "DFKai-SB", serif;
+  font-weight: 700;
+  font-size: clamp(56px, 12vmin, 128px);
+  line-height: 1.1;
+  color: #3b3247;
+  min-width: clamp(150px, 26vmin, 280px);
+  padding: .18em .35em;
+  border: 6px solid #ffd36e; border-radius: 28px;
+  background: #fffdf6;
+  box-shadow: 0 8px 0 rgba(0,0,0,.08);
+  animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both;
+  touch-action: none;
+  user-select: none; -webkit-user-select: none;
+}
+.wcard:active { transform: scale(.96); }
+.wcard.wiggle { animation: partwiggle .6s ease-in-out; }
+.wcard.hint { animation: cardhint 1.6s ease-in-out infinite; border-color: #7fd6a0; }
+.wcard.fade { opacity: 0; transition: opacity .3s; pointer-events: none; }
+.wcard.flying { z-index: 20; position: relative; }
+.wcard.big { font-size: clamp(80px, 20vmin, 200px); background: #fff6d6; cursor: default; }
+.wcard.right { animation: cardright .6s ease-out; border-color: #7fd6a0; }
+@keyframes cardin { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes cardhint { 50% { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(127,214,160,.35); } }
+@keyframes cardright { 50% { transform: scale(1.12); } }
+@media (orientation: portrait) {
+  .wcard { font-size: clamp(48px, 10vmin, 110px); min-width: clamp(120px, 26vw, 220px); }
+}
+
+/* 完結：返主選單掣 */
+#hero-again {
+  position: absolute; z-index: 12; left: 50%; top: 42%;
+  width: 140px; height: 140px; margin: -70px 0 0 -70px;
+  border-radius: 50%; border: 7px solid #fff;
+  background: radial-gradient(circle at 35% 30%, #9fc0ff, #5b8def 60%, #4673d1);
+  padding: 26px;
+  opacity: 0; pointer-events: none; transition: opacity 1s;
+}
+#hero-again svg { width: 100%; height: 100%; display: block; }
+body.hero-done #hero-again { opacity: 1; pointer-events: auto; }

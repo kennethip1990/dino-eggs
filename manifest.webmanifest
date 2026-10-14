@@ -1,7 +1,7 @@
 {
   "name": "恐龍搵蛋",
   "short_name": "恐龍搵蛋",
-  "description": "幫恐龍媽媽搵蛋，學數數（廣東話 + English）",
+  "description": "恐龍搵蛋（學數數）+ 英雄裝備站（學認字）",
   "lang": "zh-HK",
   "start_url": "./",
   "scope": "./",

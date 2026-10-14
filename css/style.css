@@ -71,7 +71,8 @@ body:not([data-screen="start"]) #start-screen { display: none; }
   position: absolute; z-index: 3;
   display: flex; pointer-events: none;
 }
-body[data-screen="start"] #home, body[data-screen="start"] #field { display: none; }
+body:not([data-screen="play"]):not([data-screen="sleep"]) #home,
+body:not([data-screen="play"]):not([data-screen="sleep"]) #field { display: none; }
 
 /* 橫向：左邊一欄 */
 @media (orientation: landscape) {
@@ -213,3 +214,35 @@ body[data-screen="sleep"] #home::after {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* ---------- 主選單 ---------- */
+#menu-screen { position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; gap: 5vmin; padding: 72px 16px 24px; }
+body:not([data-screen="menu"]) #menu-screen { display: none; }
+.choose {
+  position: relative;
+  width: min(40vw, 62vh); aspect-ratio: 1;
+  border: 8px solid #fff; border-radius: 36px;
+  background: rgba(255,255,255,.5);
+  box-shadow: 0 10px 0 rgba(0,0,0,.06);
+  padding: 8%;
+  animation: bob 3s ease-in-out infinite;
+}
+#go-hero { animation-delay: -1.5s; background: rgba(214,228,255,.7); }
+#go-dino { background: rgba(255,240,214,.7); }
+.choose:active { transform: scale(.96); }
+.choose-art { width: 100%; height: 100%; }
+.choose-art svg { width: 100%; height: 100%; display: block; }
+.choose-egg { position: absolute; right: 8%; bottom: 8%; width: 24%; }
+.choose-egg svg { width: 100%; display: block; }
+@media (orientation: portrait) {
+  #menu-screen { flex-direction: column; }
+  .choose { width: min(64vw, 38vh); }
+}
+
+/* 返主選單掣（揀恐龍畫面） */
+.home-btn {
+  position: absolute; z-index: 12; top: max(12px, env(safe-area-inset-top)); left: 12px;
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 5px solid #fff; background: rgba(255,255,255,.55); padding: 10px;
+}
+.home-btn svg { width: 100%; height: 100%; display: block; }

@@ -1,14 +1,16 @@
 // 用法：node tools/list-recordings.js  → 印出 README 用嘅錄音清單（markdown table）
 const vm = require('vm'), fs = require('fs'), path = require('path');
 global.self = global;
-vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', 'voices.js'), 'utf8'));
+for (const f of ['words.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
 const groups = [
   ['數數（撳蛋時）', /^(yue|en)_\d+$/],
   ['開場（每局開始）', /_intro_/],
   ['總數（慶祝時）', /_total_/],
   ['讚賞（隨機一句）', /^praise_/],
   ['恐龍名（揀恐龍時）', /_dino_/],
-  ['結束（瞓覺）', /_bye$/]
+  ['結束（瞓覺）', /^(yue|en)_bye$/],
+  ['英雄認字：生字', /^word_/],
+  ['英雄認字：句子', /^hero_/]
 ];
 const clips = self.VOICES.clips;
 const out = [];
