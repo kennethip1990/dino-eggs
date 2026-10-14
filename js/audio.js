@@ -200,7 +200,10 @@ const Sound = (() => {
   const sfx = {
     pop()   { tone(520, 880, 0.18, 'sine', 0.12); },
     hatch() { tone(784, 784, 0.35, 'triangle', 0.07); tone(988, 988, 0.4, 'triangle', 0.06, 0.12); tone(1175, 1175, 0.5, 'triangle', 0.05, 0.24); },
-    soft()  { tone(440, 520, 0.25, 'sine', 0.05); }
+    soft()  { tone(440, 520, 0.25, 'sine', 0.05); },
+    zap()   { tone(500, 1300, 0.28, 'triangle', 0.07); },
+    thump() { tone(160, 60, 0.35, 'sine', 0.16); },
+    whoosh(){ tone(260, 900, 0.5, 'sine', 0.05); }
   };
 
   return {

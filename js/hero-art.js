@@ -155,5 +155,38 @@ const HeroArt = (() => {
     </svg>`;
   }
 
-  return { robot, icon, city };
+  // 搞笑怪獸（唔恐怖）：.m-angry 同 .m-happy 兩個表情，被打敗之後轉做開心
+  function monster() {
+    return `<svg viewBox="0 0 300 300" aria-hidden="true">
+      <ellipse cx="150" cy="288" rx="105" ry="10" fill="#000" opacity=".1"/>
+      <path d="M96 60 l-18 -42 l34 26z M204 60 l18 -42 l-34 26z" fill="#ffd36e" stroke="#e8b84a" stroke-width="4" stroke-linejoin="round"/>
+      <ellipse cx="96" cy="270" rx="34" ry="18" fill="#8a63c9"/>
+      <ellipse cx="204" cy="270" rx="34" ry="18" fill="#8a63c9"/>
+      <path d="M150 40 C236 40 262 118 262 182 C262 246 214 274 150 274 C86 274 38 246 38 182 C38 118 64 40 150 40Z" fill="#a47de0"/>
+      <ellipse cx="150" cy="206" rx="72" ry="56" fill="#cbb3f2"/>
+      <circle cx="84" cy="120" r="9" fill="#8a63c9"/><circle cx="224" cy="104" r="7" fill="#8a63c9"/><circle cx="236" cy="150" r="10" fill="#8a63c9"/>
+      <path class="m-arm-l" d="M44 170 C14 150 10 120 22 104" stroke="#a47de0" stroke-width="26" fill="none" stroke-linecap="round"/>
+      <path class="m-arm-r" d="M256 170 C286 150 290 120 278 104" stroke="#a47de0" stroke-width="26" fill="none" stroke-linecap="round"/>
+      <circle cx="116" cy="124" r="28" fill="#fff"/><circle cx="184" cy="124" r="28" fill="#fff"/>
+      <g class="m-angry">
+        <circle cx="122" cy="130" r="13" fill="#3b3247"/><circle cx="178" cy="130" r="13" fill="#3b3247"/>
+        <circle cx="126" cy="125" r="4" fill="#fff"/><circle cx="182" cy="125" r="4" fill="#fff"/>
+        <path d="M88 92 L140 108 M212 92 L160 108" stroke="#5b3f8f" stroke-width="10" stroke-linecap="round"/>
+        <path d="M116 186 Q150 170 184 186" stroke="#3b3247" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M124 182 l6 12 l6 -14z M164 178 l6 14 l6 -12z" fill="#fff"/>
+      </g>
+      <g class="m-happy">
+        <path d="M100 128 Q116 112 132 128 M168 128 Q184 112 200 128" stroke="#3b3247" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <circle cx="96" cy="158" r="11" fill="#ff8fa8" opacity=".6"/><circle cx="204" cy="158" r="11" fill="#ff8fa8" opacity=".6"/>
+        <path d="M118 172 Q150 206 182 172" stroke="#3b3247" stroke-width="8" fill="#b0506a" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </svg>`;
+  }
+
+  // 愛心炮彈
+  function heartShot() {
+    return `<svg viewBox="0 0 60 56" aria-hidden="true"><path d="M30 54 C6 36 0 22 8 10 C16 0 28 4 30 14 C32 4 44 0 52 10 C60 22 54 36 30 54Z" fill="#ff7a9c" stroke="#fff" stroke-width="5" stroke-linejoin="round"/></svg>`;
+  }
+
+  return { robot, icon, city, monster, heartShot };
 })();

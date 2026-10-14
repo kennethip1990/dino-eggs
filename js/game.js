@@ -437,6 +437,15 @@
     if (resumeAfterPanel === 'sleep') document.body.classList.add('show-again');
     dispatchEvent(new CustomEvent('panel-close', { detail: resumeAfterPanel }));
   });
+  $('#p-hero-video').addEventListener('click', () => {
+    Sound.clear();
+    panel.hidden = true;
+    roundToken++;
+    clearField();
+    scene.classList.remove('is-night');
+    document.body.classList.remove('show-again');
+    HeroGame.playVideo();
+  });
   $('#p-hero-reset').addEventListener('click', () => {
     if (!confirm('重設英雄認字記錄？')) return;
     HeroGame.resetStats();

@@ -10,7 +10,8 @@ const groups = [
   ['恐龍名（揀恐龍時）', /_dino_/],
   ['結束（瞓覺）', /^(yue|en)_bye$/],
   ['英雄認字：生字', /^word_/],
-  ['英雄認字：句子', /^hero_/]
+  ['英雄認字：句子', /^hero_/],
+  ['英雄打怪獸短片', /^battle_/]
 ];
 const clips = self.VOICES.clips;
 const out = [];

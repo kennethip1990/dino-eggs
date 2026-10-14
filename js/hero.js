@@ -53,6 +53,7 @@ const HeroGame = (() => {
     Sound.clear();
     document.body.dataset.screen = 'hero';
     document.body.classList.remove('hero-done');
+    cleanupBattle();
     stage.className = '';
     cardsEl.replaceChildren();
     const plan = pickWords(LEARN_COUNT);
@@ -85,12 +86,120 @@ const HeroGame = (() => {
       await askPart(w, tk);
       if (tk !== token) return;
     }
-    // 英雄飛走
     cardsEl.replaceChildren();
+    // 獎勵短片：英雄打怪獸
+    await battle(tk);
+    if (tk !== token) return;
+    // 英雄飛走
     stage.classList.add('fly');
-    await Sound.say([{ pause: 400 }, 'hero_bye']);
+    await Sound.say([{ pause: 300 }, 'hero_bye']);
     if (tk !== token) return;
     document.body.classList.add('hero-done');
+  }
+
+  // ---------- 獎勵短片：打怪獸（~20 秒，冇閃光；Luca 撳怪獸可以額外發炮） ----------
+  let monsterEl = null;
+  const heroSvg = () => stage.querySelector('svg');
+
+  function cleanupBattle() {
+    document.body.classList.remove('battle');
+    if (monsterEl) monsterEl.remove();
+    monsterEl = null;
+    document.querySelectorAll('.shot, .burst').forEach((e) => e.remove());
+  }
+
+  function center(el) {
+    const r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  }
+
+  function shoot(onHit) {
+    if (!monsterEl) return;
+    Sound.sfx.zap();
+    const from = center(partEl('heart'));
+    const to = center(monsterEl.querySelector('.m-body'));
+    const s = document.createElement('div');
+    s.className = 'shot';
+    put(s, HeroArt.heartShot());
+    s.style.left = from.x + 'px';
+    s.style.top = from.y + 'px';
+    document.body.appendChild(s);
+    const done = () => {
+      s.remove();
+      if (!monsterEl) return;
+      const b = document.createElement('div');
+      b.className = 'burst';
+      b.style.left = to.x + 'px';
+      b.style.top = to.y + 'px';
+      document.body.appendChild(b);
+      setTimeout(() => b.remove(), 700);
+      restart(monsterEl.querySelector('.m-body'), 'hit');
+      if (onHit) onHit();
+    };
+    if (!s.animate) return done();
+    s.animate([
+      { transform: 'translate(0,0) scale(.5)' },
+      { transform: `translate(${(to.x - from.x) * 0.6}px, ${(to.y - from.y) * 0.6 - 50}px) scale(1.1)`, offset: 0.6 },
+      { transform: `translate(${to.x - from.x}px, ${to.y - from.y}px) scale(1)` }
+    ], { duration: 500, easing: 'ease-out' }).onfinish = done;
+  }
+
+  // 每一幕最少播咁耐（冇語音 / 語音好快都唔會趕）
+  const sayMin = (items, ms) => Promise.all([Sound.say(items), wait(ms)]);
+
+  async function battle(tk) {
+    document.body.classList.add('battle');
+    monsterEl = document.createElement('div');
+    monsterEl.id = 'monster';
+    const body = document.createElement('div');
+    body.className = 'm-body';
+    put(body, HeroArt.monster());
+    monsterEl.appendChild(body);
+    $('#hero-screen').appendChild(monsterEl);
+    body.style.setProperty('--s', 1);
+    // Luca 撳怪獸 = 額外發炮（純粹好玩，唔影響流程）
+    monsterEl.addEventListener('pointerdown', (e) => { e.preventDefault(); if (tk === token && !monsterEl.classList.contains('friendly')) shoot(); });
+
+    // 1. 怪獸跳入城市（咚、咚、咚）
+    monsterEl.classList.add('enter');
+    [300, 900, 1500].forEach((t) => setTimeout(() => { if (tk === token) { Sound.sfx.thump(); restart($('#scene'), 'shake'); } }, t));
+    await wait(1900);
+    if (tk !== token) return;
+    await sayMin(['battle_alarm', { pause: 200 }], 2600);
+    if (tk !== token) return;
+
+    // 2. 英雄出動
+    restart(stage, 'ready');
+    Sound.sfx.whoosh();
+    await sayMin(['battle_go', { pause: 100 }], 2200);
+    if (tk !== token) return;
+
+    // 3. 愛心炮 ×3：每中一下，怪獸細一個碼
+    const sizes = [0.85, 0.7, 0.55];
+    for (const sz of sizes) {
+      shoot(() => body.style.setProperty('--s', sz));
+      await wait(900);
+      if (tk !== token) return;
+    }
+
+    // 4. 怪獸變返可愛，講對唔住，跳走
+    await wait(300);
+    monsterEl.classList.add('friendly');
+    await sayMin(['battle_sorry', { pause: 200 }], 2600);
+    if (tk !== token) return;
+    monsterEl.classList.add('leave');
+    await wait(1600);
+    if (tk !== token) return;
+    monsterEl.remove();
+    monsterEl = null;
+
+    // 5. 英雄勝利
+    stage.classList.add('powered');
+    Sound.sfx.hatch();
+    await sayMin(['battle_win', { pause: 300 }], 2400);
+    if (tk !== token) return;
+    stage.classList.remove('powered');
+    document.body.classList.remove('battle');
   }
 
   function praise() { return 'hero_yes_' + (1 + Math.floor(Math.random() * 3)); }
@@ -206,7 +315,7 @@ const HeroGame = (() => {
   againBtn.addEventListener('click', () => { if (window.App) App.goHome(); });
 
   // ---------- 家長區 ----------
-  function stop() { token++; onPartTap = null; clearTimeout(idleTimer); }
+  function stop() { token++; onPartTap = null; clearTimeout(idleTimer); cleanupBattle(); }
   addEventListener('panel-open', () => { if (document.body.dataset.screen === 'hero') stop(); });
   // 由家長區返嚟：未玩完就重新開始呢一節；玩完咗就淨係顯示返主選單掣
   addEventListener('panel-close', (e) => { if (e.detail === 'hero' && !document.body.classList.contains('hero-done')) start(); });
@@ -226,5 +335,24 @@ const HeroGame = (() => {
   }
   function resetStats() { stats = {}; saveStats(); }
 
-  return { start, stop, renderStats, resetStats };
+  // 家長區預覽：淨係播打怪獸短片
+  async function playVideo() {
+    const tk = ++token;
+    Sound.clear();
+    cleanupBattle();
+    document.body.dataset.screen = 'hero';
+    document.body.classList.remove('hero-done');
+    stage.className = '';
+    cardsEl.replaceChildren();
+    allParts().forEach((p) => p.classList.remove('off', 'pop', 'hint', 'wiggle'));
+    await wait(300);
+    await battle(tk);
+    if (tk !== token) return;
+    stage.classList.add('fly');
+    await Sound.say([{ pause: 300 }, 'hero_bye']);
+    if (tk !== token) return;
+    document.body.classList.add('hero-done');
+  }
+
+  return { start, stop, renderStats, resetStats, playVideo };
 })();

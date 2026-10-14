@@ -45,6 +45,10 @@
   clips.hero_yes_3  = { lang: 'yue', text: '好犀利！' };
   clips.hero_power  = { lang: 'yue', text: '裝備齊晒，變身！' };
   clips.hero_test   = { lang: 'yue', text: '而家考吓你！' };
+  clips.battle_alarm = { lang: 'yue', text: '哎呀！有怪獸嚟搞亂個城市！' };
+  clips.battle_go    = { lang: 'yue', text: '英雄出動！愛心炮，發射！' };
+  clips.battle_sorry = { lang: 'yue', text: '對唔住呀，我唔再搞亂喇！' };
+  clips.battle_win   = { lang: 'yue', text: '打敗怪獸喇！好嘢！' };
   clips.hero_bye    = { lang: 'yue', text: '多謝你幫我！英雄要去救人喇，拜拜！' };
   clips.yue_bye  = { lang: 'yue', text: '恐龍BB要瞓覺喇，拜拜！' };
   clips.en_bye   = { lang: 'en',  text: 'Good night, little dinos!' };
