@@ -1,6 +1,6 @@
 # 🦕 恐龍搵蛋（Dino Eggs）
 
-一個 app 兩個 game，開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）或者 🤖 **英雄裝備站**（學認字，見下面）。
+一個 app 三個 game，開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文），後兩個見下面。
 
 **恐龍搵蛋：** 幫恐龍媽媽搵蛋：每撳一隻蛋，蛋就飛入巢，遊戲先用廣東話、再用英文讀出數字（「一……one」）。搵齊之後蛋會孵出恐龍 BB，再讀出總數同一句讚佢嘅說話。
 
@@ -25,7 +25,11 @@ js/words.js             ★ 英雄認字嘅字表（換單元改呢度）
 js/hero.js              英雄裝備站遊戲流程
 js/hero-art.js          機械人英雄 SVG
 css/hero.css            英雄畫面樣式 + 楷書字體
-fonts/                  楷書字體（只抽咗用到嘅字，7KB）
+js/animals.js           ★ Super Rex 嘅英文動物表（換字改呢度）
+js/rex.js               Super Rex 遊戲流程
+js/rex-art.js           Super Rex + 8 隻動物 SVG
+css/rex.css             Super Rex 畫面樣式 + Andika 字體
+fonts/                  楷書 + Andika 字體（只抽咗用到嘅字）
 sw.js                   Service Worker（離線）
 manifest.webmanifest    加入主畫面 / 安裝 app
 icons/                  App icon
@@ -85,6 +89,28 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 ### 換下一個單元
 - 改 `js/words.js`（字、對應部位、focus）
 - 新字要加入楷書字體（字體檔只有用到嘅字）、而如果新單元唔係身體，英雄部位要重新設計 → 叫 Claude 做會最快
+- 改完記得 `js/version.js` +1
+
+## 🦖🦸 Super Rex 救動物（學英文，全英文）
+
+跟 Yorkland Tutorial 工作紙：dog、cat、cow、pig、frog、duck、hen、fish，同埋 two legs / four legs。調皮怪獸將農場動物困咗喺泡泡入面，Super Rex（戴眼罩、披紅色披風嘅暴龍）同 Luca 一齊救佢哋。
+
+1. Super Rex 飛入嚟：「Super Rex to the rescue! Hi Luca!…」
+2. **聽音撳泡泡（4 條）**：「Where's the duck?」→ 3 個泡泡揀一個 → Super Rex 吼一聲、泡泡爆開 → 動物叫「Quack quack!」再讀「Duck!」→ 跑去下面農場
+3. **睇字撳泡泡（3 條）**：出英文字牌（例如 `cow`，冇讀出嚟）→ 撳啱嗰隻動物。呢 part 就係工作紙「Look, read and match」
+4. **數腳（4 條）**：動物由農場行出嚟 →「Two legs or four legs?」→ 撳「2」定「4」圍欄 → 每隻腳逐隻發光、讀「one, two, three, four… Four legs!」→ 動物入圍欄。最少一隻兩隻腳（duck / hen）。fish 冇腳，唔會出
+5. **獎勵短片**（約 20 秒）：怪獸返嚟 → Super Rex 大吼三下 → 怪獸越嚟越細、變乖、講「Sorry!」跳走 → 農場動物一齊跳
+6. Super Rex 飛走 → 返主選單掣
+
+- 一節約 3–4 分鐘；撳錯唔罰：泡泡搖一搖、嗰隻動物叫一聲（順便學埋佢係咩），再問一次；錯兩次啱嗰個會發光
+- 數腳撳錯：Super Rex 會帶住一齊數一次，之後啱嗰個圍欄發光
+- 字牌用 Andika 字體（專為初學閱讀設計，`a` `g` 同學校寫法一樣）
+- 未熟嘅動物出多啲
+
+**家長區**有「▶ 睇 Super Rex 短片」同「Super Rex 英文記錄」：每隻動物「第一下就啱 / 次數」，分「聽音撳圖」、「睇字撳圖」、「數腳」。
+
+### 換英文字
+- 改 `js/animals.js`。新動物要畫 SVG（`js/rex-art.js`），新字母要加入 Andika 字體 → 叫 Claude 做會最快
 - 改完記得 `js/version.js` +1
 
 
@@ -158,7 +184,7 @@ python -m http.server 8765
 
 ---
 
-## 錄音清單（97 個檔）
+## 錄音清單（138 個檔）
 
 放喺 `audio/` folder，**檔名要一模一樣**（細楷、底線、`.mp3`）。唔使一次錄晒，錄咗邊個就用邊個，未錄嘅照用內置語音。
 
@@ -171,6 +197,7 @@ python -m http.server 8765
 - 數數用「一、**二**、三」；講數量用「**兩**隻蛋」（已經寫喺清單入面）
 - 廣東話同英文可以分開兩個人錄（例如爸爸讀廣東話、媽媽讀英文）
 - 錄完喺家長區揀嗰句試聽，🎙 就代表用緊錄音
+- Super Rex 嗰啲全部英文；動物叫聲（`snd_*`）用把聲扮就得，好玩為主
 - 想改句子：改 `js/voices.js`，再行 `node tools/list-recordings.js` 印出新清單
 
 **數數（撳蛋時）**
@@ -314,6 +341,72 @@ python -m http.server 8765
 | `battle_go.mp3` | 廣東話 | 英雄出動！愛心炮，發射！ |
 | `battle_sorry.mp3` | 廣東話 | 對唔住呀，我唔再搞亂喇！ |
 | `battle_win.mp3` | 廣東話 | 打敗怪獸喇！好嘢！ |
+
+**Super Rex：動物名**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `an_dog.mp3` | English | Dog! |
+| `an_cat.mp3` | English | Cat! |
+| `an_cow.mp3` | English | Cow! |
+| `an_pig.mp3` | English | Pig! |
+| `an_frog.mp3` | English | Frog! |
+| `an_duck.mp3` | English | Duck! |
+| `an_hen.mp3` | English | Hen! |
+| `an_fish.mp3` | English | Fish! |
+
+**Super Rex：叫聲**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `snd_dog.mp3` | English | Woof woof! |
+| `snd_cat.mp3` | English | Meow! |
+| `snd_cow.mp3` | English | Moo! |
+| `snd_pig.mp3` | English | Oink oink! |
+| `snd_frog.mp3` | English | Ribbit! |
+| `snd_duck.mp3` | English | Quack quack! |
+| `snd_hen.mp3` | English | Cluck cluck! |
+| `snd_fish.mp3` | English | Blub blub! |
+
+**Super Rex：問題**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `rex_where_dog.mp3` | English | Where’s the dog? |
+| `rex_where_cat.mp3` | English | Where’s the cat? |
+| `rex_where_cow.mp3` | English | Where’s the cow? |
+| `rex_where_pig.mp3` | English | Where’s the pig? |
+| `rex_where_frog.mp3` | English | Where’s the frog? |
+| `rex_where_duck.mp3` | English | Where’s the duck? |
+| `rex_where_hen.mp3` | English | Where’s the hen? |
+| `rex_where_fish.mp3` | English | Where’s the fish? |
+
+**Super Rex：句子**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `rex_hi.mp3` | English | Super Rex to the rescue! |
+| `rex_intro.mp3` | English | Hi Luca! A naughty monster trapped the animals in bubbles. Let’s save them! |
+| `rex_read.mp3` | English | Now let’s read! |
+| `rex_read_q.mp3` | English | What does it say? |
+| `rex_legs.mp3` | English | Let’s count legs! |
+| `rex_legs_q.mp3` | English | Two legs or four legs? |
+| `rex_count.mp3` | English | Let’s count! |
+| `rex_bye.mp3` | English | Thank you, Luca! See you next time! |
+| `rex_yes_1.mp3` | English | Yes! |
+| `rex_yes_2.mp3` | English | Well done! |
+| `legs_2.mp3` | English | Two legs! |
+| `rex_yes_3.mp3` | English | Great job, Luca! |
+| `legs_4.mp3` | English | Four legs! |
+
+**Super Rex 打怪獸短片**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `rbat_alarm.mp3` | English | Oh no! The monster is back! |
+| `rbat_go.mp3` | English | Super Rex, big roar! |
+| `rbat_sorry.mp3` | English | Sorry! I’ll be nice now. |
+| `rbat_win.mp3` | English | Hooray! Super Rex saves the day! |
 
 ---
 

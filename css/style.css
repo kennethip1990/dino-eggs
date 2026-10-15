@@ -220,7 +220,7 @@ body[data-screen="sleep"] #home::after {
 body:not([data-screen="menu"]) #menu-screen { display: none; }
 .choose {
   position: relative;
-  width: min(40vw, 62vh); aspect-ratio: 1;
+  width: min(28vw, 56vh); aspect-ratio: 1;
   border: 8px solid #fff; border-radius: 36px;
   background: rgba(255,255,255,.5);
   box-shadow: 0 10px 0 rgba(0,0,0,.06);
@@ -236,7 +236,7 @@ body:not([data-screen="menu"]) #menu-screen { display: none; }
 .choose-egg svg { width: 100%; display: block; }
 @media (orientation: portrait) {
   #menu-screen { flex-direction: column; }
-  .choose { width: min(64vw, 38vh); }
+  .choose { width: min(56vw, 25vh); }
 }
 
 /* 返主選單掣（揀恐龍畫面） */

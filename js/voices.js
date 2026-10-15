@@ -50,7 +50,32 @@
   clips.battle_sorry = { lang: 'yue', text: '對唔住呀，我唔再搞亂喇！' };
   clips.battle_win   = { lang: 'yue', text: '打敗怪獸喇！好嘢！' };
   clips.hero_bye    = { lang: 'yue', text: '多謝你幫我！英雄要去救人喇，拜拜！' };
-  clips.yue_bye  = { lang: 'yue', text: '恐龍BB要瞓覺喇，拜拜！' };
+  // ---- Super Rex 英文（全英文）----
+  if (root.ANIMAL_UNIT) {
+    for (const a of root.ANIMAL_UNIT.animals) {
+      clips['an_' + a.id]        = { lang: 'en', text: cap(a.word) + '!' };
+      clips['snd_' + a.id]       = { lang: 'en', text: a.sound };
+      clips['rex_where_' + a.id] = { lang: 'en', text: 'Where’s the ' + a.word + '?' };
+    }
+  }
+  clips.rex_hi     = { lang: 'en', text: 'Super Rex to the rescue!' };
+  clips.rex_intro  = { lang: 'en', text: 'Hi Luca! A naughty monster trapped the animals in bubbles. Let’s save them!' };
+  clips.rex_yes_1  = { lang: 'en', text: 'Yes!' };
+  clips.rex_yes_2  = { lang: 'en', text: 'Well done!' };
+  clips.rex_yes_3  = { lang: 'en', text: 'Great job, Luca!' };
+  clips.rex_read   = { lang: 'en', text: 'Now let’s read!' };
+  clips.rex_read_q = { lang: 'en', text: 'What does it say?' };
+  clips.rex_legs   = { lang: 'en', text: 'Let’s count legs!' };
+  clips.rex_legs_q = { lang: 'en', text: 'Two legs or four legs?' };
+  clips.rex_count  = { lang: 'en', text: 'Let’s count!' };
+  clips.legs_2     = { lang: 'en', text: 'Two legs!' };
+  clips.legs_4     = { lang: 'en', text: 'Four legs!' };
+  clips.rbat_alarm = { lang: 'en', text: 'Oh no! The monster is back!' };
+  clips.rbat_go    = { lang: 'en', text: 'Super Rex, big roar!' };
+  clips.rbat_sorry = { lang: 'en', text: 'Sorry! I’ll be nice now.' };
+  clips.rbat_win   = { lang: 'en', text: 'Hooray! Super Rex saves the day!' };
+  clips.rex_bye    = { lang: 'en', text: 'Thank you, Luca! See you next time!' };
+  clips.yue_bye  ={ lang: 'yue', text: '恐龍BB要瞓覺喇，拜拜！' };
   clips.en_bye   = { lang: 'en',  text: 'Good night, little dinos!' };
 
   root.VOICES = {

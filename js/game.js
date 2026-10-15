@@ -91,19 +91,26 @@
   // ---------- 主選單：恐龍搵蛋 / 英雄裝備站 ----------
   put($('#go-dino'), `<div class="choose-art">${Art.mama('trex')}</div><div class="choose-egg">${Art.egg(1)}</div>`);
   put($('#go-hero'), `<div class="choose-art">${HeroArt.icon()}</div>`);
+  put($('#go-rex'), `<div class="choose-art">${RexArt.rex()}</div><div class="choose-bubble">${RexArt.animal('duck')}</div>`);
   $('#go-dino').addEventListener('click', () => { prepare(); setScreen('start'); });
   $('#go-hero').addEventListener('click', async () => {
     prepare();
     await Promise.race([Sound.loadRecordings(), wait(1500)]);
     HeroGame.start();
   });
+  $('#go-rex').addEventListener('click', async () => {
+    prepare();
+    await Promise.race([Sound.loadRecordings(), wait(1500)]);
+    RexGame.start();
+  });
 
   function goHome() {
     Sound.clear();
     roundToken++;
     HeroGame.stop();
+    RexGame.stop();
     clearField();
-    document.body.classList.remove('show-again', 'hero-done');
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done');
     scene.classList.remove('is-night');
     setScreen('menu');
     keepAwake();
@@ -389,7 +396,7 @@
   }
   function releaseAwake() { try { if (wakeLock) wakeLock.release(); } catch (e) {} wakeLock = null; }
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && /^(play|hero)$/.test(document.body.dataset.screen)) keepAwake();
+    if (document.visibilityState === 'visible' && /^(play|hero|rex)$/.test(document.body.dataset.screen)) keepAwake();
   });
   let trapped = false;
   function trapBack() {
@@ -437,14 +444,23 @@
     if (resumeAfterPanel === 'sleep') document.body.classList.add('show-again');
     dispatchEvent(new CustomEvent('panel-close', { detail: resumeAfterPanel }));
   });
-  $('#p-hero-video').addEventListener('click', () => {
+  const preview = (game) => () => {
     Sound.clear();
     panel.hidden = true;
     roundToken++;
     clearField();
+    HeroGame.stop();
+    RexGame.stop();
     scene.classList.remove('is-night');
-    document.body.classList.remove('show-again');
-    HeroGame.playVideo();
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done');
+    game.playVideo();
+  };
+  $('#p-hero-video').addEventListener('click', preview(HeroGame));
+  $('#p-rex-video').addEventListener('click', preview(RexGame));
+  $('#p-rex-reset').addEventListener('click', () => {
+    if (!confirm('重設 Super Rex 英文記錄？')) return;
+    RexGame.resetStats();
+    renderPanel();
   });
   $('#p-hero-reset').addEventListener('click', () => {
     if (!confirm('重設英雄認字記錄？')) return;
@@ -457,6 +473,7 @@
     $('#p-level').textContent = progress.level;
     $('#p-rounds').textContent = progress.rounds;
     HeroGame.renderStats($('#p-hero-stats'));
+    RexGame.renderStats($('#p-rex-stats'));
     $('#p-yue').textContent = st.yueVoice ? '✅ ' + st.yueVoice : '⚠️ 搵唔到廣東話語音';
     $('#p-yue-help').hidden = !!st.yueVoice;
     $('#p-en').textContent = st.enVoice ? '✅ ' + st.enVoice : '⚠️ 搵唔到英文語音（會用系統預設）';
