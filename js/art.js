@@ -28,9 +28,10 @@ const Art = (() => {
   // 三款恐龍：腕龍（長頸）、暴龍（T-Rex）、三角龍
   const SPECIES = ['brachio', 'trex', 'trice'];
 
-  function baby(ci, species) {
-    const c = EGG_COLORS[ci % EGG_COLORS.length];
-    const b = BABY_COLORS[ci % BABY_COLORS.length];
+  function baby(ci, species, opts) {
+    opts = opts || {};
+    const c = opts.shell || EGG_COLORS[ci % EGG_COLORS.length];
+    const b = opts.fill || BABY_COLORS[ci % BABY_COLORS.length];
     const sp = species || 'brachio';
     // 頭後面 / 頭上面嘅特徵
     const behind = {
@@ -48,6 +49,7 @@ const Art = (() => {
     }[sp];
     const headR = sp === 'trex' ? 27 : 25;
     return `<svg viewBox="0 0 100 110" aria-hidden="true">
+      ${opts.defs || ''}
       <ellipse cx="50" cy="105" rx="30" ry="4.5" fill="#000" opacity=".10"/>
       ${behind}
       <ellipse cx="50" cy="58" rx="27" ry="26" fill="${b}"/>
@@ -65,6 +67,46 @@ const Art = (() => {
       <path d="M12 66 L22 58 L32 68 L42 58 L50 67 L58 58 L68 68 L78 58 L88 66 C92 92 74 104 50 104 C26 104 8 92 12 66Z"
             fill="${c.base}" stroke="#a88b6a" stroke-opacity=".35" stroke-width="2.5"/>
       <circle cx="34" cy="84" r="5" fill="${c.spot}"/><circle cx="64" cy="88" r="7" fill="${c.spot}"/>
+      ${opts.extra || ''}
+    </svg>`;
+  }
+
+  // ---------- 特別恐龍BB（每節完結孵一隻；三款輪流，集貼紙用） ----------
+  const SPECIALS = ['rainbow', 'gold', 'star'];
+  const sparkle = (x, y, r, col) => `<path d="M${x} ${y - r} Q${x} ${y} ${x + r} ${y} Q${x} ${y} ${x} ${y + r} Q${x} ${y} ${x - r} ${y} Q${x} ${y} ${x} ${y - r}Z" fill="${col || '#fff6b0'}"/>`;
+  function specialBaby(kind, species) {
+    if (kind === 'rainbow') {
+      return baby(0, species, {
+        defs: `<defs><linearGradient id="rbgrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ff9a9a"/><stop offset=".2" stop-color="#ffc46b"/><stop offset=".4" stop-color="#fff07a"/>
+          <stop offset=".6" stop-color="#8fe0a0"/><stop offset=".8" stop-color="#8fbdf0"/><stop offset="1" stop-color="#c7a3ff"/></linearGradient></defs>`,
+        fill: 'url(#rbgrad)',
+        shell: { base: '#ffffff', spot: '#ffc46b' },
+        extra: sparkle(14, 20, 6) + sparkle(88, 30, 5)
+      });
+    }
+    if (kind === 'gold') {
+      return baby(0, species, {
+        fill: '#ffd36e',
+        shell: { base: '#fff6d6', spot: '#f2c45c' },
+        extra: `<path d="M36 18 L38 4 L45 12 L50 2 L55 12 L62 4 L64 18Z" fill="#f2c45c" stroke="#d9a53a" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="50" cy="12" r="2.6" fill="#f2706b"/>` + sparkle(14, 26, 6) + sparkle(88, 18, 5)
+      });
+    }
+    return baby(0, species, {
+      fill: '#a9bcff',
+      shell: { base: '#3d4a8a', spot: '#ffe27a' },
+      extra: sparkle(40, 66, 4, '#fff') + sparkle(60, 60, 3, '#fff') + sparkle(14, 22, 6) + sparkle(88, 30, 6) + sparkle(50, 0 + 6, 5)
+    });
+  }
+  function specialEgg() {
+    return `<svg viewBox="0 0 100 124" aria-hidden="true">
+      <defs><linearGradient id="spegg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6c9"/><stop offset="1" stop-color="#ffd36e"/></linearGradient></defs>
+      <ellipse cx="50" cy="118" rx="32" ry="5" fill="#000" opacity=".10"/>
+      <path d="${EGG_PATH}" fill="url(#spegg)" stroke="#d9a53a" stroke-width="3"/>
+      <path d="M30 60 l6 -8 l6 8 l6 -8 l6 8 l6 -8 l6 8 l6 -8" stroke="#f2706b" stroke-width="4" fill="none" stroke-linejoin="round"/>
+      ${sparkle(34, 36, 7, '#fff')}${sparkle(66, 86, 6, '#fff')}${sparkle(40, 92, 4, '#fff')}
+      <ellipse cx="33" cy="30" rx="7" ry="12" transform="rotate(25 33 30)" fill="#fff" opacity=".7"/>
     </svg>`;
   }
 
@@ -263,5 +305,5 @@ const Art = (() => {
     gear: `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="14" fill="none" stroke="currentColor" stroke-width="8"/><g stroke="currentColor" stroke-width="10" stroke-linecap="round"><path d="M50 14v10M50 76v10M14 50h10M76 50h10M25 25l7 7M68 68l7 7M25 75l7-7M68 32l7-7"/></g></svg>`
   };
 
-  return { SPECIES, egg, baby, mama, nest, bush, rock, background, night, icons, EGG_COLORS };
+  return { SPECIES, SPECIALS, egg, baby, specialBaby, specialEgg, mama, nest, bush, rock, background, night, icons, EGG_COLORS };
 })();

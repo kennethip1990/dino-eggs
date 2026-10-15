@@ -16,7 +16,12 @@ const groups = [
   ['Super Rex：叫聲', /^snd_/],
   ['Super Rex：問題', /^rex_where_/],
   ['Super Rex：句子', /^(rex_(?!where_)|legs_)/],
-  ['Super Rex 打怪獸短片', /^rbat_/]
+  ['Super Rex 打怪獸短片', /^rbat_/],
+  ['英雄結局：黑雲怪 / 外星人', /^(cloud|ufo)_/],
+  ['Super Rex 結局：龍捲風 / 隕石', /^(torn|met)_/],
+  ['恐龍搵蛋：特別恐龍BB', /_(special|sp_\w+)$/],
+  ['貼紙', /^(sticker|unlock|locked)_/],
+  ['秘密短片：怪獸大王', /^boss_/]
 ];
 const clips = self.VOICES.clips;
 const out = [];

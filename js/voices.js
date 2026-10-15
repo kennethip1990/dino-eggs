@@ -75,7 +75,45 @@
   clips.rbat_sorry = { lang: 'en', text: 'Sorry! I’ll be nice now.' };
   clips.rbat_win   = { lang: 'en', text: 'Hooray! Super Rex saves the day!' };
   clips.rex_bye    = { lang: 'en', text: 'Thank you, Luca! See you next time!' };
-  clips.yue_bye  ={ lang: 'yue', text: '恐龍BB要瞓覺喇，拜拜！' };
+  // ---- 結局短片 ----
+  // 英雄（廣東話）
+  clips.cloud_alarm = { lang: 'yue', text: '哎呀！黑雲怪落大雨，個城市濕晒！' };
+  clips.cloud_go    = { lang: 'yue', text: '英雄出動！太陽光，發射！' };
+  clips.cloud_happy = { lang: 'yue', text: '黑雲變白雲！仲有彩虹添！' };
+  clips.cloud_win   = { lang: 'yue', text: '好嘢！天晴喇！' };
+  clips.ufo_alarm   = { lang: 'yue', text: '哎呀！外星人用飛碟吸走大廈！' };
+  clips.ufo_go      = { lang: 'yue', text: '英雄出動！磁力手，拉返落嚟！' };
+  clips.ufo_bye     = { lang: 'yue', text: '對唔住呀，我玩吓啫！拜拜！' };
+  clips.ufo_win     = { lang: 'yue', text: '大廈返嚟喇！好嘢！' };
+  // Super Rex（英文）
+  clips.torn_alarm = { lang: 'en', text: 'Oh no! A big tornado!' };
+  clips.torn_go    = { lang: 'en', text: 'Super Rex, tail spin!' };
+  clips.torn_safe  = { lang: 'en', text: 'Boing! Boing! Everyone is safe!' };
+  clips.met_alarm  = { lang: 'en', text: 'Oh no! A big rock from space!' };
+  clips.met_go     = { lang: 'en', text: 'Super Rex, jump!' };
+  clips.met_stars  = { lang: 'en', text: 'Wow! Shooting stars!' };
+  // 恐龍搵蛋：特別恐龍BB
+  clips.yue_special    = { lang: 'yue', text: '咦？有隻特別嘅蛋！' };
+  clips.en_special     = { lang: 'en',  text: 'A special egg!' };
+  clips.yue_sp_rainbow = { lang: 'yue', text: '係彩虹恐龍BB！' };
+  clips.en_sp_rainbow  = { lang: 'en',  text: 'A rainbow baby dino!' };
+  clips.yue_sp_gold    = { lang: 'yue', text: '係金色恐龍BB！' };
+  clips.en_sp_gold     = { lang: 'en',  text: 'A golden baby dino!' };
+  clips.yue_sp_star    = { lang: 'yue', text: '係星星恐龍BB！' };
+  clips.en_sp_star     = { lang: 'en',  text: 'A starry baby dino!' };
+  // 貼紙
+  clips.sticker_yue = { lang: 'yue', text: '你攞到一張新貼紙！' };
+  clips.sticker_en  = { lang: 'en',  text: 'You got a new sticker!' };
+  clips.unlock_yue  = { lang: 'yue', text: '集齊晒！秘密短片解鎖咗！' };
+  clips.unlock_en   = { lang: 'en',  text: 'Secret movie unlocked!' };
+  clips.locked_yue  = { lang: 'yue', text: '集齊六張英雄同Super Rex貼紙，就可以睇秘密短片！' };
+  // 秘密短片：機械人英雄 + Super Rex 大戰怪獸大王
+  clips.boss_alarm  = { lang: 'yue', text: '嘩！怪獸大王嚟咗！' };
+  clips.boss_team   = { lang: 'yue', text: '機械人英雄同Super Rex，一齊出動！' };
+  clips.boss_sorry  = { lang: 'yue', text: '對唔住！我哋做好朋友啦！' };
+  clips.boss_win    = { lang: 'yue', text: '我哋贏咗喇！' };
+  clips.boss_win_en = { lang: 'en',  text: 'We did it! Hooray!' };
+  clips.yue_bye  = { lang: 'yue', text: '恐龍BB要瞓覺喇，拜拜！' };
   clips.en_bye   = { lang: 'en',  text: 'Good night, little dinos!' };
 
   root.VOICES = {

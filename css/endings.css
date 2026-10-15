@@ -1,0 +1,192 @@
+/* 結局短片 + 貼紙簿 + 秘密短片 */
+
+/* ---------- 主選單：卡 + 貼紙 ---------- */
+#menu-screen { --card: min(28vw, 54vh); }
+@media (orientation: portrait) { #menu-screen { --card: min(52vw, 23vh); } }
+#menu-screen .choose { width: var(--card); }
+.card-wrap { display: flex; flex-direction: column; align-items: center; }
+.stickers { position: relative; z-index: 1; display: flex; gap: calc(var(--card) * .03); margin-top: calc(var(--card) * -.11); }
+.stk { width: calc(var(--card) * .23); aspect-ratio: 1; padding: 0; border: none; background: none; touch-action: manipulation; }
+.stk svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 3px 0 rgba(0,0,0,.08)); }
+.stk.got:active { transform: scale(.92); }
+.stk.wiggle { animation: partwiggle .6s ease-in-out; }
+
+#go-boss {
+  position: absolute; top: max(10px, env(safe-area-inset-top)); left: 50%;
+  width: 84px; height: 84px; margin-left: -42px; padding: 0;
+  border: none; border-radius: 50%; background: none;
+  animation: bossglow 2s ease-in-out infinite;
+}
+#go-boss svg { width: 100%; height: 100%; display: block; }
+#go-boss.locked { animation: none; filter: grayscale(1) brightness(1.15); opacity: .6; }
+#go-boss.locked::after {
+  content: ""; position: absolute; right: 2px; bottom: 2px; width: 28px; height: 28px; border-radius: 50%;
+  background: #b7aec4 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='6' y='11' width='12' height='9' rx='2' fill='%23fff'/%3E%3Cpath d='M8.5 11V8.5a3.5 3.5 0 0 1 7 0V11' stroke='%23fff' stroke-width='2.4' fill='none'/%3E%3C/svg%3E") center / 70% no-repeat;
+  border: 3px solid #fff;
+}
+#go-boss.wiggle { animation: partwiggle .6s ease-in-out; }
+@keyframes bossglow { 50% { transform: scale(1.08); filter: drop-shadow(0 0 12px #ffd36e); } }
+
+/* ---------- 攞到新貼紙 ---------- */
+#sticker-pop { position: fixed; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+#sticker-pop[hidden] { display: none; }
+#sticker-pop::before {
+  content: ""; position: absolute; width: min(80vmin, 640px); aspect-ratio: 1; border-radius: 50%;
+  background: repeating-conic-gradient(rgba(255,230,140,.55) 0 12deg, transparent 12deg 30deg);
+  opacity: 0; transition: opacity .4s;
+}
+#sticker-pop.on::before { opacity: 1; animation: rays 6s linear infinite; }
+.sp-art { position: relative; width: min(42vmin, 320px); aspect-ratio: 1; transform: scale(0); }
+.sp-art svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
+#sticker-pop.on .sp-art { animation: stickerin .8s cubic-bezier(.3,1.6,.5,1) forwards; }
+@keyframes stickerin { 0% { transform: scale(0) rotate(-40deg); } 100% { transform: scale(1) rotate(0); } }
+@keyframes rays { to { transform: rotate(360deg); } }
+
+/* ---------- 英雄結局 2：黑雲怪 ---------- */
+#hero-screen::before { content: ""; position: absolute; inset: 0; background: rgba(70,80,120,.28); opacity: 0; transition: opacity 1s; pointer-events: none; }
+#hero-screen.gloomy::before { opacity: 1; }
+.cloud-fx { position: absolute; z-index: 11; right: 6vw; top: 8vh; width: min(36vw, 48vh); aspect-ratio: 3 / 2; touch-action: none; }
+.cloud-fx svg { width: 100%; height: 100%; display: block; overflow: visible; animation: drift2 3s ease-in-out infinite; }
+.cloud-fx .c-dark { opacity: var(--dark, 1); transition: opacity .5s; }
+.cloud-fx .c-happy { display: none; }
+.cloud-fx.happy .c-happy { display: inline; }
+.cloud-fx.happy .c-angry { display: none; }
+.cloud-fx.enter { animation: fromright 1.4s ease-out both; }
+.cloud-fx.hit svg { animation: mhit .45s ease-out; }
+.rain-fx {
+  position: absolute; z-index: 10; right: 8vw; width: min(32vw, 44vh);
+  top: calc(8vh + min(36vw, 48vh) * .5); bottom: 3vh;
+  background: repeating-linear-gradient(100deg, transparent 0 22px, rgba(110,150,220,.6) 22px 25px);
+  background-size: 100% 60px;
+  opacity: 0; transition: opacity .6s; pointer-events: none;
+  -webkit-mask-image: linear-gradient(#000 70%, transparent); mask-image: linear-gradient(#000 70%, transparent);
+}
+.rain-fx.on { opacity: 1; animation: rain .35s linear infinite; }
+.rainbow-fx { position: absolute; z-index: 10; right: 1vw; top: 2vh; width: min(52vw, 70vh); aspect-ratio: 400 / 215; opacity: 0; transform: scale(.6); transform-origin: 50% 100%; transition: opacity 1.4s, transform 1.4s cubic-bezier(.3,1.4,.5,1); pointer-events: none; }
+.rainbow-fx svg { width: 100%; height: 100%; display: block; }
+.rainbow-fx.show { opacity: 1; transform: scale(1); }
+@keyframes rain { to { background-position: -12px 60px; } }
+@keyframes drift2 { 50% { transform: translateX(-10px); } }
+@keyframes fromright { from { translate: 70vw 0; } to { translate: 0 0; } }
+@media (orientation: portrait) {
+  .cloud-fx { top: 56vh; width: 46vw; }
+  .rain-fx { top: calc(56vh + 15vw); width: 42vw; }
+  .rainbow-fx { top: 48vh; width: 70vw; }
+}
+
+/* ---------- 英雄結局 3：飛碟 + 大廈 ---------- */
+.ufo-scene { position: absolute; z-index: 11; right: 4vw; top: 6vh; bottom: 4vh; width: min(30vw, 42vh); display: flex; flex-direction: column; align-items: center; justify-content: space-between; pointer-events: none; }
+.ufo-fx { width: 100%; aspect-ratio: 1; pointer-events: auto; touch-action: none; position: relative; z-index: 2; }
+.ufo-fx svg { width: 100%; height: 100%; display: block; overflow: visible; animation: hover 1.6s ease-in-out infinite; }
+.ufo-fx .u-beam { opacity: 0; transition: opacity .5s; }
+.ufo-fx.beaming .u-beam { opacity: .55; animation: beampulse .6s ease-in-out infinite alternate; }
+.ufo-fx.enter { animation: fromtop 1.4s cubic-bezier(.2,.9,.3,1.2) both; }
+.ufo-fx .u-arm { transform-box: fill-box; transform-origin: 0 100%; }
+.ufo-fx.friendly .u-arm { animation: wave .5s ease-in-out infinite alternate; }
+.ufo-fx.leave { animation: upaway 1.4s ease-in forwards; }
+.building-fx { width: 34%; aspect-ratio: 120 / 260; translate: 0 calc(var(--lift, 0) * -28vh); transition: translate .8s cubic-bezier(.3,1.3,.5,1); }
+.building-fx svg { width: 100%; height: 100%; display: block; }
+.building-fx.wobble svg { animation: bwobble 1s ease-in-out infinite; }
+@keyframes hover { 50% { transform: translateY(-8px); } }
+@keyframes beampulse { to { opacity: .35; } }
+@keyframes fromtop { from { translate: 20vw -60vh; } to { translate: 0 0; } }
+@keyframes upaway { to { translate: 40vw -80vh; } }
+@keyframes wave { from { transform: rotate(-20deg); } to { transform: rotate(20deg); } }
+@keyframes bwobble { 25% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } }
+@media (orientation: portrait) { .ufo-scene { top: 50vh; bottom: 2vh; width: 34vw; } .building-fx { translate: 0 calc(var(--lift, 0) * -12vh); } }
+
+/* 光束：太陽光（黃）/ 磁力（紫藍間條） */
+.beam {
+  position: fixed; z-index: 40; height: 20px; margin-top: -10px; transform-origin: 0 50%;
+  border-radius: 10px; pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,246,176,.2), #fff6b0 30%, #ffd36e);
+  box-shadow: 0 0 16px 6px rgba(255,220,120,.55);
+  animation: beamshoot .7s ease-out forwards;
+}
+.beam.magnet { height: 16px; margin-top: -8px; background: repeating-linear-gradient(90deg, #b48cff 0 16px, #7fd6ff 16px 32px); box-shadow: 0 0 14px 4px rgba(150,170,255,.5); }
+@keyframes beamshoot { 0% { clip-path: inset(0 100% 0 0); opacity: 1; } 50% { clip-path: inset(0 0 0 0); opacity: 1; } 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+
+/* ---------- Super Rex 結局 2：龍捲風 ---------- */
+.tornado-fx { position: absolute; z-index: 11; right: 8vw; bottom: 20vh; width: min(22vw, 34vh); aspect-ratio: 200 / 290; scale: var(--s, 1); transform-origin: 50% 100%; transition: scale .45s cubic-bezier(.3,1.6,.5,1), opacity .4s; touch-action: none; }
+.tornado-fx svg { width: 100%; height: 100%; display: block; overflow: visible; animation: twist .5s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+.tornado-fx.enter { animation: fromright 1.4s ease-out both; }
+.tornado-fx .t-happy { display: none; }
+.tornado-fx.gone { opacity: 0; scale: 0; }
+@keyframes twist { from { transform: skewX(-6deg); } to { transform: skewX(6deg); } }
+#rex-saved.whirl .saved-animal { animation: whirl 1.3s ease-in-out infinite; }
+#rex-saved.whirl .saved-animal:nth-child(2n) { animation-delay: -.6s; }
+#rex-saved.whirl .saved-animal:nth-child(3n) { animation-delay: -.3s; animation-duration: 1.6s; }
+@keyframes whirl { 0% { transform: translateY(-34vh) rotate(0); } 50% { transform: translateY(-42vh) translateX(4vw) rotate(180deg); } 100% { transform: translateY(-34vh) rotate(360deg); } }
+#rex-saved.drop .saved-animal { animation: dropin .9s cubic-bezier(.3,1.5,.5,1) both; }
+#rex-saved.drop .saved-animal:nth-child(2) { animation-delay: .16s; }
+#rex-saved.drop .saved-animal:nth-child(3) { animation-delay: .32s; }
+#rex-saved.drop .saved-animal:nth-child(4) { animation-delay: .48s; }
+#rex-saved.drop .saved-animal:nth-child(5) { animation-delay: .64s; }
+#rex-saved.drop .saved-animal:nth-child(6) { animation-delay: .8s; }
+#rex-saved.drop .saved-animal:nth-child(7) { animation-delay: .96s; }
+#rex-saved.drop .saved-animal:nth-child(8) { animation-delay: 1.12s; }
+@keyframes dropin { 0% { transform: translateY(-38vh) rotate(200deg); } 70% { transform: translateY(0) scaleY(.8) rotate(360deg); } 100% { transform: translateY(0) rotate(360deg); } }
+#rex-stage.spin svg { animation: rexspin .8s ease-in-out; }
+@keyframes rexspin { 50% { transform: scaleX(-1) translateY(-10px); } }
+
+/* ---------- Super Rex 結局 3：隕石 ---------- */
+.meteor-fx { position: absolute; z-index: 11; top: 4vh; right: 14vw; width: min(26vw, 38vh); aspect-ratio: 260 / 240; transition: opacity .35s, scale .35s; touch-action: none; }
+.meteor-fx svg { width: 100%; height: 100%; display: block; overflow: visible; animation: hover 1.2s ease-in-out infinite; }
+.meteor-fx.enter { animation: meteorin 1.8s ease-out both; }
+.meteor-fx.hit svg { animation: mhit .45s ease-out; }
+.meteor-fx.gone { opacity: 0; scale: 1.6; pointer-events: none; }
+@keyframes meteorin { from { translate: 50vw -50vh; } to { translate: 0 0; } }
+.star-fx { position: fixed; z-index: 30; width: 46px; height: 46px; margin: -23px 0 0 -23px; pointer-events: none; }
+.star-fx svg { width: 100%; height: 100%; display: block; }
+@media (orientation: portrait) { .meteor-fx { top: 30vh; right: 8vw; width: 40vw; } .tornado-fx { bottom: 15vh; width: 30vw; } }
+
+/* ---------- 恐龍搵蛋：特別蛋 ---------- */
+.special-egg { position: absolute; z-index: 3; animation: cardin .6s cubic-bezier(.3,1.6,.5,1) both; filter: drop-shadow(0 0 18px rgba(255,220,120,.7)); }
+.special-egg svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.special-egg.wiggle { animation: partwiggle .6s ease-in-out; }
+.special-egg.hatched { animation: hatch .6s cubic-bezier(.3,1.6,.5,1); }
+.special-egg.hatched svg { animation: babybob 1.4s ease-in-out infinite; transform-origin: 50% 100%; }
+
+/* ---------- 秘密短片：怪獸大王 ---------- */
+#boss-screen { position: absolute; inset: 0; z-index: 10; display: none; }
+body[data-screen="boss"] #boss-screen { display: block; }
+#boss-city { position: absolute; left: 0; right: 0; bottom: 0; height: 45%; pointer-events: none; }
+#boss-city svg { width: 100%; height: 100%; display: block; }
+#boss-robot { position: absolute; left: 2vw; bottom: 4vh; width: min(25vw, 44vh); aspect-ratio: 520 / 570; z-index: 2; }
+#boss-rex { position: absolute; left: calc(2vw + min(21vw, 37vh)); bottom: 3vh; width: min(24vw, 42vh); aspect-ratio: 1; z-index: 3; }
+#boss-robot svg, #boss-rex svg { width: 100%; height: 100%; display: block; overflow: visible; }
+#boss-robot, #boss-rex { opacity: 0; }
+#boss-robot.in, #boss-rex.in, #boss-robot.ready, #boss-rex.ready, #boss-rex.roaring { opacity: 1; }
+#boss-robot.in svg { animation: fromleft 1s cubic-bezier(.2,.9,.3,1.2) both; }
+#boss-rex.in svg { animation: fromleft 1s .15s cubic-bezier(.2,.9,.3,1.2) both; }
+#boss-robot.ready svg, #boss-rex.ready svg { animation: ready .8s ease-in-out; }
+#boss-rex.roaring .rex-roar { display: inline; }
+#boss-rex.roaring .rex-smile { display: none; }
+#boss-rex.roaring .rex-head { animation: rexroar .8s ease-in-out; }
+@keyframes fromleft { from { transform: translateX(-60vw); } to { transform: none; } }
+#boss-monster { position: absolute; right: 2vw; bottom: 3vh; width: min(42vw, 64vh); aspect-ratio: 300 / 320; z-index: 1; opacity: 0; touch-action: none; }
+#boss-monster svg { width: 100%; height: 100%; display: block; overflow: visible; }
+#boss-monster.enter { opacity: 1; animation: menter 2.4s ease-out both; }
+#boss-monster .m-happy { display: none; }
+#boss-monster.friendly .m-happy { display: inline; }
+#boss-monster.friendly .m-angry { display: none; }
+#boss-screen.party #boss-robot svg { animation: dance .6s ease-in-out infinite; }
+#boss-screen.party #boss-rex svg { animation: dance .6s -.3s ease-in-out infinite; }
+#boss-screen.party #boss-monster .m-body { animation: mhappy .8s ease-in-out infinite; }
+@keyframes dance { 25% { transform: translateY(-14px) rotate(-5deg); } 75% { transform: translateY(-14px) rotate(5deg); } }
+.confetti { position: absolute; top: -4vh; width: 12px; height: 18px; border-radius: 3px; z-index: 6; pointer-events: none; animation: confall 3s linear forwards; }
+@keyframes confall { to { transform: translateY(112vh) rotate(720deg); } }
+@media (orientation: portrait) {
+  #boss-robot { left: 4vw; width: 40vw; bottom: auto; top: 12vh; }
+  #boss-rex { left: auto; right: 4vw; width: 44vw; bottom: auto; top: 16vh; }
+  #boss-monster { right: 18vw; width: 64vw; bottom: 3vh; }
+}
+#boss-again {
+  position: absolute; z-index: 12; left: 50%; top: 40%;
+  width: 140px; height: 140px; margin: -70px 0 0 -70px;
+  border-radius: 50%; border: 7px solid #fff;
+  background: radial-gradient(circle at 35% 30%, #ffe08a, #f6b24a 60%, #e0943c);
+  padding: 26px; opacity: 0; pointer-events: none; transition: opacity 1s;
+}
+#boss-again svg { width: 100%; height: 100%; display: block; }
+body.boss-done #boss-again { opacity: 1; pointer-events: auto; }

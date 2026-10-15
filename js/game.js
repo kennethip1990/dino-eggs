@@ -98,21 +98,55 @@
     await Promise.race([Sound.loadRecordings(), wait(1500)]);
     HeroGame.start();
   });
+  // 撳已攞到嘅貼紙 = 再睇嗰段短片
+  Rewards.setOnPlay(async (game, id) => {
+    prepare();
+    await Promise.race([Sound.loadRecordings(), wait(1500)]);
+    if (game === 'dino') playSpecial(id);
+    else if (game === 'hero') HeroGame.playVideo(id);
+    else RexGame.playVideo(id);
+  });
+  put($('#go-boss'), EndArt.bossBadge());
+  $('#go-boss').addEventListener('click', async () => {
+    prepare();
+    if (!Rewards.bossReady()) {
+      wiggle($('#go-boss'));
+      if (!Sound.isBusy()) Sound.say(['locked_yue']);
+      return;
+    }
+    await Promise.race([Sound.loadRecordings(), wait(1500)]);
+    BossGame.play();
+  });
+  Rewards.renderMenu();
   $('#go-rex').addEventListener('click', async () => {
     prepare();
     await Promise.race([Sound.loadRecordings(), wait(1500)]);
     RexGame.start();
   });
 
+  // 撳貼紙 / 家長區預覽：淨係播特別BB 嗰段
+  function playSpecial(kind) {
+    prepare();
+    Sound.clear();
+    HeroGame.stop();
+    RexGame.stop();
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done');
+    put(mamaEl, Art.mama(progress.dino));
+    goToSleep(kind);
+  }
+
   function goHome() {
     Sound.clear();
     roundToken++;
     HeroGame.stop();
     RexGame.stop();
+    BossGame.stop();
+    Rewards.hidePop();
     clearField();
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done');
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done');
     scene.classList.remove('is-night');
     setScreen('menu');
+    Rewards.renderMenu();
     keepAwake();
   }
   window.App = { goHome };
@@ -327,14 +361,28 @@
     nextRound();
   }
 
-  // ---------- 結束：去瞓覺 ----------
-  async function goToSleep() {
+  // ---------- 結束：孵特別恐龍BB → 去瞓覺 ----------
+  // special：指定邊款（預覽 / 撳貼紙重播用，唔計貼紙）；冇就輪流揀，計貼紙
+  async function goToSleep(special) {
     const token = ++roundToken;
     round = null;
     clearField();
-    // 三隻恐龍BB喺巢入面瞓覺
+    setScreen('play');
+    scene.classList.remove('is-night');
+    const kind = special || Rewards.next('dino');
+    await specialHatch(token, kind);
+    if (token !== roundToken) return;
+    if (!special) {
+      await Rewards.celebrate('dino', kind, 'both');
+      if (token !== roundToken) return;
+    }
+    clearField();
+    // 三隻恐龍BB喺巢入面瞓覺，特別BB喺中間
     buildSlots(3);
-    [...slots.children].forEach((s, i) => { put(s, Art.baby(i, progress.dino)); s.classList.add('hatched'); });
+    [...slots.children].forEach((s, i) => {
+      put(s, i === 1 ? Art.specialBaby(kind, progress.dino) : Art.baby(i, progress.dino));
+      s.classList.add('hatched');
+    });
     scene.classList.add('is-night');
     setScreen('sleep');
     await wait(1200);
@@ -343,6 +391,39 @@
     if (token !== roundToken) return;
     document.body.classList.add('show-again');
     releaseAwake();
+  }
+
+  // 一隻金色大蛋出現 → 搖三下 → 孵出特別恐龍BB（~10 秒）
+  async function specialHatch(token, kind) {
+    const el = document.createElement('div');
+    el.className = 'special-egg';
+    put(el, Art.specialEgg());
+    const P = playArea();
+    const S = Math.min(P.w, P.h) * 0.62;
+    Object.assign(el.style, { width: S + 'px', height: S * 1.1 + 'px', left: P.x + (P.w - S) / 2 + 'px', top: P.y + (P.h - S * 1.1) / 2 + 'px' });
+    field.appendChild(el);
+    Sound.sfx.hatch();
+    await wait(700);
+    if (token !== roundToken) return;
+    talk(true);
+    await Sound.say(['yue_special', { pause: self.VOICES.gapMs }, 'en_special']);
+    talk(false);
+    if (token !== roundToken) return;
+    for (let i = 0; i < 3; i++) {
+      wiggle(el);
+      Sound.sfx.soft();
+      await wait(750);
+      if (token !== roundToken) return;
+    }
+    Sound.sfx.hatch();
+    put(el, Art.specialBaby(kind, progress.dino));
+    el.classList.add('hatched');
+    mamaEl.classList.add('happy');
+    talk(true);
+    await Promise.all([Sound.say([{ pause: 300 }, 'yue_sp_' + kind, { pause: self.VOICES.gapMs }, 'en_sp_' + kind]), wait(2400)]);
+    talk(false);
+    mamaEl.classList.remove('happy');
+    await wait(500);
   }
 
   // ---------- 提示：靜咗一陣，未搵到嘅蛋輕輕搖 ----------
@@ -396,7 +477,7 @@
   }
   function releaseAwake() { try { if (wakeLock) wakeLock.release(); } catch (e) {} wakeLock = null; }
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && /^(play|hero|rex)$/.test(document.body.dataset.screen)) keepAwake();
+    if (document.visibilityState === 'visible' && /^(play|hero|rex|boss)$/.test(document.body.dataset.screen)) keepAwake();
   });
   let trapped = false;
   function trapBack() {
@@ -444,19 +525,38 @@
     if (resumeAfterPanel === 'sleep') document.body.classList.add('show-again');
     dispatchEvent(new CustomEvent('panel-close', { detail: resumeAfterPanel }));
   });
-  const preview = (game) => () => {
+  // 短片預覽（唔計貼紙）
+  const vsel = $('#p-video');
+  for (const [game, label] of [['dino', '恐龍'], ['hero', '英雄'], ['rex', 'Super Rex']]) {
+    for (const id of Rewards.ENDINGS[game]) {
+      const o = document.createElement('option');
+      o.value = game + ':' + id;
+      o.textContent = label + '：' + Rewards.NAMES[game][id];
+      vsel.appendChild(o);
+    }
+  }
+  { const o = document.createElement('option'); o.value = 'boss:boss'; o.textContent = '秘密：怪獸大王'; vsel.appendChild(o); }
+  $('#p-video-play').addEventListener('click', () => {
+    const [game, id] = vsel.value.split(':');
     Sound.clear();
     panel.hidden = true;
     roundToken++;
     clearField();
     HeroGame.stop();
     RexGame.stop();
+    BossGame.stop();
     scene.classList.remove('is-night');
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done');
-    game.playVideo();
-  };
-  $('#p-hero-video').addEventListener('click', preview(HeroGame));
-  $('#p-rex-video').addEventListener('click', preview(RexGame));
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done');
+    if (game === 'dino') playSpecial(id);
+    else if (game === 'hero') HeroGame.playVideo(id);
+    else if (game === 'rex') RexGame.playVideo(id);
+    else BossGame.play();
+  });
+  $('#p-stickers-reset').addEventListener('click', () => {
+    if (!confirm('重設貼紙簿？（結局會由頭輪過）')) return;
+    Rewards.reset();
+    renderPanel();
+  });
   $('#p-rex-reset').addEventListener('click', () => {
     if (!confirm('重設 Super Rex 英文記錄？')) return;
     RexGame.resetStats();
@@ -474,6 +574,9 @@
     $('#p-rounds').textContent = progress.rounds;
     HeroGame.renderStats($('#p-hero-stats'));
     RexGame.renderStats($('#p-rex-stats'));
+    const NAME = { dino: '恐龍', hero: '英雄', rex: 'Super Rex' };
+    $('#p-stickers').textContent = Rewards.summary().map((r) => NAME[r.game] + ' ' + r.seen + '/3（玩咗 ' + r.plays + ' 次）').join('　') +
+      (Rewards.bossReady() ? '　· 秘密短片已解鎖' : '');
     $('#p-yue').textContent = st.yueVoice ? '✅ ' + st.yueVoice : '⚠️ 搵唔到廣東話語音';
     $('#p-yue-help').hidden = !!st.yueVoice;
     $('#p-en').textContent = st.enVoice ? '✅ ' + st.enVoice : '⚠️ 搵唔到英文語音（會用系統預設）';
@@ -529,6 +632,18 @@
       });
     }
   }
+  // 開發測試：index.html#demo=hero:cloud → 直接播嗰段短片（唔計貼紙）
+  const demo = /#demo=(\w+):?(\w*)/.exec(location.hash);
+  if (demo) setTimeout(() => {
+    const [, g, id] = demo;
+    if (g === 'dino') playSpecial(id);
+    else if (g === 'hero') HeroGame.playVideo(id);
+    else if (g === 'rex') RexGame.playVideo(id);
+    else if (g === 'boss') BossGame.play();
+    else if (g === 'heroplay') HeroGame.start();
+    else if (g === 'rexplay') RexGame.start();
+    else if (g === 'sticker') Rewards.celebrate('hero', id || 'cloud', 'yue');
+  }, 300);
   // 預先 load 錄音（AudioContext 未解鎖都可以 decode）
   Sound.loadRecordings();
 })();

@@ -87,8 +87,11 @@ const HeroGame = (() => {
       if (tk !== token) return;
     }
     cardsEl.replaceChildren();
-    // 獎勵短片：英雄打怪獸
-    await battle(tk);
+    // 獎勵短片：3 個結局輪流
+    const end = Rewards.next('hero');
+    await battle(tk, end);
+    if (tk !== token) return;
+    await Rewards.celebrate('hero', end, 'yue');
     if (tk !== token) return;
     // 英雄飛走
     stage.classList.add('fly');
@@ -97,27 +100,49 @@ const HeroGame = (() => {
     document.body.classList.add('hero-done');
   }
 
-  // ---------- 獎勵短片：打怪獸（~20 秒，冇閃光；Luca 撳怪獸可以額外發炮） ----------
+  // ---------- 獎勵短片：3 個結局（~20 秒，冇閃光；Luca 撳壞蛋可以額外攻擊） ----------
   let monsterEl = null;
-  const heroSvg = () => stage.querySelector('svg');
+  let fx = [];                        // 結局用嘅臨時元素，完咗一次過清
+  const screenEl = $('#hero-screen');
 
   function cleanupBattle() {
     document.body.classList.remove('battle');
+    screenEl.classList.remove('gloomy');
     if (monsterEl) monsterEl.remove();
     monsterEl = null;
-    document.querySelectorAll('.shot, .burst').forEach((e) => e.remove());
+    fx.forEach((e) => e.remove());
+    fx = [];
+    document.querySelectorAll('.shot, .burst, .beam').forEach((e) => e.remove());
+  }
+  function addFx(cls, markup, parent) {
+    const el = document.createElement('div');
+    el.className = cls;
+    if (markup) put(el, markup);
+    (parent || screenEl).appendChild(el);
+    if (!parent) fx.push(el);
+    return el;
   }
 
   function center(el) {
     const r = el.getBoundingClientRect();
     return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
   }
+  function burstAt(p) {
+    const b = document.createElement('div');
+    b.className = 'burst';
+    b.style.left = p.x + 'px';
+    b.style.top = p.y + 'px';
+    document.body.appendChild(b);
+    setTimeout(() => b.remove(), 700);
+  }
 
-  function shoot(onHit) {
-    if (!monsterEl) return;
+  // 愛心炮：由胸口飛去 target
+  function shoot(onHit, target) {
+    target = target || (monsterEl && monsterEl.querySelector('.m-body'));
+    if (!target) return;
     Sound.sfx.zap();
     const from = center(partEl('heart'));
-    const to = center(monsterEl.querySelector('.m-body'));
+    const to = center(target);
     const s = document.createElement('div');
     s.className = 'shot';
     put(s, HeroArt.heartShot());
@@ -126,14 +151,9 @@ const HeroGame = (() => {
     document.body.appendChild(s);
     const done = () => {
       s.remove();
-      if (!monsterEl) return;
-      const b = document.createElement('div');
-      b.className = 'burst';
-      b.style.left = to.x + 'px';
-      b.style.top = to.y + 'px';
-      document.body.appendChild(b);
-      setTimeout(() => b.remove(), 700);
-      restart(monsterEl.querySelector('.m-body'), 'hit');
+      if (!target.isConnected) return;
+      burstAt(to);
+      if (target.classList.contains('m-body')) restart(target, 'hit');
       if (onHit) onHit();
     };
     if (!s.animate) return done();
@@ -144,10 +164,41 @@ const HeroGame = (() => {
     ], { duration: 500, easing: 'ease-out' }).onfinish = done;
   }
 
+  // 光束（太陽光 / 磁力）：由胸口射去 target，一條直線閃一閃
+  function beam(target, kind, onHit) {
+    if (!target || !target.isConnected) return;
+    Sound.sfx.beam();
+    const from = center(partEl(kind === 'magnet' ? 'body' : 'heart'));
+    const to = center(target);
+    const len = Math.hypot(to.x - from.x, to.y - from.y);
+    const el = document.createElement('div');
+    el.className = 'beam ' + kind;
+    Object.assign(el.style, { left: from.x + 'px', top: from.y + 'px', width: len + 'px', transform: `rotate(${Math.atan2(to.y - from.y, to.x - from.x)}rad)` });
+    document.body.appendChild(el);
+    setTimeout(() => { burstAt(to); if (onHit) onHit(); }, 380);
+    setTimeout(() => el.remove(), 700);
+  }
+
   // 每一幕最少播咁耐（冇語音 / 語音好快都唔會趕）
   const sayMin = (items, ms) => Promise.all([Sound.say(items), wait(ms)]);
 
-  async function battle(tk) {
+  function battle(tk, id) {
+    if (id === 'cloud') return battleCloud(tk);
+    if (id === 'ufo') return battleUfo(tk);
+    return battleMonster(tk);
+  }
+
+  async function heroWins(tk, clip) {
+    stage.classList.add('powered');
+    Sound.sfx.hatch();
+    await sayMin([clip, { pause: 300 }], 2400);
+    if (tk !== token) return;
+    stage.classList.remove('powered');
+    document.body.classList.remove('battle');
+  }
+
+  // 結局 1：紫色怪獸（愛心炮）
+  async function battleMonster(tk) {
     document.body.classList.add('battle');
     monsterEl = document.createElement('div');
     monsterEl.id = 'monster';
@@ -155,7 +206,7 @@ const HeroGame = (() => {
     body.className = 'm-body';
     put(body, HeroArt.monster());
     monsterEl.appendChild(body);
-    $('#hero-screen').appendChild(monsterEl);
+    screenEl.appendChild(monsterEl);
     body.style.setProperty('--s', 1);
     // Luca 撳怪獸 = 額外發炮（純粹好玩，唔影響流程）
     monsterEl.addEventListener('pointerdown', (e) => { e.preventDefault(); if (tk === token && !monsterEl.classList.contains('friendly')) shoot(); });
@@ -175,8 +226,7 @@ const HeroGame = (() => {
     if (tk !== token) return;
 
     // 3. 愛心炮 ×3：每中一下，怪獸細一個碼
-    const sizes = [0.85, 0.7, 0.55];
-    for (const sz of sizes) {
+    for (const sz of [0.85, 0.7, 0.55]) {
       shoot(() => body.style.setProperty('--s', sz));
       await wait(900);
       if (tk !== token) return;
@@ -194,12 +244,85 @@ const HeroGame = (() => {
     monsterEl = null;
 
     // 5. 英雄勝利
-    stage.classList.add('powered');
-    Sound.sfx.hatch();
-    await sayMin(['battle_win', { pause: 300 }], 2400);
+    await heroWins(tk, 'battle_win');
+  }
+
+  // 結局 2：黑雲怪落大雨 → 太陽光 ×3 → 白雲 + 彩虹
+  async function battleCloud(tk) {
+    document.body.classList.add('battle');
+    const rb = addFx('rainbow-fx', EndArt.rainbow());
+    const rain = addFx('rain-fx');
+    const cl = addFx('cloud-fx enter', EndArt.cloud());
+    cl.style.setProperty('--dark', 1);
+    cl.addEventListener('pointerdown', (e) => { e.preventDefault(); if (tk === token && !cl.classList.contains('happy')) beam(cl, 'sun'); });
+    Sound.sfx.whoosh();
+    await wait(1500);
     if (tk !== token) return;
-    stage.classList.remove('powered');
-    document.body.classList.remove('battle');
+    rain.classList.add('on');
+    screenEl.classList.add('gloomy');
+    await sayMin(['cloud_alarm', { pause: 200 }], 2800);
+    if (tk !== token) return;
+
+    restart(stage, 'ready');
+    Sound.sfx.whoosh();
+    await sayMin(['cloud_go', { pause: 100 }], 2200);
+    if (tk !== token) return;
+
+    for (const d of [0.66, 0.33, 0]) {
+      beam(cl, 'sun', () => { cl.style.setProperty('--dark', d); rain.style.opacity = d; restart(cl, 'hit'); });
+      await wait(1000);
+      if (tk !== token) return;
+    }
+    rain.classList.remove('on');
+    screenEl.classList.remove('gloomy');
+    cl.classList.add('happy');
+    rb.classList.add('show');
+    Sound.sfx.hatch();
+    await sayMin(['cloud_happy', { pause: 200 }], 2800);
+    if (tk !== token) return;
+    await heroWins(tk, 'cloud_win');
+  }
+
+  // 結局 3：外星人飛碟吸走大廈 → 磁力 ×3 拉返落嚟 → 外星人講拜拜飛走
+  async function battleUfo(tk) {
+    document.body.classList.add('battle');
+    const scene = addFx('ufo-scene');
+    const ufo = addFx('ufo-fx enter', EndArt.ufo(), scene);
+    const bd = addFx('building-fx', EndArt.building(), scene);
+    ufo.addEventListener('pointerdown', (e) => { e.preventDefault(); if (tk === token && !ufo.classList.contains('friendly')) beam(bd, 'magnet'); });
+    Sound.sfx.whoosh();
+    await wait(1500);
+    if (tk !== token) return;
+    ufo.classList.add('beaming');
+    bd.style.setProperty('--lift', 1);
+    bd.classList.add('wobble');
+    Sound.sfx.whoosh();
+    await sayMin(['ufo_alarm', { pause: 200 }], 2800);
+    if (tk !== token) return;
+
+    restart(stage, 'ready');
+    Sound.sfx.whoosh();
+    await sayMin(['ufo_go', { pause: 100 }], 2200);
+    if (tk !== token) return;
+
+    for (const l of [0.66, 0.33, 0]) {
+      beam(bd, 'magnet', () => bd.style.setProperty('--lift', l));
+      await wait(1000);
+      if (tk !== token) return;
+    }
+    ufo.classList.remove('beaming');
+    bd.classList.remove('wobble');
+    Sound.sfx.thump();
+    restart($('#scene'), 'shake');
+    await wait(500);
+    ufo.classList.add('friendly');
+    await sayMin(['ufo_bye', { pause: 200 }], 2800);
+    if (tk !== token) return;
+    ufo.classList.add('leave');
+    Sound.sfx.whoosh();
+    await wait(1400);
+    if (tk !== token) return;
+    await heroWins(tk, 'ufo_win');
   }
 
   function praise() { return 'hero_yes_' + (1 + Math.floor(Math.random() * 3)); }
@@ -335,8 +458,8 @@ const HeroGame = (() => {
   }
   function resetStats() { stats = {}; saveStats(); }
 
-  // 家長區預覽：淨係播打怪獸短片
-  async function playVideo() {
+  // 預覽 / 撳貼紙重播：淨係播短片（唔計貼紙）
+  async function playVideo(id) {
     const tk = ++token;
     Sound.clear();
     cleanupBattle();
@@ -346,7 +469,7 @@ const HeroGame = (() => {
     cardsEl.replaceChildren();
     allParts().forEach((p) => p.classList.remove('off', 'pop', 'hint', 'wiggle'));
     await wait(300);
-    await battle(tk);
+    await battle(tk, id);
     if (tk !== token) return;
     stage.classList.add('fly');
     await Sound.say([{ pause: 300 }, 'hero_bye']);

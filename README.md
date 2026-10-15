@@ -1,6 +1,6 @@
 # 🦕 恐龍搵蛋（Dino Eggs）
 
-一個 app 三個 game，開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文），後兩個見下面。
+一個 app 三個 game（每個 game 3 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文），後兩個見下面。
 
 **恐龍搵蛋：** 幫恐龍媽媽搵蛋：每撳一隻蛋，蛋就飛入巢，遊戲先用廣東話、再用英文讀出數字（「一……one」）。搵齊之後蛋會孵出恐龍 BB，再讀出總數同一句讚佢嘅說話。
 
@@ -29,6 +29,10 @@ js/animals.js           ★ Super Rex 嘅英文動物表（換字改呢度）
 js/rex.js               Super Rex 遊戲流程
 js/rex-art.js           Super Rex + 8 隻動物 SVG
 css/rex.css             Super Rex 畫面樣式 + Andika 字體
+js/rewards.js           結局輪流 + 貼紙簿 + 秘密短片解鎖
+js/endings-art.js       結局短片 SVG（黑雲怪、飛碟、龍捲風、隕石、怪獸大王、貼紙）
+js/boss.js              秘密短片：英雄 + Super Rex 大戰怪獸大王
+css/endings.css         結局短片 + 貼紙簿樣式
 fonts/                  楷書 + Andika 字體（只抽咗用到嘅字）
 sw.js                   Service Worker（離線）
 manifest.webmanifest    加入主畫面 / 安裝 app
@@ -114,6 +118,25 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 - 改完記得 `js/version.js` +1
 
 
+
+## 🎬 結局短片 + 貼紙簿
+
+每個 game 有 3 個唔同結局，等 Luca 有動力玩多幾次：
+
+| Game | 結局 1 | 結局 2 | 結局 3 |
+|---|---|---|---|
+| 🦖 恐龍搵蛋 | 🌈 彩虹恐龍BB | 👑 金色恐龍BB | ✨ 星星恐龍BB |
+| 🤖 英雄裝備站 | 紫色怪獸（愛心炮） | ☁️ 黑雲怪落大雨 → 太陽光 → 白雲 + 彩虹 | 🛸 外星人吸走大廈 → 磁力手拉返落嚟 → 外星人拜拜 |
+| 🦖🦸 Super Rex | 紫色怪獸（大吼） | 🌪️ 龍捲風吹起動物 → 擰尾 → 動物「boing」跌返落嚟 | ☄️ 大隕石 → Super Rex 跳上去頂爆 → 變星星 |
+
+- 恐龍搵蛋：一節完咗會出一隻金色大蛋，搖三下孵出特別恐龍BB，之後佢會喺巢中間一齊瞓覺
+- **次序**：頭 3 次一定 1 → 2 → 3（保證全部睇到），之後隨機（唔會連續同一個）
+- **貼紙簿**：主選單每張卡下面 3 格，未攞到係「?」。睇完一個新結局 → 大貼紙彈出嚟 +「你攞到一張新貼紙！」。撳已攞到嘅貼紙 = 再睇嗰段短片
+- **秘密短片**：英雄 + Super Rex 6 張貼紙集齊，主選單頂部嘅怪獸大王掣解鎖 → 機械人英雄同 Super Rex 合體大戰怪獸大王（約 30 秒，廣東話 + 英文）。未解鎖撳落去會講「集齊六張…就可以睇」
+- 冇閃光；短片入面撳壞蛋可以額外攻擊（純粹好玩）
+- **家長區「短片同貼紙簿」**：睇每個 game 集咗幾多張、揀任何一段短片預覽（唔計貼紙）、重設貼紙簿
+- 開發測試：網址加 `#demo=hero:cloud`（或 `rex:meteor`、`dino:gold`、`boss:`）直接播嗰段
+
 ---
 
 ## 本機試玩（電腦）
@@ -184,7 +207,7 @@ python -m http.server 8765
 
 ---
 
-## 錄音清單（138 個檔）
+## 錄音清單（170 個檔）
 
 放喺 `audio/` folder，**檔名要一模一樣**（細楷、底線、`.mp3`）。唔使一次錄晒，錄咗邊個就用邊個，未錄嘅照用內置語音。
 
@@ -407,6 +430,63 @@ python -m http.server 8765
 | `rbat_go.mp3` | English | Super Rex, big roar! |
 | `rbat_sorry.mp3` | English | Sorry! I’ll be nice now. |
 | `rbat_win.mp3` | English | Hooray! Super Rex saves the day! |
+
+**英雄結局：黑雲怪 / 外星人**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `cloud_alarm.mp3` | 廣東話 | 哎呀！黑雲怪落大雨，個城市濕晒！ |
+| `cloud_go.mp3` | 廣東話 | 英雄出動！太陽光，發射！ |
+| `cloud_happy.mp3` | 廣東話 | 黑雲變白雲！仲有彩虹添！ |
+| `cloud_win.mp3` | 廣東話 | 好嘢！天晴喇！ |
+| `ufo_alarm.mp3` | 廣東話 | 哎呀！外星人用飛碟吸走大廈！ |
+| `ufo_go.mp3` | 廣東話 | 英雄出動！磁力手，拉返落嚟！ |
+| `ufo_bye.mp3` | 廣東話 | 對唔住呀，我玩吓啫！拜拜！ |
+| `ufo_win.mp3` | 廣東話 | 大廈返嚟喇！好嘢！ |
+
+**Super Rex 結局：龍捲風 / 隕石**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `torn_alarm.mp3` | English | Oh no! A big tornado! |
+| `torn_go.mp3` | English | Super Rex, tail spin! |
+| `torn_safe.mp3` | English | Boing! Boing! Everyone is safe! |
+| `met_alarm.mp3` | English | Oh no! A big rock from space! |
+| `met_go.mp3` | English | Super Rex, jump! |
+| `met_stars.mp3` | English | Wow! Shooting stars! |
+
+**恐龍搵蛋：特別恐龍BB**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `yue_sp_star.mp3` | 廣東話 | 係星星恐龍BB！ |
+| `yue_sp_gold.mp3` | 廣東話 | 係金色恐龍BB！ |
+| `yue_sp_rainbow.mp3` | 廣東話 | 係彩虹恐龍BB！ |
+| `yue_special.mp3` | 廣東話 | 咦？有隻特別嘅蛋！ |
+| `en_special.mp3` | English | A special egg! |
+| `en_sp_rainbow.mp3` | English | A rainbow baby dino! |
+| `en_sp_gold.mp3` | English | A golden baby dino! |
+| `en_sp_star.mp3` | English | A starry baby dino! |
+
+**貼紙**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `sticker_yue.mp3` | 廣東話 | 你攞到一張新貼紙！ |
+| `sticker_en.mp3` | English | You got a new sticker! |
+| `unlock_yue.mp3` | 廣東話 | 集齊晒！秘密短片解鎖咗！ |
+| `unlock_en.mp3` | English | Secret movie unlocked! |
+| `locked_yue.mp3` | 廣東話 | 集齊六張英雄同Super Rex貼紙，就可以睇秘密短片！ |
+
+**秘密短片：怪獸大王**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `boss_alarm.mp3` | 廣東話 | 嘩！怪獸大王嚟咗！ |
+| `boss_team.mp3` | 廣東話 | 機械人英雄同Super Rex，一齊出動！ |
+| `boss_sorry.mp3` | 廣東話 | 對唔住！我哋做好朋友啦！ |
+| `boss_win.mp3` | 廣東話 | 我哋贏咗喇！ |
+| `boss_win_en.mp3` | English | We did it! Hooray! |
 
 ---
 

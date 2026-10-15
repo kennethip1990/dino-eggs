@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/hero.css">
   <link rel="stylesheet" href="css/rex.css">
+  <link rel="stylesheet" href="css/endings.css">
 </head>
 <body data-screen="menu">
   <div id="scene">
@@ -22,9 +23,20 @@
 
     <!-- 主選單：揀 game（撳 = 解鎖聲音） -->
     <div id="menu-screen">
-      <button id="go-dino" class="choose" aria-label="恐龍搵蛋"></button>
-      <button id="go-hero" class="choose" aria-label="英雄裝備站"></button>
-      <button id="go-rex" class="choose" aria-label="Super Rex"></button>
+      <div class="card-wrap"><button id="go-dino" class="choose" aria-label="恐龍搵蛋"></button><div class="stickers" data-game="dino"></div></div>
+      <div class="card-wrap"><button id="go-hero" class="choose" aria-label="英雄裝備站"></button><div class="stickers" data-game="hero"></div></div>
+      <div class="card-wrap"><button id="go-rex" class="choose" aria-label="Super Rex"></button><div class="stickers" data-game="rex"></div></div>
+      <!-- 秘密短片：集齊英雄 + Super Rex 6 張貼紙先開到 -->
+      <button id="go-boss" class="locked" aria-label="秘密短片"></button>
+    </div>
+
+    <!-- 秘密短片：機械人英雄 + Super Rex 大戰怪獸大王 -->
+    <div id="boss-screen">
+      <div id="boss-city"></div>
+      <div id="boss-robot"></div>
+      <div id="boss-rex"></div>
+      <div id="boss-monster"><div class="m-body"></div></div>
+      <button id="boss-again" aria-label="返主選單"></button>
     </div>
 
     <!-- 英雄裝備站 -->
@@ -63,6 +75,9 @@
     <button id="again-btn" aria-label="再玩"></button>
   </div>
 
+  <!-- 攞到新貼紙 -->
+  <div id="sticker-pop" hidden><div class="sp-art"></div></div>
+
   <!-- 家長掣：長按 3 秒 -->
   <button id="parent-btn" aria-label="家長設定（長按三秒）">
     <span id="parent-icon"></span>
@@ -85,14 +100,22 @@
         <h3>英雄認字記錄（第一下就啱 / 次數）</h3>
         <table class="stats"><thead><tr><th>字</th><th>聽字揀卡</th><th>睇字搵位</th></tr></thead><tbody id="p-hero-stats"></tbody></table>
         <p class="note">★ = 老師未剔，會出多啲。「睇字搵位」先係真正自己睇字，填工作紙「家長評估」可以參考呢欄。</p>
-        <div class="row"><button id="p-hero-video">▶ 睇打怪獸短片</button> <button id="p-hero-reset" class="danger">重設認字記錄</button></div>
+        <div class="row"><button id="p-hero-reset" class="danger">重設認字記錄</button></div>
       </section>
 
       <section>
         <h3>Super Rex 英文記錄（第一下就啱 / 次數）</h3>
         <table class="stats"><thead><tr><th>動物</th><th>聽音撳圖</th><th>睇字撳圖</th><th>數腳</th></tr></thead><tbody id="p-rex-stats"></tbody></table>
         <p class="note">「睇字撳圖」= 自己睇英文字（工作紙 Look, read and match）；「數腳」= two legs / four legs。</p>
-        <div class="row"><button id="p-rex-video">▶ 睇 Super Rex 短片</button> <button id="p-rex-reset" class="danger">重設英文記錄</button></div>
+        <div class="row"><button id="p-rex-reset" class="danger">重設英文記錄</button></div>
+      </section>
+
+      <section>
+        <h3>短片同貼紙簿</h3>
+        <div class="row" id="p-stickers"></div>
+        <p class="note">每個 game 3 個結局：頭 3 次跟次序（全部睇到），之後隨機。睇完新結局攞貼紙；主選單撳貼紙可以再睇。英雄 + Super Rex 6 張集齊 → 主選單頂嘅秘密短片解鎖。</p>
+        <div class="row"><select id="p-video"></select> <button id="p-video-play">▶ 播</button></div>
+        <div class="row"><button id="p-stickers-reset" class="danger">重設貼紙簿</button></div>
       </section>
 
       <section>
@@ -130,9 +153,12 @@
   <script src="js/art.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/hero-art.js"></script>
-  <script src="js/hero.js"></script>
   <script src="js/rex-art.js"></script>
+  <script src="js/endings-art.js"></script>
+  <script src="js/rewards.js"></script>
+  <script src="js/hero.js"></script>
   <script src="js/rex.js"></script>
+  <script src="js/boss.js"></script>
   <script src="js/game.js"></script>
 </body>
 </html>

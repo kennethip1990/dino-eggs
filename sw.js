@@ -3,9 +3,10 @@ importScripts('js/version.js', 'js/words.js', 'js/animals.js', 'js/voices.js');
 const CACHE = 'dino-eggs-v' + self.APP_VERSION;
 const CORE = [
   './', 'index.html', 'css/style.css', 'manifest.webmanifest',
-  'css/hero.css', 'css/rex.css', 'fonts/wenkai-subset.woff2', 'fonts/andika-subset.woff2',
+  'css/hero.css', 'css/rex.css', 'css/endings.css', 'fonts/wenkai-subset.woff2', 'fonts/andika-subset.woff2',
   'js/version.js', 'js/words.js', 'js/animals.js', 'js/voices.js', 'js/art.js', 'js/audio.js',
-  'js/hero-art.js', 'js/hero.js', 'js/rex-art.js', 'js/rex.js', 'js/game.js',
+  'js/hero-art.js', 'js/hero.js', 'js/rex-art.js', 'js/rex.js',
+  'js/endings-art.js', 'js/rewards.js', 'js/boss.js', 'js/game.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'
 ];
 

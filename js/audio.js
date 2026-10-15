@@ -205,7 +205,9 @@ const Sound = (() => {
     thump() { tone(160, 60, 0.35, 'sine', 0.16); },
     whoosh(){ tone(260, 900, 0.5, 'sine', 0.05); },
     roar()  { tone(210, 80, 0.7, 'sawtooth', 0.045); tone(150, 60, 0.7, 'triangle', 0.12); },
-    bubble(){ tone(700, 1500, 0.12, 'sine', 0.1); tone(1100, 1800, 0.1, 'sine', 0.06, 0.08); }
+    bubble(){ tone(700, 1500, 0.12, 'sine', 0.1); tone(1100, 1800, 0.1, 'sine', 0.06, 0.08); },
+    boing() { tone(180, 520, 0.18, 'sine', 0.12); tone(520, 260, 0.25, 'sine', 0.08, 0.16); },
+    beam()  { tone(880, 1320, 0.4, 'sine', 0.05); tone(660, 990, 0.4, 'triangle', 0.03); }
   };
 
   return {

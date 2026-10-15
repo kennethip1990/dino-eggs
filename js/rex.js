@@ -127,8 +127,11 @@ const RexGame = (() => {
     play.replaceChildren();
     // 數完腳嘅動物返去農場
     saved.querySelectorAll('.away').forEach((el) => el.classList.remove('away'));
-    // 獎勵短片
-    await battle(tk);
+    // 獎勵短片：3 個結局輪流
+    const end = Rewards.next('rex');
+    await battle(tk, end);
+    if (tk !== token) return;
+    await Rewards.celebrate('rex', end, 'en');
     if (tk !== token) return;
     await finale(tk);
   }
@@ -325,24 +328,46 @@ const RexGame = (() => {
     restart(pen, 'got');
   }
 
-  // ---------- 獎勵短片：Super Rex 吼走怪獸（~20 秒） ----------
+  // ---------- 獎勵短片：3 個結局（~20 秒） ----------
   let monsterEl = null;
+  let fx = [];
   function cleanupBattle() {
     document.body.classList.remove('rex-battle');
     if (monsterEl) monsterEl.remove();
     monsterEl = null;
+    fx.forEach((e) => e.remove());
+    fx = [];
+    saved.classList.remove('scared', 'whirl', 'drop');
     document.querySelectorAll('.roar-wave, .burst').forEach((e) => e.remove());
+  }
+  function addFx(cls, markup) {
+    const el = document.createElement('div');
+    el.className = cls;
+    if (markup) put(el, markup);
+    screen.appendChild(el);
+    fx.push(el);
+    return el;
   }
   function center(el) {
     const r = el.getBoundingClientRect();
     return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
   }
+  function burstAt(p) {
+    const b = document.createElement('div');
+    b.className = 'burst';
+    b.style.left = p.x + 'px';
+    b.style.top = p.y + 'px';
+    document.body.appendChild(b);
+    setTimeout(() => b.remove(), 700);
+  }
 
-  function roarShot(onHit) {
-    if (!monsterEl) return;
+  // 吼聲波：由 Super Rex 個頭飛去 target
+  function roarShot(onHit, target) {
+    target = target || (monsterEl && monsterEl.querySelector('.m-body'));
+    if (!target || !target.isConnected) return;
     roar(true);
     const from = center(stage.querySelector('.rex-head'));
-    const to = center(monsterEl.querySelector('.m-body'));
+    const to = center(target);
     const w = document.createElement('div');
     w.className = 'roar-wave';
     put(w, RexArt.roarWave());
@@ -352,14 +377,9 @@ const RexGame = (() => {
     document.body.appendChild(w);
     const done = () => {
       w.remove();
-      if (!monsterEl) return;
-      const b = document.createElement('div');
-      b.className = 'burst';
-      b.style.left = to.x + 'px';
-      b.style.top = to.y + 'px';
-      document.body.appendChild(b);
-      setTimeout(() => b.remove(), 700);
-      restart(monsterEl.querySelector('.m-body'), 'hit');
+      if (!target.isConnected) return;
+      burstAt(to);
+      if (target.classList.contains('m-body')) restart(target, 'hit');
       if (onHit) onHit();
     };
     if (!w.animate) return done();
@@ -369,7 +389,24 @@ const RexGame = (() => {
     ], { duration: 550, easing: 'ease-out' }).onfinish = done;
   }
 
-  async function battle(tk) {
+  function battle(tk, id) {
+    if (id === 'tornado') return battleTornado(tk);
+    if (id === 'meteor') return battleMeteor(tk);
+    return battleMonster(tk);
+  }
+
+  async function rexWins(tk) {
+    stage.classList.add('powered');
+    saved.classList.add('cheer');
+    Sound.sfx.hatch();
+    await sayMin(['rbat_win', { pause: 300 }], 2400);
+    if (tk !== token) return;
+    stage.classList.remove('powered');
+    document.body.classList.remove('rex-battle');
+  }
+
+  // 結局 1：紫色怪獸（大吼）
+  async function battleMonster(tk) {
     document.body.classList.add('rex-battle');
     monsterEl = document.createElement('div');
     monsterEl.id = 'monster';
@@ -414,15 +451,121 @@ const RexGame = (() => {
     if (tk !== token) return;
     monsterEl.remove();
     monsterEl = null;
+    await rexWins(tk);
+  }
 
-    // 5. 勝利
-    stage.classList.add('powered');
-    saved.classList.add('cheer');
-    Sound.sfx.hatch();
-    await sayMin(['rbat_win', { pause: 300 }], 2400);
+  // 結局 2：龍捲風吹起啲動物 → 擰尾 ×3 → 龍捲風冇咗，動物「boing」跌返落嚟
+  async function battleTornado(tk) {
+    document.body.classList.add('rex-battle');
+    const t = addFx('tornado-fx enter', EndArt.tornado());
+    t.style.setProperty('--s', 1);
+    t.addEventListener('pointerdown', (e) => { e.preventDefault(); if (tk === token && !t.classList.contains('gone')) roarShot(null, t); });
+    Sound.sfx.whoosh();
+    await wait(1400);
     if (tk !== token) return;
-    stage.classList.remove('powered');
-    document.body.classList.remove('rex-battle');
+    saved.classList.add('whirl');
+    Sound.sfx.whoosh();
+    await sayMin(['torn_alarm', { pause: 200 }], 2600);
+    if (tk !== token) return;
+
+    restart(stage, 'ready');
+    await sayMin(['torn_go', { pause: 100 }], 2000);
+    if (tk !== token) return;
+
+    for (const sz of [0.72, 0.45, 0.2]) {
+      restart(stage, 'spin');
+      Sound.sfx.whoosh();
+      await wait(450);
+      roarShot(() => t.style.setProperty('--s', sz), t);
+      await wait(900);
+      if (tk !== token) return;
+    }
+    t.classList.add('gone');
+    await wait(500);
+    // 動物逐隻跌返落嚟
+    saved.classList.remove('whirl');
+    saved.classList.add('drop');
+    [...saved.children].forEach((el, i) => setTimeout(() => { if (tk === token) Sound.sfx.boing(); }, 250 + i * 160));
+    await sayMin(['torn_safe', { pause: 200 }], 2800);
+    if (tk !== token) return;
+    saved.classList.remove('drop');
+    await rexWins(tk);
+  }
+
+  // 結局 3：大隕石飛埋嚟 → Super Rex 跳上去用頭頂 ×3 → 爆開變星星
+  async function battleMeteor(tk) {
+    document.body.classList.add('rex-battle');
+    const m = addFx('meteor-fx enter', EndArt.meteor());
+    m.addEventListener('pointerdown', (e) => { e.preventDefault(); if (tk === token) restart(m, 'hit'); });
+    Sound.sfx.whoosh();
+    await wait(1800);
+    if (tk !== token) return;
+    saved.classList.add('scared');
+    await sayMin(['met_alarm', { pause: 200 }], 2600);
+    if (tk !== token) return;
+
+    restart(stage, 'ready');
+    await sayMin(['met_go', { pause: 100 }], 1800);
+    if (tk !== token) return;
+
+    for (let i = 0; i < 3; i++) {
+      await jumpAt(m, i === 2 ? 1 : 0.8, () => {
+        Sound.sfx.thump();
+        burstAt(center(m));
+        if (i < 2) restart(m, 'hit');
+        else starBurst(m, tk);
+      });
+      if (tk !== token) return;
+      await wait(250);
+    }
+    saved.classList.remove('scared');
+    await sayMin(['met_stars', { pause: 200 }], 2800);
+    if (tk !== token) return;
+    await rexWins(tk);
+  }
+
+  // Super Rex 跳去 target 個方向，頂一下再跌返落嚟
+  function jumpAt(target, reach, onBonk) {
+    const svg = stage.querySelector('svg');
+    const from = center(stage.querySelector('.rex-head'));
+    const to = center(target);
+    const dx = (to.x - from.x) * reach * 0.75, dy = (to.y - from.y) * reach * 0.9;
+    roar(true);
+    setTimeout(onBonk, 380);
+    if (!svg.animate) return wait(800);
+    return new Promise((r) => {
+      svg.animate([
+        { transform: 'translate(0,0)' },
+        { transform: `translate(${dx}px, ${dy}px) rotate(-8deg)`, offset: 0.45 },
+        { transform: `translate(${dx * 0.9}px, ${dy * 0.85}px)`, offset: 0.55 },
+        { transform: 'translate(0,0)' }
+      ], { duration: 850, easing: 'ease-in-out' }).onfinish = r;
+      setTimeout(r, 1100);
+    });
+  }
+
+  // 隕石爆開：星星四散，再跌落農場
+  function starBurst(m, tk) {
+    const c = center(m);
+    m.classList.add('gone');
+    Sound.sfx.hatch();
+    const cols = ['#ffd36e', '#ffb3c7', '#9fd3ff', '#a6e3a0', '#c7a3ff'];
+    const farm = $('#rex-farm').getBoundingClientRect();
+    for (let i = 0; i < 10; i++) {
+      const s = addFx('star-fx', EndArt.star(cols[i % cols.length]));
+      s.style.left = c.x + 'px';
+      s.style.top = c.y + 'px';
+      if (!s.animate) continue;
+      const ang = (i / 10) * Math.PI * 2;
+      const ox = Math.cos(ang) * 160, oy = Math.sin(ang) * 120;
+      const lx = farm.left + farm.width * (0.08 + 0.84 * Math.random()) - c.x;
+      const ly = farm.top + farm.height * (0.15 + 0.3 * Math.random()) - c.y;
+      s.animate([
+        { transform: 'translate(0,0) scale(.3) rotate(0)' },
+        { transform: `translate(${ox}px, ${oy}px) scale(1.2) rotate(180deg)`, offset: 0.35 },
+        { transform: `translate(${lx}px, ${ly}px) scale(.8) rotate(360deg)` }
+      ], { duration: 1800 + i * 60, easing: 'ease-in-out', fill: 'forwards' });
+    }
   }
 
   againBtn.addEventListener('click', () => { if (window.App) App.goHome(); });
@@ -447,14 +590,14 @@ const RexGame = (() => {
   }
   function resetStats() { stats = {}; saveStats(); }
 
-  // 家長區預覽：淨係播打怪獸短片
-  async function playVideo() {
+  // 預覽 / 撳貼紙重播：淨係播短片（唔計貼紙）
+  async function playVideo(id) {
     const tk = ++token;
     Sound.clear();
     reset();
     for (const a of shuffle(unit.animals).slice(0, 5)) saved.appendChild(savedAnimal(a));
     await wait(300);
-    await battle(tk);
+    await battle(tk, id);
     if (tk !== token) return;
     await finale(tk);
   }
