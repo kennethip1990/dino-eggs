@@ -8,18 +8,25 @@ const Rewards = (() => {
   const $ = (s) => document.querySelector(s);
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const put = (el, markup) => el.replaceChildren(document.createRange().createContextualFragment(markup));
-  const ENDINGS = { dino: ['rainbow', 'gold', 'star'], hero: ['monster', 'cloud', 'ufo'], rex: ['monster', 'tornado', 'meteor'] };
+  const ENDINGS = { dino: ['rainbow', 'gold', 'star'], hero: ['monster', 'cloud', 'ufo'], rex: ['monster', 'tornado', 'meteor'], snake: ['heart', 'dragon', 'monster'] };
   const NAMES = {
     dino: { rainbow: '彩虹恐龍BB', gold: '金色恐龍BB', star: '星星恐龍BB' },
     hero: { monster: '紫色怪獸', cloud: '黑雲怪', ufo: '搗蛋外星人' },
-    rex: { monster: '紫色怪獸', tornado: '龍捲風', meteor: '大隕石' }
+    rex: { monster: '紫色怪獸', tornado: '龍捲風', meteor: '大隕石' },
+    snake: { heart: '愛心蛇', dragon: '金色飛龍', monster: '字母炮打怪獸' }
   };
 
   const KEY = 'rewards.v1';
-  const fresh = () => ({ plays: { dino: 0, hero: 0, rex: 0 }, seen: { dino: [], hero: [], rex: [] }, last: {}, unlockShown: false });
+  const fresh = () => ({ plays: { dino: 0, hero: 0, rex: 0, snake: 0 }, seen: { dino: [], hero: [], rex: [], snake: [] }, last: {}, unlockShown: false });
   let st = load();
   function load() {
-    try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); return s && s.seen ? Object.assign(fresh(), s) : fresh(); }
+    try {
+      const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (!s || !s.seen) return fresh();
+      const f = fresh();
+      // 舊版冇新 game 嘅格 → 補返
+      return Object.assign(f, s, { plays: Object.assign(f.plays, s.plays), seen: Object.assign(f.seen, s.seen) });
+    }
     catch (e) { return fresh(); }
   }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }

@@ -131,7 +131,7 @@ const EndArt = (() => {
   // ---------- 貼紙 ----------
   // 將一個完整 <svg> 塞入貼紙入面（nested svg）
   const nest = (svg, x, y, w, h) => svg.replace('<svg ', `<svg x="${x}" y="${y}" width="${w}" height="${h}" `);
-  const BG = { hero: '#d6e4ff', rex: '#d6f5cd', dino: '#fff0d6' };
+  const BG = { hero: '#d6e4ff', rex: '#d6f5cd', dino: '#fff0d6', snake: '#ffe3ef' };
   function sticker(game, id) {
     let inner;
     if (game === 'hero' && id === 'monster') inner = nest(HeroArt.monster(), 14, 16, 72, 72);
@@ -140,6 +140,9 @@ const EndArt = (() => {
     else if (game === 'rex' && id === 'monster') inner = nest(RexArt.rex(), 6, 14, 56, 56) + nest(HeroArt.monster(), 48, 40, 44, 44);
     else if (game === 'rex' && id === 'tornado') inner = nest(tornado().replace('class="t-angry"', 'class="t-angry" display="none"'), 24, 10, 52, 76);
     else if (game === 'rex' && id === 'meteor') inner = nest(star(), 14, 14, 34, 34) + nest(star('#ffb3c7'), 54, 22, 28, 28) + nest(star('#9fd3ff'), 32, 50, 34, 34);
+    else if (game === 'snake' && id === 'heart') inner = nest(SnakeArt.heart(), 8, 8, 84, 84);
+    else if (game === 'snake' && id === 'dragon') inner = nest(star(), 58, 10, 28, 28) + nest(SnakeArt.dragon(), 6, 12, 84, 84);
+    else if (game === 'snake' && id === 'monster') inner = nest(SnakeArt.shooter(), 2, 10, 70, 70) + nest(HeroArt.monster().replace('class="m-angry"', 'class="m-angry" display="none"'), 50, 36, 42, 42);
     else if (game === 'dino') inner = nest(Art.specialBaby(id, 'trex'), 16, 12, 68, 75);
     return `<svg viewBox="0 0 100 100" aria-hidden="true">
       <circle cx="50" cy="50" r="46" fill="${BG[game]}" stroke="#fff" stroke-width="6"/>

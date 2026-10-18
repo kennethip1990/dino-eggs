@@ -20,6 +20,8 @@ const groups = [
   ['英雄結局：黑雲怪 / 外星人', /^(cloud|ufo)_/],
   ['Super Rex 結局：龍捲風 / 隕石', /^(torn|met)_/],
   ['恐龍搵蛋：特別恐龍BB', /_(special|sp_\w+)$/],
+  ['ABC 貪食蛇：字母', /^ltr_/],
+  ['ABC 貪食蛇：句子 + 結局', /^snk_/],
   ['貼紙', /^(sticker|unlock|locked)_/],
   ['秘密短片：怪獸大王', /^boss_/]
 ];

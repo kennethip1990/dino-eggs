@@ -75,6 +75,24 @@
   clips.rbat_sorry = { lang: 'en', text: 'Sorry! I’ll be nice now.' };
   clips.rbat_win   = { lang: 'en', text: 'Hooray! Super Rex saves the day!' };
   clips.rex_bye    = { lang: 'en', text: 'Thank you, Luca! See you next time!' };
+  // ---- ABC 貪食蛇（全英文）----
+  for (let i = 0; i < 26; i++) clips['ltr_' + String.fromCharCode(97 + i)] = { lang: 'en', text: String.fromCharCode(65 + i) };
+  clips.snk_hi      = { lang: 'en', text: 'Hi Luca! I’m Sunny the snake. I’m so hungry!' };
+  clips.snk_intro   = { lang: 'en', text: 'Let’s eat the letters in order!' };
+  clips.snk_find    = { lang: 'en', text: 'Find' };
+  clips.snk_yum_1   = { lang: 'en', text: 'Yum!' };
+  clips.snk_yum_2   = { lang: 'en', text: 'Yummy!' };
+  clips.snk_yum_3   = { lang: 'en', text: 'Crunch, crunch!' };
+  clips.snk_sing    = { lang: 'en', text: 'Look at my letters! Let’s read them!' };
+  clips.snk_done    = { lang: 'en', text: 'Well done, Luca! My tummy is full!' };
+  clips.snk_heart_1 = { lang: 'en', text: 'I can draw a picture!' };
+  clips.snk_heart_2 = { lang: 'en', text: 'A big heart! I love letters!' };
+  clips.snk_drg_1   = { lang: 'en', text: 'Wow! A magic star!' };
+  clips.snk_drg_2   = { lang: 'en', text: 'I’m a flying dragon!' };
+  clips.snk_drg_3   = { lang: 'en', text: 'That was so much fun!' };
+  clips.snk_mon_1   = { lang: 'en', text: 'Oh no! The monster wants my letters!' };
+  clips.snk_mon_2   = { lang: 'en', text: 'Letter power, go!' };
+  clips.snk_mon_3   = { lang: 'en', text: 'Hooray! My letters are safe!' };
   // ---- 結局短片 ----
   // 英雄（廣東話）
   clips.cloud_alarm = { lang: 'yue', text: '哎呀！黑雲怪落大雨，個城市濕晒！' };

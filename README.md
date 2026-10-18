@@ -1,6 +1,6 @@
 # 🦕 恐龍搵蛋（Dino Eggs）
 
-一個 app 三個 game（每個 game 3 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文），後兩個見下面。
+一個 app 四個 game（每個 game 3 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文）、🐍 **ABC 貪食蛇**（學英文字母），後三個見下面。
 
 **恐龍搵蛋：** 幫恐龍媽媽搵蛋：每撳一隻蛋，蛋就飛入巢，遊戲先用廣東話、再用英文讀出數字（「一……one」）。搵齊之後蛋會孵出恐龍 BB，再讀出總數同一句讚佢嘅說話。
 
@@ -33,6 +33,9 @@ js/rewards.js           結局輪流 + 貼紙簿 + 秘密短片解鎖
 js/endings-art.js       結局短片 SVG（黑雲怪、飛碟、龍捲風、隕石、怪獸大王、貼紙）
 js/boss.js              秘密短片：英雄 + Super Rex 大戰怪獸大王
 css/endings.css         結局短片 + 貼紙簿樣式
+js/snake.js             ABC 貪食蛇（canvas 遊戲 + 3 個結局）
+js/snake-art.js         貪食蛇主選單卡 + 貼紙 SVG
+css/snake.css           貪食蛇畫面 + 主選單 4 張卡排位
 fonts/                  楷書 + Andika 字體（只抽咗用到嘅字）
 sw.js                   Service Worker（離線）
 manifest.webmanifest    加入主畫面 / 安裝 app
@@ -119,6 +122,23 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 
 
 
+## 🐍 ABC 貪食蛇（學英文字母，全英文）
+
+蛇仔 Sunny 好肚餓，要**跟次序**食字母：A → B → C → D → E，下一局 F → J，之後 K–O、P–T、U–Z，玩完再由 A 開始。
+
+- **操控**：手指撳住 / 拖 = 蛇仔跟住手指行；放手就直行，撞牆會彈返。**唔會死**，冇時間限制
+- 上面有一條字母帶，而家要食嗰個會閃黃色；食咗嘅變色
+- 食啱：「A!」+ 字母變成蛇仔身上嘅花紋 → 「Find B」
+- 撞錯：字母彈開 + 讀佢個名（「D」）+ 再講「Find B」；錯兩次或者 12 秒冇進展 → 啱嗰個發光
+- 行到啱嗰個字母附近會自動轉過去（磁石），細路仔手指唔使好準
+- 食晒 → 蛇仔繞圈，逐粒字母發光一齊讀「A, B, C, D, E」→ 結局短片 + 貼紙
+- 結局：💗 蛇仔畫一個大心心 / 🐉 食魔法星變金色飛龍 / 👾 字母炮打紫色怪獸
+- **家長區「ABC 貪食蛇」**：揀下一局由邊組開始、字款（大楷 ABC / 細楷 abc / 大細楷配對 Aa = 上面大楷、要食細楷）、睇邊啲字母最常撞錯
+- 貪食蛇貼紙唔計入秘密短片（仍然係英雄 + Super Rex 6 張）
+- 開發測試：`#demo=snakeplay`（玩）、`#demo=snakeauto`（自動行）、`#demo=snake:heart`（`dragon` / `monster`）
+
+---
+
 ## 🎬 結局短片 + 貼紙簿
 
 每個 game 有 3 個唔同結局，等 Luca 有動力玩多幾次：
@@ -128,6 +148,7 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 | 🦖 恐龍搵蛋 | 🌈 彩虹恐龍BB | 👑 金色恐龍BB | ✨ 星星恐龍BB |
 | 🤖 英雄裝備站 | 紫色怪獸（愛心炮） | ☁️ 黑雲怪落大雨 → 太陽光 → 白雲 + 彩虹 | 🛸 外星人吸走大廈 → 磁力手拉返落嚟 → 外星人拜拜 |
 | 🦖🦸 Super Rex | 紫色怪獸（大吼） | 🌪️ 龍捲風吹起動物 → 擰尾 → 動物「boing」跌返落嚟 | ☄️ 大隕石 → Super Rex 跳上去頂爆 → 變星星 |
+| 🐍 ABC 貪食蛇 | 💗 畫大心心 | 🐉 金色飛龍 | 👾 字母炮打怪獸 |
 
 - 恐龍搵蛋：一節完咗會出一隻金色大蛋，搖三下孵出特別恐龍BB，之後佢會喺巢中間一齊瞓覺
 - **次序**：頭 3 次一定 1 → 2 → 3（保證全部睇到），之後隨機（唔會連續同一個）
@@ -207,7 +228,7 @@ python -m http.server 8765
 
 ---
 
-## 錄音清單（170 個檔）
+## 錄音清單（212 個檔）
 
 放喺 `audio/` folder，**檔名要一模一樣**（細楷、底線、`.mp3`）。唔使一次錄晒，錄咗邊個就用邊個，未錄嘅照用內置語音。
 
@@ -467,6 +488,58 @@ python -m http.server 8765
 | `en_sp_rainbow.mp3` | English | A rainbow baby dino! |
 | `en_sp_gold.mp3` | English | A golden baby dino! |
 | `en_sp_star.mp3` | English | A starry baby dino! |
+
+**ABC 貪食蛇：字母**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `ltr_a.mp3` | English | A |
+| `ltr_b.mp3` | English | B |
+| `ltr_c.mp3` | English | C |
+| `ltr_d.mp3` | English | D |
+| `ltr_e.mp3` | English | E |
+| `ltr_f.mp3` | English | F |
+| `ltr_g.mp3` | English | G |
+| `ltr_h.mp3` | English | H |
+| `ltr_i.mp3` | English | I |
+| `ltr_j.mp3` | English | J |
+| `ltr_k.mp3` | English | K |
+| `ltr_l.mp3` | English | L |
+| `ltr_m.mp3` | English | M |
+| `ltr_n.mp3` | English | N |
+| `ltr_o.mp3` | English | O |
+| `ltr_p.mp3` | English | P |
+| `ltr_q.mp3` | English | Q |
+| `ltr_r.mp3` | English | R |
+| `ltr_s.mp3` | English | S |
+| `ltr_t.mp3` | English | T |
+| `ltr_u.mp3` | English | U |
+| `ltr_v.mp3` | English | V |
+| `ltr_w.mp3` | English | W |
+| `ltr_x.mp3` | English | X |
+| `ltr_y.mp3` | English | Y |
+| `ltr_z.mp3` | English | Z |
+
+**ABC 貪食蛇：句子 + 結局**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `snk_hi.mp3` | English | Hi Luca! I’m Sunny the snake. I’m so hungry! |
+| `snk_intro.mp3` | English | Let’s eat the letters in order! |
+| `snk_find.mp3` | English | Find |
+| `snk_sing.mp3` | English | Look at my letters! Let’s read them! |
+| `snk_done.mp3` | English | Well done, Luca! My tummy is full! |
+| `snk_yum_1.mp3` | English | Yum! |
+| `snk_heart_1.mp3` | English | I can draw a picture! |
+| `snk_drg_1.mp3` | English | Wow! A magic star! |
+| `snk_mon_1.mp3` | English | Oh no! The monster wants my letters! |
+| `snk_yum_2.mp3` | English | Yummy! |
+| `snk_heart_2.mp3` | English | A big heart! I love letters! |
+| `snk_drg_2.mp3` | English | I’m a flying dragon! |
+| `snk_mon_2.mp3` | English | Letter power, go! |
+| `snk_yum_3.mp3` | English | Crunch, crunch! |
+| `snk_drg_3.mp3` | English | That was so much fun! |
+| `snk_mon_3.mp3` | English | Hooray! My letters are safe! |
 
 **貼紙**
 
