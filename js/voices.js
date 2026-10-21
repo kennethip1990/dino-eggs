@@ -103,6 +103,14 @@
   clips.ufo_go      = { lang: 'yue', text: '英雄出動！磁力手，拉返落嚟！' };
   clips.ufo_bye     = { lang: 'yue', text: '對唔住呀，我玩吓啫！拜拜！' };
   clips.ufo_win     = { lang: 'yue', text: '大廈返嚟喇！好嘢！' };
+  clips.vol_alarm   = { lang: 'yue', text: '哎呀！火山怪噴火球，好熱呀！' };
+  clips.vol_go      = { lang: 'yue', text: '英雄出動！水炮，發射！' };
+  clips.vol_cool    = { lang: 'yue', text: '火山冷靜返喇！仲開咗好多花添！' };
+  clips.vol_win     = { lang: 'yue', text: '好嘢！城市安全喇！' };
+  clips.oct_alarm   = { lang: 'yue', text: '哎呀！大八爪魚捉走咗巴士同私家車！' };
+  clips.oct_go      = { lang: 'yue', text: '英雄出動！笑笑光，發射！' };
+  clips.oct_laugh   = { lang: 'yue', text: '哈哈哈！好痕呀！還返畀你啦！' };
+  clips.oct_win     = { lang: 'yue', text: '巴士同私家車返嚟喇！好嘢！' };
   // Super Rex（英文）
   clips.torn_alarm = { lang: 'en', text: 'Oh no! A big tornado!' };
   clips.torn_go    = { lang: 'en', text: 'Super Rex, tail spin!' };

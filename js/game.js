@@ -594,7 +594,7 @@
     RexGame.renderStats($('#p-rex-stats'));
     SnakeGame.renderPanel($('#p-snake-group'), $('#p-snake-mode'), $('#p-snake-info'));
     const NAME = { dino: '恐龍', hero: '英雄', rex: 'Super Rex', snake: '貪食蛇' };
-    $('#p-stickers').textContent = Rewards.summary().map((r) => NAME[r.game] + ' ' + r.seen + '/3（玩咗 ' + r.plays + ' 次）').join('　') +
+    $('#p-stickers').textContent = Rewards.summary().map((r) => NAME[r.game] + ' ' + r.seen + '/' + r.total + '（玩咗 ' + r.plays + ' 次）').join('　') +
       (Rewards.bossReady() ? '　· 秘密短片已解鎖' : '');
     $('#p-yue').textContent = st.yueVoice ? '✅ ' + st.yueVoice : '⚠️ 搵唔到廣東話語音';
     $('#p-yue-help').hidden = !!st.yueVoice;

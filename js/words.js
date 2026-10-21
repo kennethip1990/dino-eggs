@@ -2,7 +2,7 @@
  * 英雄認字：字表
  * - text：學校教嘅字（要喺 fonts/wenkai-subset.woff2 入面，見 README「加新字」）
  * - part：機械人身上邊個部位（見 hero-art.js）
- * - focus：true = 老師未剔，出多啲
+ * - focus：true = 老師未剔（家長區打 ★）；揀字係輪流平均出，唔會偏心
  * 亦會被 sw.js importScripts，所以用 `self`。
  */
 (function (root) {

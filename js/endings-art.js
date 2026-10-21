@@ -1,4 +1,4 @@
-/* 結局短片用嘅 SVG：黑雲怪、彩虹、飛碟、大廈、龍捲風、隕石、星星、怪獸大王、貼紙 */
+/* 結局短片用嘅 SVG：黑雲怪、彩虹、飛碟、大廈、火山怪、八爪魚、龍捲風、隕石、星星、怪獸大王、貼紙 */
 const EndArt = (() => {
   const INK = '#3b3247';
   const eye = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${INK}"/><circle cx="${x + r * .35}" cy="${y - r * .35}" r="${r * .38}" fill="#fff"/>`;
@@ -96,6 +96,71 @@ const EndArt = (() => {
     </svg>`;
   }
 
+  // ---------- 火山怪（.v-lava / .v-smoke 透明度由 --hot 控制；.cool 之後開花） ----------
+  function volcano() {
+    const flower = (x, y, c) => `<g class="v-flower" style="transform-origin:${x}px ${y}px">
+      <path d="M${x} ${y} L${x} ${y + 18}" stroke="#4f9e5a" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="${x - 7}" cy="${y}" r="6" fill="${c}"/><circle cx="${x + 7}" cy="${y}" r="6" fill="${c}"/>
+      <circle cx="${x}" cy="${y - 7}" r="6" fill="${c}"/><circle cx="${x}" cy="${y + 7}" r="6" fill="${c}"/>
+      <circle cx="${x}" cy="${y}" r="5" fill="#ffd36e"/></g>`;
+    return `<svg viewBox="0 0 300 240" aria-hidden="true">
+      <g class="v-smoke">
+        <circle cx="132" cy="34" r="16" fill="#a9a2b3"/><circle cx="154" cy="22" r="20" fill="#bdb6c6"/><circle cx="174" cy="36" r="14" fill="#a9a2b3"/>
+      </g>
+      <path d="M14 236 L112 66 Q150 50 188 66 L286 236Z" fill="#b5835f"/>
+      <path d="M150 58 Q172 58 188 66 L286 236 L190 236Z" fill="#a0704f"/>
+      <path class="v-grass" d="M14 236 L58 160 Q100 176 150 168 Q200 176 242 160 L286 236Z" fill="#8fd18a"/>
+      <ellipse class="v-crater" cx="150" cy="66" rx="40" ry="12" fill="#6e4a36"/>
+      <g class="v-lava">
+        <ellipse cx="150" cy="66" rx="34" ry="9" fill="#ff7a3c"/>
+        <path d="M124 68 Q118 92 126 108 Q132 92 136 70Z M164 70 Q170 98 160 122 Q178 104 178 68Z" fill="#ff9a4c"/>
+      </g>
+      <g class="v-angry">
+        <path d="M108 120 L136 132 M192 120 L164 132" stroke="${INK}" stroke-width="7" stroke-linecap="round"/>
+        ${eye(126, 146, 10)}${eye(174, 146, 10)}
+        <path d="M128 192 Q150 176 172 192" stroke="${INK}" stroke-width="7" fill="none" stroke-linecap="round"/>
+      </g>
+      <g class="v-happy">
+        <path d="M114 146 Q126 132 138 146 M162 146 Q174 132 186 146" stroke="${INK}" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="106" cy="168" r="10" fill="#ff8fa8" opacity=".55"/><circle cx="194" cy="168" r="10" fill="#ff8fa8" opacity=".55"/>
+        <path d="M128 172 Q150 196 172 172" stroke="${INK}" stroke-width="6" fill="#b0506a" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      ${flower(56, 206, '#ff8fa8')}${flower(96, 218, '#c7a3ff')}${flower(204, 218, '#8fbdf0')}${flower(244, 206, '#ffb36b')}${flower(150, 222, '#ff8fa8')}
+    </svg>`;
+  }
+
+  // ---------- 大八爪魚（兩隻觸手捉住 .o-bus / .o-car；.m-angry / .m-happy） ----------
+  function octopus() {
+    const PINK = '#ff8fb1', DEEP = '#e66f96';
+    const bus = `<g class="o-bus"><rect x="6" y="26" width="64" height="38" rx="8" fill="#ffd36e" stroke="#e5a83a" stroke-width="3"/>
+      <rect x="12" y="32" width="14" height="12" rx="3" fill="#bfe9ff"/><rect x="31" y="32" width="14" height="12" rx="3" fill="#bfe9ff"/><rect x="50" y="32" width="14" height="12" rx="3" fill="#bfe9ff"/>
+      <circle cx="20" cy="66" r="7" fill="${INK}"/><circle cx="56" cy="66" r="7" fill="${INK}"/></g>`;
+    const car = `<g class="o-car"><path d="M232 52 Q238 34 256 34 L274 34 Q288 34 292 52Z" fill="#7fc0ff"/>
+      <rect x="226" y="50" width="70" height="20" rx="8" fill="#ff6b6b"/>
+      <circle cx="242" cy="72" r="7" fill="${INK}"/><circle cx="280" cy="72" r="7" fill="${INK}"/></g>`;
+    return `<svg viewBox="0 0 300 300" aria-hidden="true">
+      <path d="M96 196 C60 230 40 250 30 286 M124 206 C110 240 104 262 108 292 M176 206 C190 240 196 262 192 292 M204 196 C240 230 260 250 270 286"
+        stroke="${PINK}" stroke-width="22" fill="none" stroke-linecap="round"/>
+      <g class="o-arm-l"><path d="M92 170 C54 156 36 120 40 80" stroke="${PINK}" stroke-width="20" fill="none" stroke-linecap="round"/></g>
+      <g class="o-arm-r"><path d="M208 170 C246 156 264 120 260 80" stroke="${PINK}" stroke-width="20" fill="none" stroke-linecap="round"/></g>
+      ${bus}${car}
+      <ellipse class="o-head" cx="150" cy="140" rx="82" ry="76" fill="${PINK}"/>
+      <ellipse cx="124" cy="96" rx="20" ry="12" fill="#fff" opacity=".35" transform="rotate(-25 124 96)"/>
+      <circle cx="96" cy="190" r="7" fill="${DEEP}"/><circle cx="128" cy="204" r="7" fill="${DEEP}"/><circle cx="172" cy="204" r="7" fill="${DEEP}"/><circle cx="204" cy="190" r="7" fill="${DEEP}"/>
+      <circle cx="122" cy="140" r="20" fill="#fff"/><circle cx="178" cy="140" r="20" fill="#fff"/>
+      <g class="m-angry">
+        ${eye(126, 144, 10)}${eye(174, 144, 10)}
+        <path d="M98 110 L136 124 M202 110 L164 124" stroke="${INK}" stroke-width="7" stroke-linecap="round"/>
+        <path d="M134 184 Q150 174 166 184" stroke="${INK}" stroke-width="6" fill="none" stroke-linecap="round"/>
+      </g>
+      <g class="m-happy">
+        <path d="M106 142 Q122 126 138 142 M162 142 Q178 126 194 142" stroke="${INK}" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="96" cy="166" r="11" fill="#ff5f8f" opacity=".45"/><circle cx="204" cy="166" r="11" fill="#ff5f8f" opacity=".45"/>
+        <path d="M128 170 Q150 198 172 170" stroke="${INK}" stroke-width="6" fill="#b0506a" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </svg>`;
+  }
+
   function star(col) {
     return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6 L62 36 L94 38 L69 58 L78 90 L50 72 L22 90 L31 58 L6 38 L38 36Z" fill="${col || '#ffd36e'}" stroke="#fff" stroke-width="6" stroke-linejoin="round"/></svg>`;
   }
@@ -137,6 +202,8 @@ const EndArt = (() => {
     if (game === 'hero' && id === 'monster') inner = nest(HeroArt.monster(), 14, 16, 72, 72);
     else if (game === 'hero' && id === 'cloud') inner = nest(rainbow(), 10, 20, 80, 44) + nest(cloud().replace('class="c-dark"', 'class="c-dark" opacity="0"').replace('class="c-angry"', 'class="c-angry" display="none"'), 14, 40, 72, 48);
     else if (game === 'hero' && id === 'ufo') inner = nest(ufo().replace('class="u-beam"', 'class="u-beam" display="none"'), 12, 10, 76, 76);
+    else if (game === 'hero' && id === 'volcano') inner = nest(volcano().replace('class="v-lava"', 'class="v-lava" display="none"').replace('class="v-smoke"', 'class="v-smoke" display="none"').replace('class="v-angry"', 'class="v-angry" display="none"'), 8, 16, 84, 68);
+    else if (game === 'hero' && id === 'octopus') inner = nest(octopus().replace('class="o-bus"', 'class="o-bus" display="none"').replace('class="o-car"', 'class="o-car" display="none"').replace('class="m-angry"', 'class="m-angry" display="none"'), 10, 10, 80, 80);
     else if (game === 'rex' && id === 'monster') inner = nest(RexArt.rex(), 6, 14, 56, 56) + nest(HeroArt.monster(), 48, 40, 44, 44);
     else if (game === 'rex' && id === 'tornado') inner = nest(tornado().replace('class="t-angry"', 'class="t-angry" display="none"'), 24, 10, 52, 76);
     else if (game === 'rex' && id === 'meteor') inner = nest(star(), 14, 14, 34, 34) + nest(star('#ffb3c7'), 54, 22, 28, 28) + nest(star('#9fd3ff'), 32, 50, 34, 34);
@@ -163,5 +230,5 @@ const EndArt = (() => {
     </svg>`;
   }
 
-  return { cloud, rainbow, ufo, building, tornado, meteor, star, boss, sticker, lockedSticker, bossBadge };
+  return { cloud, rainbow, ufo, building, volcano, octopus, tornado, meteor, star, boss, sticker, lockedSticker, bossBadge };
 })();

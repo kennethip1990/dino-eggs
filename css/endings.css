@@ -8,6 +8,8 @@
 .stickers { position: relative; z-index: 1; display: flex; gap: calc(var(--card) * .03); margin-top: calc(var(--card) * -.11); }
 .stk { width: calc(var(--card) * .23); aspect-ratio: 1; padding: 0; border: none; background: none; touch-action: manipulation; }
 .stk svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 3px 0 rgba(0,0,0,.08)); }
+.stickers[data-game="hero"] { gap: calc(var(--card) * .02); }
+.stickers[data-game="hero"] .stk { width: calc(var(--card) * .18); }
 .stk.got:active { transform: scale(.92); }
 .stk.wiggle { animation: partwiggle .6s ease-in-out; }
 
@@ -95,7 +97,62 @@
 @keyframes bwobble { 25% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } }
 @media (orientation: portrait) { .ufo-scene { top: 50vh; bottom: 2vh; width: 34vw; } .building-fx { translate: 0 calc(var(--lift, 0) * -12vh); } }
 
-/* 光束：太陽光（黃）/ 磁力（紫藍間條） */
+/* ---------- 英雄結局 4：火山怪 ---------- */
+#hero-screen::after { content: ""; position: absolute; inset: 0; background: rgba(255,120,60,.16); opacity: 0; transition: opacity 1s; pointer-events: none; }
+#hero-screen.hot::after { opacity: 1; }
+.volcano-fx { position: absolute; z-index: 11; right: 3vw; bottom: 4vh; width: min(38vw, 56vh); aspect-ratio: 300 / 240; touch-action: none; }
+.volcano-fx svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.volcano-fx.enter { animation: risein 1.6s cubic-bezier(.2,.9,.3,1.1) both; }
+.volcano-fx.hit svg { animation: mhit .45s ease-out; }
+.volcano-fx .v-lava, .volcano-fx .v-smoke { opacity: var(--hot, 1); transition: opacity .5s; }
+.volcano-fx .v-grass { opacity: calc(1 - var(--hot, 1)); transition: opacity .5s; }
+.volcano-fx.erupt .v-smoke { animation: smoke 1.4s ease-in-out infinite; }
+.volcano-fx .v-happy { display: none; }
+.volcano-fx.cool .v-happy { display: inline; }
+.volcano-fx.cool .v-angry { display: none; }
+.volcano-fx .v-flower { transform: scale(0); transition: transform .6s cubic-bezier(.3,1.6,.5,1); }
+.volcano-fx.cool .v-flower { transform: scale(1); }
+.volcano-fx.cool .v-flower:nth-of-type(2n) { transition-delay: .2s; }
+.volcano-fx.cool .v-flower:nth-of-type(3n) { transition-delay: .4s; }
+.volcano-fx.cool svg { animation: mhappy .8s ease-in-out infinite; }
+.fireball { position: absolute; left: 50%; top: 22%; width: 7%; aspect-ratio: 1; margin-left: -3.5%; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe08a, #ff8a3c 55%, #e5552e); opacity: 0; pointer-events: none; }
+.volcano-fx.erupt .fireball { animation: lavapop 1.6s ease-out infinite; }
+@keyframes lavapop {
+  0% { opacity: 1; translate: 0 0; scale: .5; }
+  45% { opacity: 1; translate: calc(var(--dx) * 7vw) -20vh; scale: 1; }
+  100% { opacity: 0; translate: calc(var(--dx) * 14vw) 4vh; scale: .8; }
+}
+@keyframes smoke { 50% { transform: translateY(-8px) scale(1.06); } }
+@keyframes risein { from { translate: 0 60vh; } to { translate: 0 0; } }
+@media (orientation: portrait) { .volcano-fx { width: 52vw; bottom: 3vh; } }
+
+/* ---------- 英雄結局 5：大八爪魚 ---------- */
+.octo-fx { position: absolute; z-index: 11; right: 3vw; bottom: 2vh; width: min(40vw, 58vh); aspect-ratio: 1; touch-action: none; }
+.octo-fx svg { width: 100%; height: 100%; display: block; overflow: visible; animation: hover 1.8s ease-in-out infinite; }
+.octo-fx.enter { animation: risein 1.6s cubic-bezier(.2,.9,.3,1.1) both; }
+.octo-fx .o-arm-l, .octo-fx .o-bus { transform-box: view-box; transform-origin: 92px 170px; }
+.octo-fx .o-arm-r, .octo-fx .o-car { transform-box: view-box; transform-origin: 208px 170px; }
+.octo-fx.grab .o-arm-l, .octo-fx.grab .o-bus { animation: shakeL 1s ease-in-out infinite; }
+.octo-fx.grab .o-arm-r, .octo-fx.grab .o-car { animation: shakeR 1s ease-in-out infinite; }
+/* 放手：跌返落地企定（游走嗰陣先消失） */
+.octo-fx .o-bus, .octo-fx .o-car { transition: translate .8s cubic-bezier(.4,1.4,.6,1), opacity .3s; }
+.octo-fx.drop-bus .o-bus { animation: none; translate: -56px 222px; }
+.octo-fx.drop-car .o-car { animation: none; translate: 16px 224px; }
+.octo-fx.leave .o-bus, .octo-fx.leave .o-car { opacity: 0; }
+.octo-fx.giggle svg { animation: giggle .5s ease-in-out; }
+.octo-fx .m-happy { display: none; }
+.octo-fx.friendly .m-happy { display: inline; }
+.octo-fx.friendly .m-angry { display: none; }
+.octo-fx.friendly .o-arm-l { animation: wave .5s ease-in-out infinite alternate; }
+.octo-fx.friendly .o-arm-r { animation: wave .5s -.25s ease-in-out infinite alternate; }
+.octo-fx.leave { animation: sinkaway 1.4s ease-in forwards; }
+@keyframes shakeL { 50% { transform: rotate(-8deg); } }
+@keyframes shakeR { 50% { transform: rotate(8deg); } }
+@keyframes giggle { 20% { transform: rotate(-5deg) scale(1.04); } 40% { transform: rotate(5deg); } 60% { transform: rotate(-4deg) scale(1.03); } 80% { transform: rotate(3deg); } }
+@keyframes sinkaway { to { translate: 20vw 80vh; } }
+@media (orientation: portrait) { .octo-fx { width: 52vw; } }
+
+/* 光束：太陽光（黃）/ 磁力（紫藍間條）/ 水炮（藍）/ 笑笑光（粉紅黃間條） */
 .beam {
   position: fixed; z-index: 40; height: 20px; margin-top: -10px; transform-origin: 0 50%;
   border-radius: 10px; pointer-events: none;
@@ -104,6 +161,8 @@
   animation: beamshoot .7s ease-out forwards;
 }
 .beam.magnet { height: 16px; margin-top: -8px; background: repeating-linear-gradient(90deg, #b48cff 0 16px, #7fd6ff 16px 32px); box-shadow: 0 0 14px 4px rgba(150,170,255,.5); }
+.beam.water { height: 22px; margin-top: -11px; background: linear-gradient(90deg, rgba(160,220,255,.3), #9fdcff 30%, #4fb0f0); box-shadow: 0 0 14px 4px rgba(120,190,255,.5); }
+.beam.tickle { height: 16px; margin-top: -8px; background: repeating-linear-gradient(90deg, #ff9fc4 0 14px, #fff07a 14px 28px); box-shadow: 0 0 14px 4px rgba(255,170,200,.5); }
 @keyframes beamshoot { 0% { clip-path: inset(0 100% 0 0); opacity: 1; } 50% { clip-path: inset(0 0 0 0); opacity: 1; } 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
 
 /* ---------- Super Rex 結局 2：龍捲風 ---------- */

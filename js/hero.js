@@ -23,14 +23,32 @@ const HeroGame = (() => {
     saveStats();
   }
 
-  // 揀字：老師未剔（focus）同未熟嘅字排先，加少少隨機
+  // 揀字：輪流出 —— 一輪入面每個字都出完先再嚟過，咁每個字出現次數平均
+  // 同一輪入面，未熟（第一下就啱嘅比率低）嘅字排先，加少少隨機
+  const BAG_KEY = 'heroBag.v1';
+  function loadBag() { try { return JSON.parse(localStorage.getItem(BAG_KEY) || '[]'); } catch (e) { return []; } }
+  function saveBag(b) { try { localStorage.setItem(BAG_KEY, JSON.stringify(b)); } catch (e) {} }
+  const hearRate = (w) => { const s = stats[w.id]; return s && s.hear ? s.hearOk / s.hear : 0; };
   function pickWords(n) {
-    const scored = unit.words.map((w) => {
-      const s = stats[w.id];
-      const rate = s && s.hear ? s.hearOk / s.hear : 0;
-      return { w, score: rate + (w.focus ? 0 : 0.35) + Math.random() * 0.35 };
-    });
-    return scored.sort((a, b) => a.score - b.score).slice(0, n).map((x) => x.w);
+    const allIds = unit.words.map((w) => w.id);
+    let bag = loadBag().filter((id) => allIds.includes(id));
+    const plan = [];
+    while (plan.length < n) {
+      if (!bag.length) bag = allIds.slice();
+      const pool = unit.words.filter((w) => bag.includes(w.id) && !plan.includes(w));
+      if (!pool.length) break;
+      const take = pool.map((w) => ({ w, score: hearRate(w) + Math.random() * 0.5 }))
+        .sort((a, b) => a.score - b.score).slice(0, n - plan.length).map((x) => x.w);
+      plan.push(...take);
+      bag = bag.filter((id) => !take.some((w) => w.id === id));
+    }
+    saveBag(bag);
+    return shuffle(plan);
+  }
+  // 考字：今次 6 個入面，考得最少嗰 3 個
+  function pickTest(plan, n) {
+    return plan.map((w) => ({ w, k: ((stats[w.id] && stats[w.id].read) || 0) + Math.random() * 0.9 }))
+      .sort((a, b) => a.k - b.k).slice(0, n).map((x) => x.w);
   }
 
   // ---------- DOM ----------
@@ -82,12 +100,12 @@ const HeroGame = (() => {
     stage.classList.remove('powered');
     // 第二部分：睇字搵部位（真正認字）
     await Sound.say(['hero_test', { pause: 200 }]);
-    for (const w of shuffle(plan).slice(0, TEST_COUNT)) {
+    for (const w of shuffle(pickTest(plan, TEST_COUNT))) {
       await askPart(w, tk);
       if (tk !== token) return;
     }
     cardsEl.replaceChildren();
-    // 獎勵短片：3 個結局輪流
+    // 獎勵短片：5 個結局輪流
     const end = Rewards.next('hero');
     await battle(tk, end);
     if (tk !== token) return;
@@ -100,14 +118,14 @@ const HeroGame = (() => {
     document.body.classList.add('hero-done');
   }
 
-  // ---------- 獎勵短片：3 個結局（~20 秒，冇閃光；Luca 撳壞蛋可以額外攻擊） ----------
+  // ---------- 獎勵短片：5 個結局（~20 秒，冇閃光；Luca 撳壞蛋可以額外攻擊） ----------
   let monsterEl = null;
   let fx = [];                        // 結局用嘅臨時元素，完咗一次過清
   const screenEl = $('#hero-screen');
 
   function cleanupBattle() {
     document.body.classList.remove('battle');
-    screenEl.classList.remove('gloomy');
+    screenEl.classList.remove('gloomy', 'hot');
     if (monsterEl) monsterEl.remove();
     monsterEl = null;
     fx.forEach((e) => e.remove());
@@ -164,7 +182,7 @@ const HeroGame = (() => {
     ], { duration: 500, easing: 'ease-out' }).onfinish = done;
   }
 
-  // 光束（太陽光 / 磁力）：由胸口射去 target，一條直線閃一閃
+  // 光束（太陽光 / 磁力 / 水炮 / 笑笑光）：由胸口射去 target，一條直線閃一閃
   function beam(target, kind, onHit) {
     if (!target || !target.isConnected) return;
     Sound.sfx.beam();
@@ -185,6 +203,8 @@ const HeroGame = (() => {
   function battle(tk, id) {
     if (id === 'cloud') return battleCloud(tk);
     if (id === 'ufo') return battleUfo(tk);
+    if (id === 'volcano') return battleVolcano(tk);
+    if (id === 'octopus') return battleOctopus(tk);
     return battleMonster(tk);
   }
 
@@ -323,6 +343,91 @@ const HeroGame = (() => {
     await wait(1400);
     if (tk !== token) return;
     await heroWins(tk, 'ufo_win');
+  }
+
+  // 結局 4：火山怪噴火球 → 水炮 ×3 → 火山冷靜，開滿花
+  async function battleVolcano(tk) {
+    document.body.classList.add('battle');
+    const vol = addFx('volcano-fx enter', EndArt.volcano());
+    vol.style.setProperty('--hot', 1);
+    const balls = [-1, 1, -0.5, 0.6].map((dx, i) => {
+      const b = addFx('fireball', '', vol);
+      b.style.setProperty('--dx', dx);
+      b.style.animationDelay = i * 0.4 + 's';
+      return b;
+    });
+    const crater = vol.querySelector('.v-crater');
+    vol.addEventListener('pointerdown', (e) => { e.preventDefault(); if (tk === token && !vol.classList.contains('cool')) beam(crater, 'water'); });
+    [400, 1000].forEach((t) => setTimeout(() => { if (tk === token) { Sound.sfx.thump(); restart($('#scene'), 'shake'); } }, t));
+    await wait(1600);
+    if (tk !== token) return;
+    vol.classList.add('erupt');
+    screenEl.classList.add('hot');
+    await sayMin(['vol_alarm', { pause: 200 }], 2800);
+    if (tk !== token) return;
+
+    restart(stage, 'ready');
+    Sound.sfx.whoosh();
+    await sayMin(['vol_go', { pause: 100 }], 2200);
+    if (tk !== token) return;
+
+    for (const h of [0.66, 0.33, 0]) {
+      beam(crater, 'water', () => {
+        vol.style.setProperty('--hot', h);
+        const b = balls.pop();
+        if (b) b.remove();
+        if (!h) balls.splice(0).forEach((x) => x.remove());
+        restart(vol, 'hit');
+      });
+      await wait(1000);
+      if (tk !== token) return;
+    }
+    vol.classList.remove('erupt');
+    screenEl.classList.remove('hot');
+    vol.classList.add('cool');
+    Sound.sfx.hatch();
+    await sayMin(['vol_cool', { pause: 200 }], 2800);
+    if (tk !== token) return;
+    await heroWins(tk, 'vol_win');
+  }
+
+  // 結局 5：大八爪魚捉走巴士同私家車 → 笑笑光 ×3（痕到放手）→ 揮手游走
+  async function battleOctopus(tk) {
+    document.body.classList.add('battle');
+    const oc = addFx('octo-fx enter', EndArt.octopus());
+    const head = oc.querySelector('.o-head');
+    oc.addEventListener('pointerdown', (e) => { e.preventDefault(); if (tk === token && !oc.classList.contains('friendly')) beam(head, 'tickle', () => restart(oc, 'giggle')); });
+    Sound.sfx.bubble();
+    await wait(1700);
+    if (tk !== token) return;
+    oc.classList.add('grab');
+    await sayMin(['oct_alarm', { pause: 200 }], 2800);
+    if (tk !== token) return;
+
+    restart(stage, 'ready');
+    Sound.sfx.whoosh();
+    await sayMin(['oct_go', { pause: 100 }], 2200);
+    if (tk !== token) return;
+
+    for (const drop of ['bus', 'car', null]) {
+      beam(head, 'tickle', () => {
+        restart(oc, 'giggle');
+        Sound.sfx.boing();
+        if (drop) oc.classList.add('drop-' + drop);
+      });
+      await wait(1000);
+      if (tk !== token) return;
+    }
+    oc.classList.remove('grab');
+    oc.classList.add('friendly');
+    Sound.sfx.hatch();
+    await sayMin(['oct_laugh', { pause: 200 }], 3000);
+    if (tk !== token) return;
+    oc.classList.add('leave');
+    Sound.sfx.bubble();
+    await wait(1400);
+    if (tk !== token) return;
+    await heroWins(tk, 'oct_win');
   }
 
   function praise() { return 'hero_yes_' + (1 + Math.floor(Math.random() * 3)); }

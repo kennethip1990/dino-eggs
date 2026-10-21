@@ -1,17 +1,17 @@
 /*
  * 結局 + 貼紙簿
- * - 每個 game 3 個結局：頭 3 次跟次序（保證全部睇到），之後隨機（唔會連續同一個）
- * - 睇完一個新結局就攞一張貼紙；主選單每張卡下面有 3 格，撳已攞到嘅貼紙 = 再睇嗰段短片
+ * - 每個 game 3–5 個結局：未睇過嘅跟次序先出（保證全部睇到），之後隨機（唔會連續同一個）
+ * - 睇完一個新結局就攞一張貼紙；主選單每張卡下面每個結局一格，撳已攞到嘅貼紙 = 再睇嗰段短片
  * - 英雄 + Super Rex 6 張集齊 → 解鎖秘密短片（怪獸大王）
  */
 const Rewards = (() => {
   const $ = (s) => document.querySelector(s);
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const put = (el, markup) => el.replaceChildren(document.createRange().createContextualFragment(markup));
-  const ENDINGS = { dino: ['rainbow', 'gold', 'star'], hero: ['monster', 'cloud', 'ufo'], rex: ['monster', 'tornado', 'meteor'], snake: ['heart', 'dragon', 'monster'] };
+  const ENDINGS = { dino: ['rainbow', 'gold', 'star'], hero: ['monster', 'cloud', 'ufo', 'volcano', 'octopus'], rex: ['monster', 'tornado', 'meteor'], snake: ['heart', 'dragon', 'monster'] };
   const NAMES = {
     dino: { rainbow: '彩虹恐龍BB', gold: '金色恐龍BB', star: '星星恐龍BB' },
-    hero: { monster: '紫色怪獸', cloud: '黑雲怪', ufo: '搗蛋外星人' },
+    hero: { monster: '紫色怪獸', cloud: '黑雲怪', ufo: '搗蛋外星人', volcano: '火山怪', octopus: '大八爪魚' },
     rex: { monster: '紫色怪獸', tornado: '龍捲風', meteor: '大隕石' },
     snake: { heart: '愛心蛇', dragon: '金色飛龍', monster: '字母炮打怪獸' }
   };
@@ -33,8 +33,8 @@ const Rewards = (() => {
 
   function next(game) {
     const list = ENDINGS[game];
-    const n = st.plays[game] || 0;
-    if (n < list.length) return list[n];
+    const unseen = list.filter((x) => !st.seen[game].includes(x));
+    if (unseen.length) return unseen[0];
     const pool = list.filter((x) => x !== st.last[game]);
     return pool[Math.floor(Math.random() * pool.length)];
   }
@@ -99,7 +99,7 @@ const Rewards = (() => {
 
   function reset() { st = fresh(); save(); renderMenu(); }
   function summary() {
-    return Object.keys(ENDINGS).map((g) => ({ game: g, seen: st.seen[g].length, plays: st.plays[g] || 0 }));
+    return Object.keys(ENDINGS).map((g) => ({ game: g, seen: st.seen[g].length, total: ENDINGS[g].length, plays: st.plays[g] || 0 }));
   }
 
   return {

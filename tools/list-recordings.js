@@ -17,7 +17,7 @@ const groups = [
   ['Super Rex：問題', /^rex_where_/],
   ['Super Rex：句子', /^(rex_(?!where_)|legs_)/],
   ['Super Rex 打怪獸短片', /^rbat_/],
-  ['英雄結局：黑雲怪 / 外星人', /^(cloud|ufo)_/],
+  ['英雄結局：黑雲怪 / 外星人 / 火山怪 / 八爪魚', /^(cloud|ufo|vol|oct)_/],
   ['Super Rex 結局：龍捲風 / 隕石', /^(torn|met)_/],
   ['恐龍搵蛋：特別恐龍BB', /_(special|sp_\w+)$/],
   ['ABC 貪食蛇：字母', /^ltr_/],
