@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/rex.css">
   <link rel="stylesheet" href="css/endings.css">
   <link rel="stylesheet" href="css/snake.css">
+  <link rel="stylesheet" href="css/party.css">
 </head>
 <body data-screen="menu">
   <div id="scene">
@@ -28,6 +29,7 @@
       <div class="card-wrap"><button id="go-hero" class="choose" aria-label="英雄裝備站"></button><div class="stickers" data-game="hero"></div></div>
       <div class="card-wrap"><button id="go-rex" class="choose" aria-label="Super Rex"></button><div class="stickers" data-game="rex"></div></div>
       <div class="card-wrap"><button id="go-snake" class="choose" aria-label="ABC 貪食蛇"></button><div class="stickers" data-game="snake"></div></div>
+      <div class="card-wrap"><button id="go-party" class="choose" aria-label="恐龍生日派對"></button><div class="stickers" data-game="party"></div></div>
       <!-- 秘密短片：集齊英雄 + Super Rex 6 張貼紙先開到 -->
       <button id="go-boss" class="locked" aria-label="秘密短片"></button>
     </div>
@@ -62,6 +64,22 @@
       <canvas id="snake-canvas"></canvas>
       <div id="snake-strip"></div>
       <button id="snake-again" aria-label="返主選單"></button>
+    </div>
+
+    <!-- 恐龍生日派對（單元四：家庭/人物） -->
+    <div id="party-screen">
+      <div id="party-room"></div>
+      <div id="party-door"><div class="door-back"></div><div class="door-leaf"></div></div>
+      <div id="party-tables"></div>
+      <div id="party-people"></div>
+      <div id="party-fx"></div>
+      <div id="party-photo"></div>
+      <div id="party-title"></div>
+      <div id="party-bubble"><i></i><i></i><i></i></div>
+      <div id="party-tray"></div>
+      <div id="party-cards"></div>
+      <button id="party-mic" aria-label="撳咗講嘢"><span class="mic-art"></span></button>
+      <button id="party-again" aria-label="返主選單"></button>
     </div>
 
     <!-- 開始畫面：揀恐龍（撳邊隻就開始，同時解鎖聲音） -->
@@ -120,6 +138,16 @@
       </section>
 
       <section>
+        <h3>生日派對認字記錄（第一下就啱 / 次數）</h3>
+        <table class="stats"><thead><tr><th>字</th><th>開門認人</th><th>坐位分類</th><th>派嘢指令</th></tr></thead><tbody id="p-party-stats"></tbody></table>
+        <p class="note">★ = 老師未剔。「坐位分類」淨係睇字（冇圖、冇讀出嚟），先係真正自己認字；「派嘢指令」= 聽一步 / 兩步指令（升小面試考專注同聆聽）。</p>
+        <div class="row"><button id="p-party-reset" class="danger">重設派對記錄</button></div>
+        <h3>小記者錄音（淨係存喺呢部 tablet）</h3>
+        <div id="p-party-voices"></div>
+        <div class="row"><button id="p-party-voices-clear" class="danger">刪除全部錄音</button></div>
+      </section>
+
+      <section>
         <h3>ABC 貪食蛇</h3>
         <div class="row">下一局字母 <select id="p-snake-group"></select>　字款 <select id="p-snake-mode"></select></div>
         <div class="row" id="p-snake-info"></div>
@@ -130,7 +158,7 @@
       <section>
         <h3>短片同貼紙簿</h3>
         <div class="row" id="p-stickers"></div>
-        <p class="note">每個 game 3 個結局：頭 3 次跟次序（全部睇到），之後隨機。睇完新結局攞貼紙；主選單撳貼紙可以再睇。英雄 + Super Rex 6 張集齊 → 主選單頂嘅秘密短片解鎖（貪食蛇貼紙唔計）。</p>
+        <p class="note">每個 game 3 個結局（英雄 5 個）：未睇過嘅先出（全部睇到），之後隨機。睇完新結局攞貼紙；主選單撳貼紙可以再睇。英雄 3 張 + Super Rex 3 張 → 主選單頂嘅秘密短片解鎖（貪食蛇 / 派對貼紙唔計）。</p>
         <div class="row"><select id="p-video"></select> <button id="p-video-play">▶ 播</button></div>
         <div class="row"><button id="p-stickers-reset" class="danger">重設貼紙簿</button></div>
       </section>
@@ -165,6 +193,7 @@
 
   <script src="js/version.js"></script>
   <script src="js/words.js"></script>
+  <script src="js/family.js"></script>
   <script src="js/animals.js"></script>
   <script src="js/voices.js"></script>
   <script src="js/art.js"></script>
@@ -172,11 +201,13 @@
   <script src="js/hero-art.js"></script>
   <script src="js/rex-art.js"></script>
   <script src="js/snake-art.js"></script>
+  <script src="js/party-art.js"></script>
   <script src="js/endings-art.js"></script>
   <script src="js/rewards.js"></script>
   <script src="js/hero.js"></script>
   <script src="js/rex.js"></script>
   <script src="js/snake.js"></script>
+  <script src="js/party.js"></script>
   <script src="js/boss.js"></script>
   <script src="js/game.js"></script>
 </body>

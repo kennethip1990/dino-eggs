@@ -93,6 +93,7 @@
   put($('#go-hero'), `<div class="choose-art">${HeroArt.icon()}</div>`);
   put($('#go-rex'), `<div class="choose-art">${RexArt.rex()}</div><div class="choose-bubble">${RexArt.animal('duck')}</div>`);
   put($('#go-snake'), `<div class="choose-art">${SnakeArt.icon()}</div>`);
+  put($('#go-party'), `<div class="choose-art">${PartyArt.icon()}</div>`);
   $('#go-dino').addEventListener('click', () => { prepare(); setScreen('start'); });
   $('#go-hero').addEventListener('click', async () => {
     prepare();
@@ -106,6 +107,7 @@
     if (game === 'dino') playSpecial(id);
     else if (game === 'hero') HeroGame.playVideo(id);
     else if (game === 'snake') SnakeGame.playVideo(id);
+    else if (game === 'party') PartyGame.playVideo(id);
     else RexGame.playVideo(id);
   });
   put($('#go-boss'), EndArt.bossBadge());
@@ -130,6 +132,11 @@
     await Promise.race([Sound.loadRecordings(), wait(1500)]);
     SnakeGame.start();
   });
+  $('#go-party').addEventListener('click', async () => {
+    prepare();
+    await Promise.race([Sound.loadRecordings(), wait(1500)]);
+    PartyGame.start();
+  });
 
   // 撳貼紙 / 家長區預覽：淨係播特別BB 嗰段
   function playSpecial(kind) {
@@ -138,7 +145,8 @@
     HeroGame.stop();
     RexGame.stop();
     SnakeGame.stop();
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'snake-done');
+    PartyGame.stop();
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'snake-done', 'party-done');
     put(mamaEl, Art.mama(progress.dino));
     goToSleep(kind);
   }
@@ -149,10 +157,11 @@
     HeroGame.stop();
     RexGame.stop();
     SnakeGame.stop();
+    PartyGame.stop();
     BossGame.stop();
     Rewards.hidePop();
     clearField();
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done');
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done', 'party-done');
     scene.classList.remove('is-night');
     setScreen('menu');
     Rewards.renderMenu();
@@ -536,7 +545,7 @@
   });
   // 短片預覽（唔計貼紙）
   const vsel = $('#p-video');
-  for (const [game, label] of [['dino', '恐龍'], ['hero', '英雄'], ['rex', 'Super Rex'], ['snake', '貪食蛇']]) {
+  for (const [game, label] of [['dino', '恐龍'], ['hero', '英雄'], ['rex', 'Super Rex'], ['snake', '貪食蛇'], ['party', '派對']]) {
     for (const id of Rewards.ENDINGS[game]) {
       const o = document.createElement('option');
       o.value = game + ':' + id;
@@ -554,13 +563,15 @@
     HeroGame.stop();
     RexGame.stop();
     SnakeGame.stop();
+    PartyGame.stop();
     BossGame.stop();
     scene.classList.remove('is-night');
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done');
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done', 'party-done');
     if (game === 'dino') playSpecial(id);
     else if (game === 'hero') HeroGame.playVideo(id);
     else if (game === 'rex') RexGame.playVideo(id);
     else if (game === 'snake') SnakeGame.playVideo(id);
+    else if (game === 'party') PartyGame.playVideo(id);
     else BossGame.play();
   });
   $('#p-stickers-reset').addEventListener('click', () => {
@@ -580,6 +591,16 @@
     SnakeGame.resetStats();
     renderPanel();
   });
+  $('#p-party-reset').addEventListener('click', () => {
+    if (!confirm('重設派對認字記錄？')) return;
+    PartyGame.resetStats();
+    renderPanel();
+  });
+  $('#p-party-voices-clear').addEventListener('click', async () => {
+    if (!confirm('刪除全部小記者錄音？（刪咗就冇得返）')) return;
+    await PartyGame.clearVoices();
+    renderPanel();
+  });
   $('#p-hero-reset').addEventListener('click', () => {
     if (!confirm('重設英雄認字記錄？')) return;
     HeroGame.resetStats();
@@ -592,8 +613,10 @@
     $('#p-rounds').textContent = progress.rounds;
     HeroGame.renderStats($('#p-hero-stats'));
     RexGame.renderStats($('#p-rex-stats'));
+    PartyGame.renderStats($('#p-party-stats'));
+    PartyGame.renderVoices($('#p-party-voices'));
     SnakeGame.renderPanel($('#p-snake-group'), $('#p-snake-mode'), $('#p-snake-info'));
-    const NAME = { dino: '恐龍', hero: '英雄', rex: 'Super Rex', snake: '貪食蛇' };
+    const NAME = { dino: '恐龍', hero: '英雄', rex: 'Super Rex', snake: '貪食蛇', party: '派對' };
     $('#p-stickers').textContent = Rewards.summary().map((r) => NAME[r.game] + ' ' + r.seen + '/' + r.total + '（玩咗 ' + r.plays + ' 次）').join('　') +
       (Rewards.bossReady() ? '　· 秘密短片已解鎖' : '');
     $('#p-yue').textContent = st.yueVoice ? '✅ ' + st.yueVoice : '⚠️ 搵唔到廣東話語音';
@@ -664,6 +687,8 @@
     else if (g === 'snake') SnakeGame.playVideo(id);
     else if (g === 'snakeplay') SnakeGame.start();
     else if (g === 'snakeauto') SnakeGame.start(true);
+    else if (g === 'party') PartyGame.playVideo(id);
+    else if (g === 'partyplay') PartyGame.start({ from: +id || 1 });
     else if (g === 'sticker') Rewards.celebrate('hero', id || 'cloud', 'yue');
     else if (g.startsWith('stk_')) Rewards.celebrate(g.slice(4), id, 'en');
   }, 300);

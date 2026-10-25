@@ -1,12 +1,13 @@
 /* 離線支援：cache-first。更新內容 → 改 js/version.js 個數字 */
-importScripts('js/version.js', 'js/words.js', 'js/animals.js', 'js/voices.js');
+importScripts('js/version.js', 'js/words.js', 'js/family.js', 'js/animals.js', 'js/voices.js');
 const CACHE = 'dino-eggs-v' + self.APP_VERSION;
 const CORE = [
   './', 'index.html', 'css/style.css', 'manifest.webmanifest',
-  'css/hero.css', 'css/rex.css', 'css/endings.css', 'css/snake.css', 'fonts/wenkai-subset.woff2', 'fonts/andika-subset.woff2',
-  'js/version.js', 'js/words.js', 'js/animals.js', 'js/voices.js', 'js/art.js', 'js/audio.js',
+  'css/hero.css', 'css/rex.css', 'css/endings.css', 'css/snake.css', 'css/party.css', 'fonts/wenkai-subset.woff2', 'fonts/andika-subset.woff2',
+  'js/version.js', 'js/words.js', 'js/family.js', 'js/animals.js', 'js/voices.js', 'js/art.js', 'js/audio.js',
   'js/hero-art.js', 'js/hero.js', 'js/rex-art.js', 'js/rex.js',
   'js/snake-art.js', 'js/snake.js',
+  'js/party-art.js', 'js/party.js',
   'js/endings-art.js', 'js/rewards.js', 'js/boss.js', 'js/game.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'
 ];

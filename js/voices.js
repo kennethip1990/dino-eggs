@@ -50,6 +50,65 @@
   clips.battle_sorry = { lang: 'yue', text: '對唔住呀，我唔再搞亂喇！' };
   clips.battle_win   = { lang: 'yue', text: '打敗怪獸喇！好嘢！' };
   clips.hero_bye    = { lang: 'yue', text: '多謝你幫我！英雄要去救人喇，拜拜！' };
+  // ---- 恐龍生日派對（單元四：家庭/人物，淨係廣東話）----
+  if (root.FAMILY_UNIT) {
+    for (const w of root.FAMILY_UNIT.people) {
+      clips['fam_' + w.id]   = { lang: 'yue', text: w.text };
+      clips['greet_' + w.id] = { lang: 'yue', text: w.text + '好！' };
+    }
+    for (const g of root.FAMILY_UNIT.groups) clips['fam_' + g.id] = { lang: 'yue', text: g.text };
+  }
+  clips.fam_adult    = { lang: 'yue', text: '大人' };
+  clips.pty_hi       = { lang: 'yue', text: '今日係小暴龍生日！Luca，幫手招呼客人啦！' };
+  clips.pty_who      = { lang: 'yue', text: '係邊個嚟咗呀？' };
+  clips.pty_greet    = { lang: 'yue', text: '同佢打招呼，講：' };
+  clips.pty_reply    = { lang: 'yue', text: '你好呀！你好有禮貌呀！' };
+  clips.pty_yes_1    = { lang: 'yue', text: '啱喇！' };
+  clips.pty_yes_2    = { lang: 'yue', text: '好叻呀！' };
+  clips.pty_yes_3    = { lang: 'yue', text: '好犀利！' };
+  clips.pty_give     = { lang: 'yue', text: '而家幫手派嘢食！聽清楚先好拎呀！' };
+  clips.pty_again    = { lang: 'yue', text: '再聽多次：' };
+  clips.pty_thanks   = { lang: 'yue', text: '多謝你！' };
+  clips.pty_sit      = { lang: 'yue', text: '大人坐呢邊，小朋友坐嗰邊。' };
+  clips.pty_sit_q    = { lang: 'yue', text: '睇吓張咭，佢坐邊度呀？' };
+  clips.pty_is_adult = { lang: 'yue', text: '係大人！' };
+  clips.pty_is_kid   = { lang: 'yue', text: '係小朋友！' };
+  clips.syn_fuqin    = { lang: 'yue', text: '父親即係爸爸！' };
+  clips.syn_muqin    = { lang: 'yue', text: '母親即係媽媽！' };
+  clips.pty_photo    = { lang: 'yue', text: '大家埋位，影張家人大合照！' };
+  clips.pty_cheese   = { lang: 'yue', text: '三、二、一，茄子！' };
+  clips.pty_photo_ok = { lang: 'yue', text: '好靚呀！' };
+  clips.pty_bye      = { lang: 'yue', text: '多謝你幫手！今日好開心呀！拜拜！' };
+  // 派嘢：「攞蛋糕畀」+「爺爺」；兩步：「先攞…畀」+ 名 +「再攞…畀」+ 名
+  for (const [id, name] of [['cake', '蛋糕'], ['drink', '汽水'], ['balloon', '氣球']]) {
+    clips['give_' + id]  = { lang: 'yue', text: '攞' + name + '畀' };
+    clips['first_' + id] = { lang: 'yue', text: '先攞' + name + '畀' };
+    clips['then_' + id]  = { lang: 'yue', text: '再攞' + name + '畀' };
+  }
+  // 小記者問題（面試常見題）：問題 + 示範答法
+  clips.q_family    = { lang: 'yue', text: 'Luca，你屋企有咩人呀？' };
+  clips.hint_family = { lang: 'yue', text: '你可以咁講：我屋企有爸爸、媽媽……' };
+  clips.q_play      = { lang: 'yue', text: '你最鍾意同屋企邊個玩呀？玩咩呀？' };
+  clips.hint_play   = { lang: 'yue', text: '你可以咁講：我最鍾意同爺爺玩恐龍。' };
+  clips.q_name      = { lang: 'yue', text: '你叫咩名呀？今年幾多歲呀？' };
+  clips.hint_name   = { lang: 'yue', text: '你可以咁講：我叫Luca，今年四歲。' };
+  clips.q_gift      = { lang: 'yue', text: '你生日想要咩禮物呀？點解呀？' };
+  clips.hint_gift   = { lang: 'yue', text: '你可以咁講：我想要恐龍，因為我好鍾意恐龍。' };
+  clips.mic_tap     = { lang: 'yue', text: '撳個咪，講俾我聽！' };
+  clips.mic_listen  = { lang: 'yue', text: '我聽吓你講咩……' };
+  clips.mic_great   = { lang: 'yue', text: '講得好好呀！好叻！' };
+  clips.mic_none    = { lang: 'yue', text: '講俾爸爸媽媽聽啦！講完撳一下個咪。' };
+  // 結局
+  clips.pm_alarm  = { lang: 'yue', text: '哎呀！怪獸偷咗個蛋糕！' };
+  clips.pm_go     = { lang: 'yue', text: '彩帶炮，發射！' };
+  clips.pm_sorry  = { lang: 'yue', text: '對唔住呀！我都好想食蛋糕！' };
+  clips.pm_win    = { lang: 'yue', text: '唔緊要！大家一齊食啦！' };
+  clips.pb_alarm  = { lang: 'yue', text: '嘩！氣球拉咗小暴龍上天！' };
+  clips.pb_go     = { lang: 'yue', text: 'Luca，快啲撳爆啲氣球！' };
+  clips.pb_win    = { lang: 'yue', text: '安全降落！好嘢！' };
+  clips.pc_wish   = { lang: 'yue', text: '許個願，吹蠟燭啦！' };
+  clips.pc_blow   = { lang: 'yue', text: '用力吹！或者撳蠟燭都得！' };
+  clips.pc_win    = { lang: 'yue', text: '生日快樂！' };
   // ---- Super Rex 英文（全英文）----
   if (root.ANIMAL_UNIT) {
     for (const a of root.ANIMAL_UNIT.animals) {
@@ -132,7 +191,7 @@
   clips.sticker_en  = { lang: 'en',  text: 'You got a new sticker!' };
   clips.unlock_yue  = { lang: 'yue', text: '集齊晒！秘密短片解鎖咗！' };
   clips.unlock_en   = { lang: 'en',  text: 'Secret movie unlocked!' };
-  clips.locked_yue  = { lang: 'yue', text: '集齊六張英雄同Super Rex貼紙，就可以睇秘密短片！' };
+  clips.locked_yue  = { lang: 'yue', text: '集齊英雄同Super Rex嘅貼紙，就可以睇秘密短片！' };
   // 秘密短片：機械人英雄 + Super Rex 大戰怪獸大王
   clips.boss_alarm  = { lang: 'yue', text: '嘩！怪獸大王嚟咗！' };
   clips.boss_team   = { lang: 'yue', text: '機械人英雄同Super Rex，一齊出動！' };

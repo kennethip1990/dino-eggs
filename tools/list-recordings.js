@@ -1,7 +1,7 @@
 // 用法：node tools/list-recordings.js  → 印出 README 用嘅錄音清單（markdown table）
 const vm = require('vm'), fs = require('fs'), path = require('path');
 global.self = global;
-for (const f of ['words.js', 'animals.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
+for (const f of ['words.js', 'family.js', 'animals.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
 const groups = [
   ['數數（撳蛋時）', /^(yue|en)_\d+$/],
   ['開場（每局開始）', /_intro_/],
@@ -12,6 +12,12 @@ const groups = [
   ['英雄認字：生字', /^word_/],
   ['英雄認字：句子', /^hero_/],
   ['英雄打怪獸短片', /^battle_/],
+  ['生日派對：生字', /^fam_/],
+  ['生日派對：打招呼', /^greet_/],
+  ['生日派對：句子', /^(pty_|syn_)/],
+  ['生日派對：派嘢（後面接名）', /^(give|first|then)_/],
+  ['生日派對：小記者問題', /^(q|hint|mic)_/],
+  ['生日派對結局', /^(pm|pb|pc)_/],
   ['Super Rex：動物名', /^an_/],
   ['Super Rex：叫聲', /^snd_/],
   ['Super Rex：問題', /^rex_where_/],

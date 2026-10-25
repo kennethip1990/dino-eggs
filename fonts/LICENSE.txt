@@ -1,6 +1,6 @@
 LXGW WenKai TC — https://github.com/lxgw/LxgwWenkaiTC
 Copyright 2024 LXGW. Licensed under the SIL Open Font License 1.1 (https://openfontlicense.org).
-This file is a subset (only the characters used by the game), downloaded from Google Fonts.
+This file is a subset (only the characters used by the game), downloaded from Google Fonts (css2 API with text=…).
 
 Andika — https://software.sil.org/andika/
 Copyright SIL International. Licensed under the SIL Open Font License 1.1 (https://openfontlicense.org).
