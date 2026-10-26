@@ -1,6 +1,6 @@
 # 🦕 恐龍搵蛋（Dino Eggs）
 
-一個 app 五個 game（每個 game 3–5 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文）、🐍 **ABC 貪食蛇**（學英文字母）、🎂 **恐龍生日派對**（學認字 + 升小面試練習），後四個見下面。
+一個 app 六個 game（每個 game 3–5 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文）、🐍 **ABC 貪食蛇**（學英文字母）、🎂 **恐龍生日派對**（學認字 + 升小面試練習）、⚔️ **Jedi Luca 大戰 Sith**（英文句子 ✓✗ + 砌字），後五個見下面。主選單 3 × 2 排。
 
 **恐龍搵蛋：** 幫恐龍媽媽搵蛋：每撳一隻蛋，蛋就飛入巢，遊戲先用廣東話、再用英文讀出數字（「一……one」）。搵齊之後蛋會孵出恐龍 BB，再讀出總數同一句讚佢嘅說話。
 
@@ -39,7 +39,11 @@ css/snake.css           貪食蛇畫面
 js/family.js            ★ 生日派對嘅字表（單元四：家庭/人物）
 js/party.js             恐龍生日派對遊戲流程（開門 / 派嘢 / 坐位 / 合照 / 小記者錄音）
 js/party-art.js         派對房間 + 恐龍一家 + 蛋糕 SVG
-css/party.css           派對畫面 + 主選單 5 張卡排位
+css/party.css           派對畫面
+js/jedi-words.js        ★ Jedi 嘅英文字表（Starters R&W Part 1 句子配對 + Part 3 砌字）
+js/jedi.js              Jedi Luca 大戰 Sith 遊戲流程（Truth Saber / Force Spell / Sith Lord 決鬥 / 3 個結局）
+js/jedi-art.js          Jedi Luca、Sith 機械人、Sith Lord、23 樣嘢、黑暗星、戰機 SVG（全部原創）
+css/jedi.css            Jedi 畫面 + 主選單 6 張卡排位（3 × 2）
 fonts/                  楷書 + Andika 字體（只抽咗用到嘅字）
 sw.js                   Service Worker（離線）
 manifest.webmanifest    加入主畫面 / 安裝 app
@@ -168,6 +172,34 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 
 ---
 
+## ⚔️ Jedi Luca 大戰 Sith（英文，全英文）
+
+跟 Yorkland Tutorial **Starters R&W Part 1（CVC）+ Part 3（CVC / CCVC / CVCC）** 工作紙。Luca 做 Jedi（藍光劍），Sith 機械人成日講大話，要分真假；最後同 Sith Lord 決鬥。一局大約 5 分鐘：
+
+1. **Truth Saber（5 條，= Part 1 Look and read ✓/✗）**：Sith 機械人投影一幅圖 + 一句句子（例如蠟筆配「This is a pen.」），讀出嚟 →「Tick or cross?」→ 撳 ✓ 或 ✗，句子隔籬個格會蓋印
+   - 啱 ✓：Luca 舉劍擋，機械人中招飛走
+   - 啱 ✗：Luca 一劍劈落句子 →「What is it?」→ 兩張字卡（crayon / pen）揀返啱嘅 → 句子改正做「This is a crayon.」+ ✓
+   - 真 / 假大約一半一半；出嘅都係工作紙「似但唔係」嘅對：bath/bed、frog/dog、crayon/pen、shoes/socks、skirt/dress、watch/clock、desk/bed、lamp/clock、truck/duck、hand/pen
+   - **desk 係 focus 字**（工作紙 #7 打錯咗）：第一下就啱 3 次之前每局都出
+2. **Force Spell（3 個字，= Part 3 Look at the letters. Write the words.）**：圖 + 4 條底線（同工作紙一樣）+ 4 粒水晶字母 → 跟次序撳，字母飛入底線。砌完逐粒讀一次再讀成個字。每砌好一個字，上面光劍電量 +1 格；3 格滿 =「Your lightsaber is ready!」
+   - 10 個字（hand, duck, doll, lamp, fish, sock, desk, ship, sand, swim）平均輪流，一輪出晒先再嚟過
+   - 撳水晶會讀個字母：有錄 `ph_*`（字母**音**，例如 d = /d/）就用錄音，冇就讀字母名（`ltr_*`，同貪食蛇共用）。**內置語音讀唔到字母音，所以建議錄 `ph_*`**
+3. **Sith Lord 決鬥（4 條）**：Sith Lord 出場，上面 4 粒心。題目混合：聽字搵圖（「Find the clock」，會放埋似嘅嘢做干擾，例如 watch）、睇字搵圖（字牌冇讀出嚟）×2、✓✗ 句子。答啱一題 Luca 衝過去打一劍，Sith 扣一粒心；撳錯 Sith 會笑「Ha ha! Try again!」→ 4 粒心冇晒 →「OK, OK! You win!」飛走
+4. 結局短片 + 貼紙 →「May the Force be with you!」
+
+- 撳錯唔罰：輕輕搖 + 再講一次；**錯兩次**啱嗰個會發光；靜咗 12 秒都會提示
+- 字用 Andika 字體（`a` 同學校寫法一樣）
+- 角色全部原創 SVG（冇用官方圖 / 名 / 配樂）；Sith Lord 輸咗係逃走 / 變好人，冇斬人
+- **家長區「Jedi Luca 英文記錄」**：每個字「✓✗ 句子 / 砌字 / Sith 決鬥」第一下就啱 / 次數；★ = focus 字
+- Jedi 貼紙唔計入秘密短片
+- 開發測試：`#demo=jediplay`（由頭玩）、`#demo=jediplay:2`（由砌字開始）、`#demo=jediplay:3`（直接決鬥）、`#demo=jedi:droids`（`ship` / `saber`）；`JediGame._dbg.target` = 下一下應該撳嘅掣（自動測試用）
+
+### 換英文字
+- 改 `js/jedi-words.js`：`things`（字 + 圖）、`truth`（圖 + 似但唔係嘅字）、`spell`（砌字）。新嘢要畫 SVG（`js/jedi-art.js`）→ 叫 Claude 做會最快
+- 改完記得 `js/version.js` +1
+
+---
+
 ## 🎬 結局短片 + 貼紙簿
 
 每個 game 有 3 個唔同結局（英雄裝備站有 5 個），等 Luca 有動力玩多幾次：
@@ -179,6 +211,7 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 | 🦖🦸 Super Rex | 紫色怪獸（大吼） | 🌪️ 龍捲風吹起動物 → 擰尾 → 動物「boing」跌返落嚟 | ☄️ 大隕石 → Super Rex 跳上去頂爆 → 變星星 |
 | 🐍 ABC 貪食蛇 | 💗 畫大心心 | 🐉 金色飛龍 | 👾 字母炮打怪獸 |
 | 🎂 生日派對 | 👾 怪獸偷蛋糕 | 🎈 氣球飛上天 | 🕯 吹蠟燭 + 生日歌 |
+| ⚔️ Jedi Luca | 🤖 機械人大軍（Force push ×3） | 🌑 黑暗星 → 戰機射 ×3 → 煙花 | 🌈 Sith Lord 返嚟 → 彩虹光劍 ×3 → 佢變好人做 Jedi |
 
 - 恐龍搵蛋：一節完咗會出一隻金色大蛋，搖三下孵出特別恐龍BB，之後佢會喺巢中間一齊瞓覺
 - **次序**：未睇過嘅結局跟次序先出（保證全部睇到；新加嘅結局下一次就會出），之後隨機（唔會連續同一個）
@@ -258,7 +291,7 @@ python -m http.server 8765
 
 ---
 
-## 錄音清單（298 個檔）
+## 錄音清單（398 個檔）
 
 放喺 `audio/` folder，**檔名要一模一樣**（細楷、底線、`.mp3`）。唔使一次錄晒，錄咗邊個就用邊個，未錄嘅照用內置語音。
 
@@ -706,6 +739,131 @@ python -m http.server 8765
 | `boss_sorry.mp3` | 廣東話 | 對唔住！我哋做好朋友啦！ |
 | `boss_win.mp3` | 廣東話 | 我哋贏咗喇！ |
 | `boss_win_en.mp3` | English | We did it! Hooray! |
+
+**Jedi Luca：生字**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `w_hand.mp3` | English | hand |
+| `w_bed.mp3` | English | bed |
+| `w_bath.mp3` | English | bath |
+| `w_dog.mp3` | English | dog |
+| `w_frog.mp3` | English | frog |
+| `w_pen.mp3` | English | pen |
+| `w_crayon.mp3` | English | crayon |
+| `w_socks.mp3` | English | socks |
+| `w_shoes.mp3` | English | shoes |
+| `w_lamp.mp3` | English | lamp |
+| `w_desk.mp3` | English | desk |
+| `w_dress.mp3` | English | dress |
+| `w_skirt.mp3` | English | skirt |
+| `w_clock.mp3` | English | clock |
+| `w_watch.mp3` | English | watch |
+| `w_truck.mp3` | English | truck |
+| `w_duck.mp3` | English | duck |
+| `w_doll.mp3` | English | doll |
+| `w_fish.mp3` | English | fish |
+| `w_sock.mp3` | English | sock |
+| `w_ship.mp3` | English | ship |
+| `w_sand.mp3` | English | sand |
+| `w_swim.mp3` | English | swim |
+
+**Jedi Luca：句子（Truth Saber）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `ts_hand.mp3` | English | This is a hand. |
+| `ts_bed.mp3` | English | This is a bed. |
+| `ts_bath.mp3` | English | This is a bath. |
+| `ts_dog.mp3` | English | This is a dog. |
+| `ts_frog.mp3` | English | This is a frog. |
+| `ts_pen.mp3` | English | This is a pen. |
+| `ts_crayon.mp3` | English | This is a crayon. |
+| `ts_socks.mp3` | English | These are socks. |
+| `ts_shoes.mp3` | English | These are shoes. |
+| `ts_lamp.mp3` | English | This is a lamp. |
+| `ts_desk.mp3` | English | This is a desk. |
+| `ts_dress.mp3` | English | This is a dress. |
+| `ts_skirt.mp3` | English | This is a skirt. |
+| `ts_clock.mp3` | English | This is a clock. |
+| `ts_watch.mp3` | English | This is a watch. |
+| `ts_truck.mp3` | English | This is a truck. |
+| `ts_duck.mp3` | English | This is a duck. |
+
+**Jedi Luca：字母音（phonics，未錄之前讀字母名）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `ph_a.mp3` | English | a 嘅字母音（好似 apple 嗰個音，唔好讀字母名） |
+| `ph_b.mp3` | English | b 嘅字母音（好似 bed 嗰個音，唔好讀字母名） |
+| `ph_c.mp3` | English | c 嘅字母音（好似 cat 嗰個音，唔好讀字母名） |
+| `ph_d.mp3` | English | d 嘅字母音（好似 dog 嗰個音，唔好讀字母名） |
+| `ph_e.mp3` | English | e 嘅字母音（好似 egg 嗰個音，唔好讀字母名） |
+| `ph_f.mp3` | English | f 嘅字母音（好似 fish 嗰個音，唔好讀字母名） |
+| `ph_g.mp3` | English | g 嘅字母音（好似 goat 嗰個音，唔好讀字母名） |
+| `ph_h.mp3` | English | h 嘅字母音（好似 hand 嗰個音，唔好讀字母名） |
+| `ph_i.mp3` | English | i 嘅字母音（好似 ink 嗰個音，唔好讀字母名） |
+| `ph_j.mp3` | English | j 嘅字母音（好似 jam 嗰個音，唔好讀字母名） |
+| `ph_k.mp3` | English | k 嘅字母音（好似 kite 嗰個音，唔好讀字母名） |
+| `ph_l.mp3` | English | l 嘅字母音（好似 lamp 嗰個音，唔好讀字母名） |
+| `ph_m.mp3` | English | m 嘅字母音（好似 mum 嗰個音，唔好讀字母名） |
+| `ph_n.mp3` | English | n 嘅字母音（好似 nest 嗰個音，唔好讀字母名） |
+| `ph_o.mp3` | English | o 嘅字母音（好似 dog 嗰個音，唔好讀字母名） |
+| `ph_p.mp3` | English | p 嘅字母音（好似 pen 嗰個音，唔好讀字母名） |
+| `ph_q.mp3` | English | q 嘅字母音（好似 queen 嗰個音，唔好讀字母名） |
+| `ph_r.mp3` | English | r 嘅字母音（好似 red 嗰個音，唔好讀字母名） |
+| `ph_s.mp3` | English | s 嘅字母音（好似 sock 嗰個音，唔好讀字母名） |
+| `ph_t.mp3` | English | t 嘅字母音（好似 ten 嗰個音，唔好讀字母名） |
+| `ph_u.mp3` | English | u 嘅字母音（好似 duck 嗰個音，唔好讀字母名） |
+| `ph_v.mp3` | English | v 嘅字母音（好似 van 嗰個音，唔好讀字母名） |
+| `ph_w.mp3` | English | w 嘅字母音（好似 swim 嗰個音，唔好讀字母名） |
+| `ph_x.mp3` | English | x 嘅字母音（好似 box 嗰個音，唔好讀字母名） |
+| `ph_y.mp3` | English | y 嘅字母音（好似 yes 嗰個音，唔好讀字母名） |
+| `ph_z.mp3` | English | z 嘅字母音（好似 zoo 嗰個音，唔好讀字母名） |
+
+**Jedi Luca：旁白 + Sith**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `jd_hi.mp3` | English | Hello, Jedi Luca! |
+| `jd_intro.mp3` | English | The Sith droids are playing tricks. Look and read. Is it right? |
+| `jd_tick_q.mp3` | English | Tick or cross? |
+| `jd_tick.mp3` | English | Tick! That’s right! |
+| `jd_cross.mp3` | English | Cross! That’s wrong! |
+| `jd_what.mp3` | English | What is it? |
+| `jd_look.mp3` | English | Look again! |
+| `jd_spell.mp3` | English | Now use the Force! Let’s spell the words! |
+| `jd_spell_q.mp3` | English | Let’s spell |
+| `jd_charge.mp3` | English | Your lightsaber is ready! |
+| `jd_boss.mp3` | English | Oh no! Here comes the Sith Lord! |
+| `jd_boss_go.mp3` | English | Answer right to beat him! |
+| `jd_find.mp3` | English | Find the |
+| `jd_read_q.mp3` | English | What does it say? |
+| `sith_laugh.mp3` | English | Ha ha! Try again! |
+| `sith_give.mp3` | English | OK, OK! You win, Jedi Luca! |
+| `jd_win.mp3` | English | Hooray! The galaxy is safe! |
+| `jd_bye.mp3` | English | Thank you, Jedi Luca! May the Force be with you! |
+| `jd_yes_1.mp3` | English | Yes! |
+| `sith_ouch_1.mp3` | English | Ouch! |
+| `jd_yes_2.mp3` | English | Well done! |
+| `sith_ouch_2.mp3` | English | Oof! |
+| `jd_yes_3.mp3` | English | Great job, Jedi Luca! |
+| `sith_ouch_3.mp3` | English | Oh no! |
+
+**Jedi Luca 結局**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `dro_alarm.mp3` | English | Oh no! A Sith droid army! |
+| `dro_go.mp3` | English | Jedi Luca, Force push! |
+| `dro_win.mp3` | English | Beep boop! Bye bye, droids! |
+| `shp_alarm.mp3` | English | Oh no! The Sith Dark Star! |
+| `shp_go.mp3` | English | Jedi Luca, fly your starfighter! |
+| `shp_win.mp3` | English | Wow! Fireworks! |
+| `sab_alarm.mp3` | English | I’m back! Ha ha ha! |
+| `sab_go.mp3` | English | Jedi Luca, rainbow saber! |
+| `sab_good.mp3` | English | I want to be good! Can I be a Jedi too? |
+| `sab_win.mp3` | English | Yes! Welcome, friend! |
 
 ---
 

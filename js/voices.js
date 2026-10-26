@@ -152,6 +152,53 @@
   clips.snk_mon_1   = { lang: 'en', text: 'Oh no! The monster wants my letters!' };
   clips.snk_mon_2   = { lang: 'en', text: 'Letter power, go!' };
   clips.snk_mon_3   = { lang: 'en', text: 'Hooray! My letters are safe!' };
+  // ---- Jedi Luca 大戰 Sith（全英文）----
+  if (root.JEDI_UNIT) {
+    // 句子淨係出 Truth Saber 用到嘅字（swim / sand 唔會講「This is a …」）
+    const inTruth = new Set(root.JEDI_UNIT.truth.flatMap((p) => [p.id, p.lie]));
+    for (const t of root.JEDI_UNIT.things) {
+      clips['w_' + t.id] = { lang: 'en', text: t.word };
+      if (inTruth.has(t.id)) clips['ts_' + t.id] = { lang: 'en', text: (t.these ? 'These are ' : 'This is a ') + t.word + '.' };
+    }
+  }
+  // 字母「音」（phonics，例如 d = /d/）：內置語音讀唔到，所以冇錄音就唔讀，遊戲改讀字母名（ltr_*）
+  const PH = { a: 'apple', b: 'bed', c: 'cat', d: 'dog', e: 'egg', f: 'fish', g: 'goat', h: 'hand', i: 'ink', j: 'jam', k: 'kite', l: 'lamp', m: 'mum', n: 'nest', o: 'dog', p: 'pen', q: 'queen', r: 'red', s: 'sock', t: 'ten', u: 'duck', v: 'van', w: 'swim', x: 'box', y: 'yes', z: 'zoo' };
+  for (const l of Object.keys(PH)) clips['ph_' + l] = { lang: 'en', text: l + ' 嘅字母音（好似 ' + PH[l] + ' 嗰個音，唔好讀字母名）', noTts: true };
+  clips.jd_hi      = { lang: 'en', text: 'Hello, Jedi Luca!' };
+  clips.jd_intro   = { lang: 'en', text: 'The Sith droids are playing tricks. Look and read. Is it right?' };
+  clips.jd_tick_q  = { lang: 'en', text: 'Tick or cross?' };
+  clips.jd_tick    = { lang: 'en', text: 'Tick! That’s right!' };
+  clips.jd_cross   = { lang: 'en', text: 'Cross! That’s wrong!' };
+  clips.jd_what    = { lang: 'en', text: 'What is it?' };
+  clips.jd_look    = { lang: 'en', text: 'Look again!' };
+  clips.jd_yes_1   = { lang: 'en', text: 'Yes!' };
+  clips.jd_yes_2   = { lang: 'en', text: 'Well done!' };
+  clips.jd_yes_3   = { lang: 'en', text: 'Great job, Jedi Luca!' };
+  clips.jd_spell   = { lang: 'en', text: 'Now use the Force! Let’s spell the words!' };
+  clips.jd_spell_q = { lang: 'en', text: 'Let’s spell' };
+  clips.jd_charge  = { lang: 'en', text: 'Your lightsaber is ready!' };
+  clips.jd_boss    = { lang: 'en', text: 'Oh no! Here comes the Sith Lord!' };
+  clips.jd_boss_go = { lang: 'en', text: 'Answer right to beat him!' };
+  clips.jd_find    = { lang: 'en', text: 'Find the' };
+  clips.jd_read_q  = { lang: 'en', text: 'What does it say?' };
+  clips.sith_laugh = { lang: 'en', text: 'Ha ha! Try again!' };
+  clips.sith_ouch_1 = { lang: 'en', text: 'Ouch!' };
+  clips.sith_ouch_2 = { lang: 'en', text: 'Oof!' };
+  clips.sith_ouch_3 = { lang: 'en', text: 'Oh no!' };
+  clips.sith_give  = { lang: 'en', text: 'OK, OK! You win, Jedi Luca!' };
+  clips.jd_win     = { lang: 'en', text: 'Hooray! The galaxy is safe!' };
+  clips.jd_bye     = { lang: 'en', text: 'Thank you, Jedi Luca! May the Force be with you!' };
+  // Jedi 結局
+  clips.dro_alarm = { lang: 'en', text: 'Oh no! A Sith droid army!' };
+  clips.dro_go    = { lang: 'en', text: 'Jedi Luca, Force push!' };
+  clips.dro_win   = { lang: 'en', text: 'Beep boop! Bye bye, droids!' };
+  clips.shp_alarm = { lang: 'en', text: 'Oh no! The Sith Dark Star!' };
+  clips.shp_go    = { lang: 'en', text: 'Jedi Luca, fly your starfighter!' };
+  clips.shp_win   = { lang: 'en', text: 'Wow! Fireworks!' };
+  clips.sab_alarm = { lang: 'en', text: 'I’m back! Ha ha ha!' };
+  clips.sab_go    = { lang: 'en', text: 'Jedi Luca, rainbow saber!' };
+  clips.sab_good  = { lang: 'en', text: 'I want to be good! Can I be a Jedi too?' };
+  clips.sab_win   = { lang: 'en', text: 'Yes! Welcome, friend!' };
   // ---- 結局短片 ----
   // 英雄（廣東話）
   clips.cloud_alarm = { lang: 'yue', text: '哎呀！黑雲怪落大雨，個城市濕晒！' };

@@ -1,7 +1,7 @@
 // 用法：node tools/list-recordings.js  → 印出 README 用嘅錄音清單（markdown table）
 const vm = require('vm'), fs = require('fs'), path = require('path');
 global.self = global;
-for (const f of ['words.js', 'family.js', 'animals.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
+for (const f of ['words.js', 'family.js', 'animals.js', 'jedi-words.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
 const groups = [
   ['數數（撳蛋時）', /^(yue|en)_\d+$/],
   ['開場（每局開始）', /_intro_/],
@@ -29,7 +29,12 @@ const groups = [
   ['ABC 貪食蛇：字母', /^ltr_/],
   ['ABC 貪食蛇：句子 + 結局', /^snk_/],
   ['貼紙', /^(sticker|unlock|locked)_/],
-  ['秘密短片：怪獸大王', /^boss_/]
+  ['秘密短片：怪獸大王', /^boss_/],
+  ['Jedi Luca：生字', /^w_/],
+  ['Jedi Luca：句子（Truth Saber）', /^ts_/],
+  ['Jedi Luca：字母音（phonics，未錄之前讀字母名）', /^ph_/],
+  ['Jedi Luca：旁白 + Sith', /^(jd|sith)_/],
+  ['Jedi Luca 結局', /^(dro|shp|sab)_/]
 ];
 const clips = self.VOICES.clips;
 const out = [];

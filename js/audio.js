@@ -116,8 +116,10 @@ const Sound = (() => {
 
   function playKey(key) {
     if (buffers[key] && ctx && ctx.state === 'running') return playBuffer(key);
+    if (V.clips[key] && V.clips[key].noTts) return Promise.resolve();   // 例如字母音：冇錄音就唔讀
     return speakTTS(key);
   }
+  const has = (key) => !!buffers[key];
 
   // ---------- Queue ----------
   async function pump() {
@@ -210,6 +212,8 @@ const Sound = (() => {
     beam()  { tone(880, 1320, 0.4, 'sine', 0.05); tone(660, 990, 0.4, 'triangle', 0.03); },
     ding()  { tone(784, 783, 0.6, 'sine', 0.12); tone(622, 621, 0.9, 'sine', 0.12, 0.45); },
     click() { tone(1400, 500, 0.06, 'square', 0.03); tone(900, 300, 0.09, 'square', 0.025, 0.08); },
+    saber() { tone(110, 190, 0.45, 'sawtooth', 0.035); tone(220, 380, 0.4, 'triangle', 0.05); },
+    clash() { tone(1700, 500, 0.14, 'square', 0.025); tone(820, 260, 0.3, 'sawtooth', 0.04, 0.04); },
     // 生日歌（傳統旋律）：回傳幾多秒
     song() {
       const N = { G4: 392, A4: 440, B4: 494, C5: 523, D5: 587, E5: 659, F5: 698, G5: 784 };
@@ -224,7 +228,7 @@ const Sound = (() => {
   };
 
   return {
-    unlock, loadRecordings, say, clear, isBusy, whenIdle, sfx, playKey,
+    unlock, loadRecordings, say, clear, isBusy, whenIdle, sfx, playKey, has,
     status() {
       return {
         recorded: Object.keys(buffers).slice().sort(),

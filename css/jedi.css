@@ -1,0 +1,241 @@
+/* Jedi Luca 大戰 Sith（英文） */
+
+/* ---------- 主選單：6 張卡 = 3 × 2 ---------- */
+#menu-screen { display: grid; grid-template-columns: repeat(3, auto); justify-content: center; align-content: center; --card: min(20vw, 31vh); gap: 1.6vh 4vw; }
+@media (orientation: portrait) { #menu-screen { --card: min(29vw, 21vh); gap: 3vh 3vw; } }
+body:not([data-screen="menu"]) #menu-screen { display: none; }
+#go-jedi { background: rgba(70,60,140,.75); animation-delay: -2.2s; }
+#go-jedi .choose-art { margin: -6%; width: 112%; height: 112%; }
+
+/* ---------- 畫面 ---------- */
+#jedi-screen { position: absolute; inset: 0; z-index: 10; display: none; overflow: hidden; --blade: #6fd0ff; }
+body[data-screen="jedi"] #jedi-screen { display: block; }
+#jedi-bg { position: absolute; inset: 0; }
+#jedi-bg svg { width: 100%; height: 100%; display: block; }
+.jd-stars { animation: twinkle 4s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: .6; } }
+
+#jedi-luca { position: absolute; z-index: 4; left: 1vw; bottom: 4vh; height: 62vh; aspect-ratio: 200 / 260; transition: opacity .5s, translate .5s; }
+#jedi-sith { position: absolute; z-index: 4; right: 1vw; bottom: 4vh; height: 60vh; aspect-ratio: 200 / 260; display: none; --sblade: color-mix(in srgb, #6fd0ff calc(var(--turn, 0) * 100%), #ff4d5e); }
+body.jedi-boss #jedi-sith { display: block; }
+#jedi-luca svg, #jedi-sith svg { width: 100%; height: 100%; display: block; overflow: visible; }
+#jedi-play { position: absolute; z-index: 5; left: 29vw; right: 2vw; top: 64px; bottom: 3vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3vh; }
+body.jedi-boss #jedi-play { left: 25vw; right: 25vw; }
+#jedi-hud { position: absolute; z-index: 6; top: max(12px, env(safe-area-inset-top)); left: 50%; translate: -50% 0; display: flex; align-items: center; gap: 1.2vmin; pointer-events: none; }
+
+@media (orientation: portrait) {
+  #jedi-luca { left: 3vw; top: 70px; bottom: auto; height: 25vh; }
+  #jedi-sith { right: 3vw; top: 70px; bottom: auto; height: 25vh; }
+  #jedi-play, body.jedi-boss #jedi-play { left: 3vw; right: 3vw; top: calc(76px + 25vh); bottom: 3vh; }
+  #jedi-hud { top: calc(max(12px, env(safe-area-inset-top)) + 54px); }
+}
+
+/* ---------- Jedi Luca 動作 ---------- */
+#jedi-luca.in svg { animation: jlin .9s cubic-bezier(.2,.9,.3,1.2) both; }
+@keyframes jlin { from { transform: translateX(-50vw) rotate(-10deg); } to { transform: none; } }
+#jedi-luca:not(.in) svg { opacity: 1; }
+.jl-arm { transform-box: view-box; transform-origin: 140px 124px; }
+.jl-head { transform-box: view-box; transform-origin: 100px 110px; animation: jlnod 3s ease-in-out infinite; }
+@keyframes jlnod { 50% { transform: rotate(2deg); } }
+.jl-saber-blade { transition: filter .4s; }
+#jedi-luca.block .jl-arm { animation: jlblock .75s ease-in-out; }
+@keyframes jlblock { 35%, 65% { transform: rotate(-38deg); } }
+#jedi-luca.slash .jl-arm { animation: jlslash .8s ease-in-out; }
+@keyframes jlslash { 30% { transform: rotate(-70deg); } 55% { transform: rotate(70deg); } 75% { transform: rotate(55deg); } }
+#jedi-luca.push .jl-arm { animation: jlpush .6s ease-in-out; }
+@keyframes jlpush { 40% { transform: rotate(-22deg) translateX(10px); } }
+#jedi-luca.shout .jl-shout { display: inline; }
+#jedi-luca.shout .jl-smile { display: none; }
+#jedi-luca.charged .jl-saber-blade { filter: drop-shadow(0 0 8px #bff0ff) drop-shadow(0 0 3px #fff); }
+#jedi-luca.powered svg { animation: jlpower 1.4s ease-in-out; filter: drop-shadow(0 0 18px #bff0ff); }
+@keyframes jlpower { 50% { transform: translateY(-4%) scale(1.04); } }
+#jedi-luca.wave .jl-arm { animation: jlwave 1.2s ease-in-out infinite; }
+@keyframes jlwave { 50% { transform: rotate(-30deg); } }
+#jedi-luca.rainbow .jl-saber-blade { animation: rainbow .8s linear infinite; filter: drop-shadow(0 0 10px #fff); }
+@keyframes rainbow { to { filter: hue-rotate(360deg) drop-shadow(0 0 10px #fff); } from { filter: hue-rotate(0deg) drop-shadow(0 0 10px #fff); } }
+#jedi-luca.away { opacity: 0; translate: -10vw 0; }
+#jedi-luca.cheer svg, #jedi-sith.cheer svg { animation: jlcheer .6s ease-in-out infinite; }
+@keyframes jlcheer { 50% { transform: translateY(-5%); } }
+
+/* ---------- Sith Lord ---------- */
+.sl-arm { transform-box: view-box; transform-origin: 62px 128px; animation: slsway 2.4s ease-in-out infinite; }
+@keyframes slsway { 50% { transform: rotate(8deg); } }
+#jedi-sith.enter svg { animation: slin 1.1s cubic-bezier(.2,.9,.3,1.2) both; }
+@keyframes slin { from { transform: translateX(50vw) rotate(10deg); } to { transform: none; } }
+#jedi-sith.hit svg { animation: slhit .5s ease-in-out; }
+@keyframes slhit { 25% { transform: translateX(6%) rotate(6deg); } 60% { transform: translateX(-2%) rotate(-3deg); } }
+#jedi-sith.laugh svg { animation: sllaugh .8s ease-in-out; }
+@keyframes sllaugh { 20%, 60% { transform: translateY(-4%) rotate(-3deg); } 40%, 80% { transform: translateY(0) rotate(3deg); } }
+#jedi-sith.dizzy svg { animation: sldizzy 1s ease-in-out infinite; }
+@keyframes sldizzy { 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
+#jedi-sith.flee svg { animation: slflee 1.2s ease-in forwards; }
+@keyframes slflee { to { transform: translate(60vw, -30vh) rotate(40deg) scale(.4); opacity: 0; } }
+#jedi-sith.friendly { --sblade: #6fd0ff; }
+#jedi-sith.friendly .sl-angry { display: none; }
+#jedi-sith.friendly .sl-happy { display: inline; }
+
+/* ---------- HUD：光劍電量 / Sith 生命 ---------- */
+#jedi-hud.meter .m-hilt { width: 6vmin; height: 3.4vmin; margin-right: -.6vmin; border-radius: .8vmin; background: repeating-linear-gradient(90deg, #a7adba 0 1.2vmin, #3b3247 1.2vmin 1.6vmin); border: 3px solid #fff; }
+#jedi-hud.meter i { width: 9vmin; height: 2.6vmin; border-radius: 1.3vmin; background: rgba(255,255,255,.2); }
+#jedi-hud.meter i.on { background: var(--blade); box-shadow: 0 0 12px #bff0ff, inset 0 0 0 .6vmin rgba(255,255,255,.7); animation: segon .5s ease-out; }
+@keyframes segon { from { transform: scaleX(.2); } }
+#jedi-hud .h-face { width: 8vmin; height: 8vmin; border-radius: 50%; background: #3d3348; border: 4px solid #fff; overflow: hidden; }
+#jedi-hud .h-face svg { width: 100%; height: 100%; display: block; }
+#jedi-hud .heart { width: 6.5vmin; }
+#jedi-hud .heart svg { width: 100%; display: block; }
+#jedi-hud .heart.lost { animation: hlost .6s ease-in forwards; }
+@keyframes hlost { 40% { transform: scale(1.4); } to { transform: scale(.7); filter: grayscale(1); opacity: .35; } }
+
+/* ---------- 共用：英文字體 + 提示 ---------- */
+#jedi-play .holo-text, #jedi-play .wcard, #jedi-play .sp-slot, #jedi-play .crystal, #jedi-play .rcard { font-family: "Andika", system-ui, sans-serif; font-weight: 700; }
+#jedi-play button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+#jedi-play .wiggle { animation: partwiggle .6s ease-in-out; }
+#jedi-play .fade { opacity: .2; transition: opacity .35s; pointer-events: none; }
+#jedi-play .hint { animation: jdhint 1.4s ease-in-out infinite; }
+@keyframes jdhint { 50% { transform: scale(1.1); filter: brightness(1.15) drop-shadow(0 0 14px #ffe680); } }
+
+/* ---------- ① Truth Saber ---------- */
+.holo {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  padding: 2vh 3vh 2.4vh; border-radius: 28px;
+  background: rgba(120,220,255,.14); border: 4px solid #8fe4ff;
+  box-shadow: 0 0 26px rgba(111,208,255,.55), inset 0 0 26px rgba(111,208,255,.3);
+}
+.holo.in { animation: holoin .5s ease-out both; }
+@keyframes holoin { from { transform: scaleY(.05); opacity: 0; } 60% { transform: scaleY(1.04); opacity: 1; } }
+.holo-pic { height: 31vh; aspect-ratio: 200 / 170; background: #fff; border-radius: 20px; padding: 1.4vh; }
+.holo-pic svg { width: 100%; height: 100%; display: block; }
+.holo-line { display: flex; align-items: center; gap: 2.4vh; margin-top: 2vh; }
+.holo-text { position: relative; font-size: clamp(30px, 7.4vh, 80px); line-height: 1.1; color: #fff; text-shadow: 0 0 12px rgba(111,208,255,.9), 0 3px 0 rgba(0,0,0,.25); white-space: nowrap; }
+.holo-text.fixed { animation: fixed .6s cubic-bezier(.3,1.6,.5,1); color: #fffbe0; }
+@keyframes fixed { from { transform: scale(.6); opacity: 0; } }
+.holo-box { width: 9vh; height: 9vh; flex: none; border: 5px solid #fff; border-radius: 12px; background: rgba(255,255,255,.92); padding: .6vh; }
+.holo-box svg { width: 100%; height: 100%; display: block; }
+.holo-box.stamp svg { animation: stamp .45s cubic-bezier(.3,1.6,.5,1); }
+@keyframes stamp { from { transform: scale(2.2); opacity: 0; } }
+.holo.slashed .holo-text { opacity: .55; }
+.holo.slashed .holo-text::after {
+  content: ""; position: absolute; left: -4%; top: 50%; width: 108%; height: .9vh; border-radius: 1vh;
+  background: var(--blade); box-shadow: 0 0 12px #bff0ff; transform-origin: 0 50%; rotate: -8deg;
+  animation: slashline .35s ease-out both;
+}
+@keyframes slashline { from { transform: scaleX(0); } }
+.holo-droid { position: absolute; right: -6vh; top: -6vh; width: 15vh; animation: hover 2.2s ease-in-out infinite; }
+.holo-droid svg { width: 100%; display: block; }
+@keyframes hover { 50% { transform: translateY(-1.4vh) rotate(4deg); } }
+.holo-droid.zapped { animation: zapped 1s ease-in forwards; }
+@keyframes zapped { 20% { transform: rotate(-20deg) scale(1.1); filter: brightness(2); } to { transform: translate(30vw, -40vh) rotate(720deg) scale(.4); opacity: 0; } }
+.dr-eye { animation: eyeglow 1.4s ease-in-out infinite; }
+@keyframes eyeglow { 50% { fill: #ff8a95; } }
+
+.tx-row { display: flex; gap: 7vh; }
+.tx { width: 17vh; height: 17vh; padding: 2.2vh; border: 6px solid #fff; border-radius: 26px; background: rgba(255,255,255,.94); box-shadow: 0 8px 0 rgba(0,0,0,.18); }
+.tx svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.tx:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,.18); }
+.wcard { min-width: 24vh; padding: 1.2vh 4vh; font-size: clamp(34px, 9vh, 96px); line-height: 1.1; color: #3b3247; background: #fff; border: 6px solid #8fe4ff; border-radius: 22px; box-shadow: 0 8px 0 rgba(0,0,0,.18); animation: cardin .4s cubic-bezier(.3,1.6,.5,1) both; }
+.wcard.right { animation: cardright .6s ease-out; border-color: #7fd6a0; }
+#jedi-play.in-boss .holo-pic { height: 24vh; }
+#jedi-play.in-boss .holo-text { font-size: clamp(24px, 6vh, 64px); }
+#jedi-play.in-boss .tx { width: 14vh; height: 14vh; }
+
+/* ---------- ② Force Spell ---------- */
+.sp-wrap { display: flex; align-items: center; gap: 4vh; }
+.sp-wrap.in { animation: holoin .5s ease-out both; }
+.sp-pic { height: 30vh; aspect-ratio: 200 / 170; background: #fff; border-radius: 20px; padding: 1.4vh; box-shadow: 0 0 22px rgba(111,208,255,.5); }
+.sp-pic svg { width: 100%; height: 100%; display: block; }
+.sp-pic.yay { animation: yay .7s cubic-bezier(.3,1.6,.5,1); }
+@keyframes yay { 40% { transform: scale(1.12) rotate(-3deg); } }
+.sp-slots { display: flex; gap: 1.8vh; }
+.sp-slot { width: 11vh; height: 14vh; display: flex; align-items: flex-end; justify-content: center; font-size: clamp(40px, 11vh, 120px); line-height: 1; color: #fff; border-bottom: 7px solid #fff; padding-bottom: 1vh; }
+.sp-slot.filled { color: #ffe680; text-shadow: 0 0 14px rgba(255,230,128,.8); }
+.sp-slot.glow { animation: slotglow .5s ease-out; }
+@keyframes slotglow { 40% { transform: translateY(-1.6vh) scale(1.25); color: #fff; text-shadow: 0 0 20px #bff0ff; } }
+.sp-crystals { display: flex; gap: 5vh; align-items: center; justify-content: center; height: 26vh; }
+.crystal {
+  width: 15vh; height: 18vh; border: none; padding: 0; translate: 0 var(--dy, 0);
+  clip-path: polygon(50% 0, 100% 24%, 100% 76%, 50% 100%, 0 76%, 0 24%);
+  background: linear-gradient(155deg, #e4f9ff 0%, #8fe4ff 40%, #4aa8e8 75%, #3b6fd8 100%);
+  font-size: clamp(36px, 10vh, 110px); color: #1e1b4b; line-height: 1;
+  animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both, cfloat 2.6s ease-in-out infinite;
+}
+@keyframes cfloat { 50% { transform: translateY(-1.6vh) rotate(3deg); } }
+.crystal.used { visibility: hidden; }
+#jedi-play .crystal.hint { animation: chint 1.2s ease-in-out infinite; }
+@keyframes chint { 50% { transform: scale(1.14); filter: brightness(1.35) saturate(1.3); } }
+
+/* ---------- ③ Boss：聽字 / 睇字搵圖 ---------- */
+.jd-picks { display: flex; gap: 3vh; flex-wrap: wrap; justify-content: center; align-items: center; }
+.jd-pick { width: min(12vw, 24vh); aspect-ratio: 200 / 170; box-sizing: content-box; padding: 1.2vh; background: #fff; border: 6px solid #8fe4ff; border-radius: 22px; box-shadow: 0 8px 0 rgba(0,0,0,.18); animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both; }
+.jd-pick svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.jd-pick.right { animation: cardright .6s ease-out; border-color: #7fd6a0; }
+#jedi-play .rcard { font-size: clamp(40px, 12vh, 130px); padding: .4vh 5vh; border-width: 6px; border-color: #ffe680; }
+@media (orientation: portrait) {
+  .jd-pick { width: 22vw; }
+  .jd-picks { gap: 3vw; flex-wrap: nowrap; }
+  #jedi-play { gap: 2.4vh; }
+  .sp-wrap { flex-direction: column; gap: 2vh; }
+  .sp-pic, .holo-pic { height: 22vh; }
+  .holo-droid { width: 11vh; right: -3vh; top: -4vh; }
+  .crystal { width: 12vh; height: 14vh; }
+  .sp-crystals { gap: 3vw; height: 18vh; }
+  .holo-text { font-size: clamp(26px, 7.5vw, 70px); }
+}
+
+/* ---------- 打中：星星火花 ---------- */
+.jd-burst { position: fixed; z-index: 40; width: 120px; height: 120px; margin: -60px 0 0 -60px; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 18%, #bff0ff 30%, rgba(143,228,255,.5) 50%, transparent 70%); animation: jdburst .6s ease-out forwards; }
+.jd-burst.big { width: 200px; height: 200px; margin: -100px 0 0 -100px; background: radial-gradient(circle, #fff 0 16%, #ffe680 30%, rgba(255,140,120,.5) 52%, transparent 70%); }
+@keyframes jdburst { from { transform: scale(.2); opacity: 1; } to { transform: scale(1.3); opacity: 0; } }
+
+/* ---------- 結局 ---------- */
+body.jedi-battle #jedi-play { visibility: hidden; }
+#jedi-again {
+  position: absolute; z-index: 12; left: 50%; top: 40%;
+  width: 140px; height: 140px; margin: -70px 0 0 -70px;
+  border-radius: 50%; border: 7px solid #fff;
+  background: radial-gradient(circle at 35% 30%, #a6e3a0, #6cc067 60%, #52a64e);
+  padding: 26px; opacity: 0; pointer-events: none; transition: opacity 1s;
+}
+#jedi-again svg { width: 100%; height: 100%; display: block; }
+body.jedi-done #jedi-again { opacity: 1; pointer-events: auto; }
+
+/* 機械人大軍 */
+.fx-droid { position: absolute; z-index: 5; width: 15vh; right: calc(5vw + var(--col) * 17vh); bottom: calc(10vh + var(--row) * 24vh); animation: marchin 1s ease-out both, hover 1.8s ease-in-out infinite; }
+.fx-droid svg { width: 100%; display: block; }
+@keyframes marchin { from { transform: translateX(60vw); } }
+.fx-droid.gone { animation: tumble .9s ease-in forwards; pointer-events: none; }
+@keyframes tumble { 25% { transform: translate(4vw, -6vh) rotate(90deg); } to { transform: translate(55vw, -50vh) rotate(720deg) scale(.4); opacity: 0; } }
+.force-wave { position: absolute; z-index: 6; left: 20vw; top: 15vh; width: 30vh; height: 70vh; border-radius: 50%; border-right: 2.4vh solid rgba(143,228,255,.85); filter: drop-shadow(0 0 14px #bff0ff); pointer-events: none; animation: fwave 1s ease-out forwards; }
+@keyframes fwave { from { transform: translateX(0) scaleY(.5); opacity: 1; } to { transform: translateX(70vw) scaleY(1.1); opacity: 0; } }
+
+/* 黑暗星 + 戰機 */
+.fx-darkstar { position: absolute; z-index: 5; right: 8vw; top: 9vh; width: 44vh; aspect-ratio: 1; }
+.fx-darkstar svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.fx-darkstar.enter { animation: dsin 1.6s ease-out both; }
+@keyframes dsin { from { transform: scale(.15) translate(40vw, -20vh); opacity: 0; } }
+.fx-darkstar.charge .ds-eye { animation: dscharge .7s ease-in-out infinite; }
+@keyframes dscharge { 50% { fill: #ffe680; r: 17; } }
+.fx-darkstar.hit svg { animation: dshit .4s ease-in-out; }
+@keyframes dshit { 30% { transform: translate(2%, -2%) rotate(4deg); } 70% { transform: translate(-1%, 1%) rotate(-2deg); } }
+.fx-darkstar .ds-crack path { opacity: 0; }
+.fx-darkstar.crack1 .ds-crack { opacity: 1; }
+.fx-darkstar.crack1 .c1, .fx-darkstar.crack2 .c2, .fx-darkstar.crack3 .c3 { opacity: 1; }
+.fx-darkstar.boom { animation: dsboom .7s ease-in forwards; pointer-events: none; }
+@keyframes dsboom { 40% { transform: scale(1.2); filter: brightness(2); } to { transform: scale(1.5); opacity: 0; } }
+.fx-fighter { position: absolute; z-index: 6; left: 8vw; top: 46vh; width: 36vh; animation: sfin 1.2s ease-out both, sfbob 1.6s 1.2s ease-in-out infinite; }
+.fx-fighter svg { width: 100%; display: block; }
+@keyframes sfin { from { transform: translate(-60vw, 20vh) rotate(-15deg); } }
+@keyframes sfbob { 50% { transform: translateY(-2vh) rotate(-3deg); } }
+.fx-fighter.leave { animation: sfleave .8s ease-in forwards; }
+@keyframes sfleave { to { transform: translate(110vw, -30vh) rotate(-12deg); } }
+.sf-flame { animation: flame .2s ease-in-out infinite alternate; }
+@keyframes flame { to { fill: #ff6b3d; } }
+.jd-laser { position: fixed; z-index: 30; width: 10vh; height: 1.4vh; margin-top: -.7vh; border-radius: 1vh; background: #8fe4ff; box-shadow: 0 0 12px #bff0ff, 0 0 4px #fff; transform-origin: 0 50%; pointer-events: none; }
+.fx-spark { position: absolute; z-index: 7; width: 7vh; pointer-events: none; }
+.fx-spark svg { width: 100%; display: block; }
+
+@media (orientation: portrait) {
+  .fx-droid { width: 11vh; right: calc(4vw + var(--col) * 12vh); bottom: calc(8vh + var(--row) * 16vh); }
+  .fx-darkstar { width: 30vh; top: 32vh; right: 4vw; }
+  .fx-fighter { top: 66vh; width: 28vh; left: 4vw; }
+}
