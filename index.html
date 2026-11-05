@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="css/snake.css">
   <link rel="stylesheet" href="css/party.css">
   <link rel="stylesheet" href="css/jedi.css">
+  <link rel="stylesheet" href="css/mecha.css">
 </head>
 <body data-screen="menu">
   <div id="scene">
@@ -32,6 +33,7 @@
       <div class="card-wrap"><button id="go-snake" class="choose" aria-label="ABC 貪食蛇"></button><div class="stickers" data-game="snake"></div></div>
       <div class="card-wrap"><button id="go-party" class="choose" aria-label="恐龍生日派對"></button><div class="stickers" data-game="party"></div></div>
       <div class="card-wrap"><button id="go-jedi" class="choose" aria-label="Jedi Luca"></button><div class="stickers" data-game="jedi"></div></div>
+      <div class="card-wrap"><button id="go-mecha" class="choose" aria-label="Jedi + Sith 大戰 Mecha-Rex"></button><div class="stickers" data-game="mecha"></div></div>
       <!-- 秘密短片：集齊英雄 + Super Rex 6 張貼紙先開到 -->
       <button id="go-boss" class="locked" aria-label="秘密短片"></button>
     </div>
@@ -92,6 +94,17 @@
       <div id="jedi-hud"></div>
       <div id="jedi-play"></div>
       <button id="jedi-again" aria-label="返主選單"></button>
+    </div>
+
+    <!-- Jedi + Sith 大戰 Mecha-Rex（英文：Starters R&W VCe + 方位字） -->
+    <div id="mecha-screen">
+      <div id="mecha-bg"></div>
+      <div id="mx-jedi" class="mx-hero"></div>
+      <div id="mx-sith" class="mx-hero"></div>
+      <div id="mx-rex"></div>
+      <div id="mecha-hud"></div>
+      <div id="mecha-play"></div>
+      <button id="mecha-again" aria-label="返主選單"></button>
     </div>
 
     <!-- 開始畫面：揀恐龍（撳邊隻就開始，同時解鎖聲音） -->
@@ -167,6 +180,13 @@
       </section>
 
       <section>
+        <h3>Mecha-Rex 英文記錄（第一下就啱 / 次數）</h3>
+        <table class="stats"><thead><tr><th>字</th><th>聽方位</th><th>睇方位</th><th>砌字</th><th>✓✗ 句子</th></tr></thead><tbody id="p-mecha-stats"></tbody></table>
+        <p class="note">方位字跟 Notes2（Part B）：「聽方位」= 聽句子揀圖，「睇方位」= 睇句子揀字（工作紙 Part B 就係咁考）。★ = 工作紙冇考到（under / in front of），第一下就啱 3 次之前每局都出；「兩個字」= next to 分開兩個字（工作紙寫咗 nextto）。砌字 = Part 3 VCe 字；✓✗ = Part 1（決鬥入面，有陷阱圖：直升機 ≠ plane 等）。</p>
+        <div class="row"><button id="p-mecha-reset" class="danger">重設 Mecha-Rex 記錄</button></div>
+      </section>
+
+      <section>
         <h3>ABC 貪食蛇</h3>
         <div class="row">下一局字母 <select id="p-snake-group"></select>　字款 <select id="p-snake-mode"></select></div>
         <div class="row" id="p-snake-info"></div>
@@ -177,7 +197,7 @@
       <section>
         <h3>短片同貼紙簿</h3>
         <div class="row" id="p-stickers"></div>
-        <p class="note">每個 game 3 個結局（英雄 5 個）：未睇過嘅先出（全部睇到），之後隨機。睇完新結局攞貼紙；主選單撳貼紙可以再睇。英雄 3 張 + Super Rex 3 張 → 主選單頂嘅秘密短片解鎖（貪食蛇 / 派對 / Jedi 貼紙唔計）。</p>
+        <p class="note">每個 game 3 個結局（英雄 5 個）：未睇過嘅先出（全部睇到），之後隨機。睇完新結局攞貼紙；主選單撳貼紙可以再睇。英雄 3 張 + Super Rex 3 張 → 主選單頂嘅秘密短片解鎖（貪食蛇 / 派對 / Jedi / Mecha-Rex 貼紙唔計）。</p>
         <div class="row"><select id="p-video"></select> <button id="p-video-play">▶ 播</button></div>
         <div class="row"><button id="p-stickers-reset" class="danger">重設貼紙簿</button></div>
       </section>
@@ -215,6 +235,7 @@
   <script src="js/family.js"></script>
   <script src="js/animals.js"></script>
   <script src="js/jedi-words.js"></script>
+  <script src="js/mecha-words.js"></script>
   <script src="js/voices.js"></script>
   <script src="js/art.js"></script>
   <script src="js/audio.js"></script>
@@ -223,6 +244,7 @@
   <script src="js/snake-art.js"></script>
   <script src="js/party-art.js"></script>
   <script src="js/jedi-art.js"></script>
+  <script src="js/mecha-art.js"></script>
   <script src="js/endings-art.js"></script>
   <script src="js/rewards.js"></script>
   <script src="js/hero.js"></script>
@@ -230,6 +252,7 @@
   <script src="js/snake.js"></script>
   <script src="js/party.js"></script>
   <script src="js/jedi.js"></script>
+  <script src="js/mecha.js"></script>
   <script src="js/boss.js"></script>
   <script src="js/game.js"></script>
 </body>

@@ -196,7 +196,7 @@ const EndArt = (() => {
   // ---------- 貼紙 ----------
   // 將一個完整 <svg> 塞入貼紙入面（nested svg）
   const nest = (svg, x, y, w, h) => svg.replace('<svg ', `<svg x="${x}" y="${y}" width="${w}" height="${h}" `);
-  const BG = { hero: '#d6e4ff', rex: '#d6f5cd', dino: '#fff0d6', snake: '#ffe3ef', party: '#ffe8d2', jedi: '#2c2a5c' };
+  const BG = { hero: '#d6e4ff', rex: '#d6f5cd', dino: '#fff0d6', snake: '#ffe3ef', party: '#ffe8d2', jedi: '#2c2a5c', mecha: '#2a2350' };
   function sticker(game, id) {
     let inner;
     if (game === 'hero' && id === 'monster') inner = nest(HeroArt.monster(), 14, 16, 72, 72);
@@ -213,6 +213,7 @@ const EndArt = (() => {
     else if (game === 'dino') inner = nest(Art.specialBaby(id, 'trex'), 16, 12, 68, 75);
     else if (game === 'party') inner = PartyArt.sticker(id);
     else if (game === 'jedi') inner = JediArt.sticker(id);
+    else if (game === 'mecha') inner = MechaArt.sticker(id);
     return `<svg viewBox="0 0 100 100" aria-hidden="true">
       <circle cx="50" cy="50" r="46" fill="${BG[game]}" stroke="#fff" stroke-width="6"/>
       ${inner || ''}

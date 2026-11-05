@@ -199,6 +199,65 @@
   clips.sab_go    = { lang: 'en', text: 'Jedi Luca, rainbow saber!' };
   clips.sab_good  = { lang: 'en', text: 'I want to be good! Can I be a Jedi too?' };
   clips.sab_win   = { lang: 'en', text: 'Yes! Welcome, friend!' };
+  // ---- Jedi + Sith 大戰 Mecha-Rex（全英文）----
+  if (root.MECHA_UNIT) {
+    const U = root.MECHA_UNIT;
+    for (const t of U.things) {
+      clips['w_' + t.id] = { lang: 'en', text: t.word };
+      if (t.no) clips['no_' + t.id] = { lang: 'en', text: t.no };
+    }
+    for (const id of U.spell) {
+      const t = U.things.find((x) => x.id === id);
+      clips['ts_' + id] = { lang: 'en', text: t.say || 'This is a ' + t.word + '.' };
+    }
+    for (const p of U.preps) clips['pw_' + p.id] = { lang: 'en', text: p.word };
+    for (const [obj, o] of Object.entries(U.places)) {
+      for (const p of o.preps) {
+        const word = U.preps.find((x) => x.id === p).word;
+        clips['pp_' + p + '_' + obj] = { lang: 'en', text: 'The droid is ' + word + ' ' + (p === 'between' ? o.some : o.one) + '.' };
+      }
+    }
+  }
+  clips.mx_hi      = { lang: 'en', text: 'Hello, Jedi Luca! Hello, Sith Luca!' };
+  clips.mx_intro   = { lang: 'en', text: 'Oh no! Mecha-Rex took the baby droids! Let’s work together!' };
+  clips.mx_who     = { lang: 'en', text: 'Who will go? Jedi or Sith?' };
+  clips.mx_go_jedi = { lang: 'en', text: 'Jedi Luca, go!' };
+  clips.mx_go_sith = { lang: 'en', text: 'Sith Luca, go!' };
+  clips.mx_find    = { lang: 'en', text: 'The baby droids are hiding. Listen and find them!' };
+  clips.mx_which   = { lang: 'en', text: 'Which one?' };
+  clips.mx_read    = { lang: 'en', text: 'Where is the droid? Read and choose.' };
+  clips.mx_saved   = { lang: 'en', text: 'You saved a baby droid!' };
+  clips.bb_thanks  = { lang: 'en', text: 'Beep beep! Thank you!' };
+  clips.mx_two     = { lang: 'en', text: 'Next to. Two words!' };
+  clips.mx_two_q   = { lang: 'en', text: 'Two words. Which one is first?' };
+  clips.mx_forge   = { lang: 'en', text: 'Now, the Magic E forge! Spell the words!' };
+  clips.mx_magic   = { lang: 'en', text: 'Add the magic e!' };
+  clips.mx_magic_wow = { lang: 'en', text: 'Magic e!' };
+  clips.mx_says_a  = { lang: 'en', text: 'The A says A!' };
+  clips.mx_says_u  = { lang: 'en', text: 'The U says U!' };
+  clips.mx_crystal = { lang: 'en', text: 'Power crystal!' };
+  clips.mx_ready   = { lang: 'en', text: 'The power crystals are ready!' };
+  clips.mx_boss    = { lang: 'en', text: 'Oh no! Here comes Mecha-Rex!' };
+  clips.mx_boss_go = { lang: 'en', text: 'Answer right to beat him!' };
+  clips.mx_yes_3   = { lang: 'en', text: 'Super team!' };
+  clips.mr_laugh   = { lang: 'en', text: 'Roar! Try again!' };
+  clips.mr_ouch_1  = { lang: 'en', text: 'Clunk!' };
+  clips.mr_ouch_2  = { lang: 'en', text: 'Beep! Ouch!' };
+  clips.mr_ouch_3  = { lang: 'en', text: 'Oh no, my bolts!' };
+  clips.mr_give    = { lang: 'en', text: 'Beep boop… OK! You win!' };
+  clips.mx_win     = { lang: 'en', text: 'Hooray! The baby droids are safe!' };
+  clips.mx_bye     = { lang: 'en', text: 'Thank you, Jedi Luca and Sith Luca! Bye bye!' };
+  // Mecha-Rex 結局
+  clips.xc_alarm = { lang: 'en', text: 'Roar! I’m not done yet!' };
+  clips.xc_go    = { lang: 'en', text: 'Jedi and Sith, team saber!' };
+  clips.xc_good  = { lang: 'en', text: 'Beep beep! Can we be friends?' };
+  clips.xc_win   = { lang: 'en', text: 'Yes! Friends!' };
+  clips.rk_alarm = { lang: 'en', text: 'You can’t catch me! Ha ha!' };
+  clips.rk_go    = { lang: 'en', text: 'Jedi and Sith, fly!' };
+  clips.rk_win   = { lang: 'en', text: 'Parachute! Bye bye, Mecha-Rex!' };
+  clips.gd_alarm = { lang: 'en', text: 'Mecha-Rex is back!' };
+  clips.gd_go    = { lang: 'en', text: 'Baby droids, team up!' };
+  clips.gd_win   = { lang: 'en', text: 'Wow! Giant droid power!' };
   // ---- 結局短片 ----
   // 英雄（廣東話）
   clips.cloud_alarm = { lang: 'yue', text: '哎呀！黑雲怪落大雨，個城市濕晒！' };

@@ -1,6 +1,6 @@
 # 🦕 恐龍搵蛋（Dino Eggs）
 
-一個 app 六個 game（每個 game 3–5 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文）、🐍 **ABC 貪食蛇**（學英文字母）、🎂 **恐龍生日派對**（學認字 + 升小面試練習）、⚔️ **Jedi Luca 大戰 Sith**（英文句子 ✓✗ + 砌字），後五個見下面。主選單 3 × 2 排。
+一個 app 七個 game（每個 game 3–5 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文）、🐍 **ABC 貪食蛇**（學英文字母）、🎂 **恐龍生日派對**（學認字 + 升小面試練習）、⚔️ **Jedi Luca 大戰 Sith**（英文句子 ✓✗ + 砌字）、⚔️🦖 **Jedi + Sith 大戰 Mecha-Rex**（VCe 字 + magic e + 方位字），後六個見下面。主選單 4 + 3 排（直向 3 + 3 + 1）。
 
 **恐龍搵蛋：** 幫恐龍媽媽搵蛋：每撳一隻蛋，蛋就飛入巢，遊戲先用廣東話、再用英文讀出數字（「一……one」）。搵齊之後蛋會孵出恐龍 BB，再讀出總數同一句讚佢嘅說話。
 
@@ -43,7 +43,11 @@ css/party.css           派對畫面
 js/jedi-words.js        ★ Jedi 嘅英文字表（Starters R&W Part 1 句子配對 + Part 3 砌字）
 js/jedi.js              Jedi Luca 大戰 Sith 遊戲流程（Truth Saber / Force Spell / Sith Lord 決鬥 / 3 個結局）
 js/jedi-art.js          Jedi Luca、Sith 機械人、Sith Lord、23 樣嘢、黑暗星、戰機 SVG（全部原創）
-css/jedi.css            Jedi 畫面 + 主選單 6 張卡排位（3 × 2）
+css/jedi.css            Jedi 畫面
+js/mecha-words.js       ★ Mecha-Rex 嘅字表（VCe 砌字 / ✓✗ / 陷阱圖 / magic e / 方位字）
+js/mecha.js             Jedi + Sith 大戰 Mecha-Rex 遊戲流程（揀 hero / 救 droid / 鍛造爐 / 決鬥 / 3 個結局）
+js/mecha-art.js         Sith Luca、Mecha-Rex、baby droid、方位場景、25 樣嘢 SVG（全部原創）
+css/mecha.css           Mecha-Rex 畫面 + 主選單 7 張卡排位（4 + 3）
 fonts/                  楷書 + Andika 字體（只抽咗用到嘅字）
 sw.js                   Service Worker（離線）
 manifest.webmanifest    加入主畫面 / 安裝 app
@@ -200,6 +204,37 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 
 ---
 
+## ⚔️🦖 Jedi + Sith 大戰 Mecha-Rex（英文，全英文）
+
+跟 Yorkland Tutorial **Starters R&W Part 1 + Part 3（VCe）+ Notes2 方位字（Part B）** 工作紙（2026-11-05）。上一個 Jedi game 有個結局係 Sith Lord 變好人，今次接住講：**Jedi Luca（藍光劍）+ Sith Luca（黑袍紅光劍）組隊**，救返俾機械恐龍 Mecha-Rex 捉走嘅 baby droid。**每關開頭 Luca 自己揀 Jedi 定 Sith 出戰**（揀咗嗰個企前面，另一個喺後面幫手）。一局大約 6 分鐘：
+
+1. **救 baby droid（4 條，= Notes2 方位字）**：上面 4 隻灰色 droid，救一隻就變返彩色 +「Beep beep! Thank you!」
+   - 聽句子揀圖 ×3：讀「The droid is under the table.」→ 3 張圖同一樣物件，droid 喺唔同位置 → 撳啱嗰張
+   - 睇句子揀字 ×1（= 工作紙 Part B）：一幅圖 +「The droid is ____ the box.」+ 3 張字卡，**唔讀出嚟**，要自己睇
+   - 物件：box（in / on / next to / behind / in front of）、table（on / under / next to）、rock（on / behind / next to / in front of）、trees（between / next to / in front of）
+   - **★ under、in front of 係 focus**（工作紙 Part B 冇考到）：第一下就啱 3 次之前每局都出；其餘方位未熟嘅排先
+2. **Magic E 鍛造爐（= Part 3 Look at the letters. Write the words.）**：上面 4 粒紫色水晶，每做好一題 +1
+   - 砌字 ×3：同 Jedi 一樣跟次序撳水晶字母，**最後一格有粒 ★ = magic e**。11 個 VCe 字（kite, plane, phone, snake, white, nose, cake, bike, lime, mice, face）平均輪流
+   - Magic e 變身 ×1：圖 + 「cap」→「Add the magic e!」→ 撳紫色 e → 飛入最後一格，**圖即刻變**（帽 → 披風）→「cap… cape! The A says A!」。4 對輪流：cap/cape、tap/tape、can/cane、cub/cube
+3. **Mecha-Rex 決鬥（5 條）**：上面 5 粒心。✓✗ 句子 ×3（= Part 1）+ 聽方位揀圖 ×1 + 最後一條：
+   - ✓✗ 用同一個長元音嘅字做大話（kite/bike、cake/snake、nose/face、lime/mice…），**white 一定係 ✓**（「This is white.」）
+   - 每局最少一條**工作紙陷阱圖**：直升機配「This is a plane.」、收音機配 phone、壁虎配 snake、兔仔配 mice、檸檬配 lime、電單車配 bike → 一定係 ✗，之後講返「No! It’s a helicopter.」
+   - **「next to」兩個字題**（工作紙寫咗 nextto）：「The droid is ____ ____ the rock.」兩條線 + next / to / 干擾字 → 跟次序撳 →「Next to. Two words!」。第一下就啱 3 次之前每局都出，之後換做普通睇方位題
+   - 答啱：出戰嗰個衝過去打一劍；撳錯 Mecha-Rex 會笑「Roar! Try again!」
+4. 結局短片 + 貼紙 →「Thank you, Jedi Luca and Sith Luca! Bye bye!」
+
+- 撳錯唔罰：輕輕搖 + 再講一次；**錯兩次**啱嗰個會發光；靜咗 12 秒都會提示
+- 角色全部原創 SVG（Sith Luca = Jedi Luca 換黑袍紅光劍）；Mecha-Rex 輸咗係逃走 / 變 BB 做朋友，冇斬人
+- **家長區「Mecha-Rex 英文記錄」**：方位字（聽 / 睇 / 兩個字）+ VCe 字（砌字 / ✓✗）第一下就啱 / 次數
+- Mecha-Rex 貼紙唔計入秘密短片
+- 開發測試：`#demo=mechaplay`（由頭玩）、`#demo=mechaplay:2`（由鍛造爐開始）、`#demo=mechaplay:3`（直接決鬥）、`#demo=mecha:combo`（`rocket` / `giant`）；`MechaGame._dbg.target` = 下一下應該撳嘅掣
+
+### 換英文字 / 方位
+- 改 `js/mecha-words.js`：`spell`（VCe 砌字）、`truth`（圖 + 同元音大話）、`traps`（陷阱圖）、`magic`（magic e 對）、`preps` + `places`（方位 + 每樣物件擺得邊啲位）。新圖要畫 SVG（`js/mecha-art.js`）→ 叫 Claude 做會最快
+- 改完記得 `js/version.js` +1
+
+---
+
 ## 🎬 結局短片 + 貼紙簿
 
 每個 game 有 3 個唔同結局（英雄裝備站有 5 個），等 Luca 有動力玩多幾次：
@@ -212,6 +247,7 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 | 🐍 ABC 貪食蛇 | 💗 畫大心心 | 🐉 金色飛龍 | 👾 字母炮打怪獸 |
 | 🎂 生日派對 | 👾 怪獸偷蛋糕 | 🎈 氣球飛上天 | 🕯 吹蠟燭 + 生日歌 |
 | ⚔️ Jedi Luca | 🤖 機械人大軍（Force push ×3） | 🌑 黑暗星 → 戰機射 ×3 → 煙花 | 🌈 Sith Lord 返嚟 → 彩虹光劍 ×3 → 佢變好人做 Jedi |
+| ⚔️🦖 Mecha-Rex | 💜 Jedi + Sith 交叉光劍 ×3 → Mecha-Rex 縮細變 BB 機械恐龍做朋友 | 🚀 Mecha-Rex 着火箭飛走 → 藍 + 紅戰機射 ×3 → 開降落傘飄走 | 🤖 4 隻 baby droid 疊高變巨型機械人 → Force 波 → Mecha-Rex 嚇走 + 煙花 |
 
 - 恐龍搵蛋：一節完咗會出一隻金色大蛋，搖三下孵出特別恐龍BB，之後佢會喺巢中間一齊瞓覺
 - **次序**：未睇過嘅結局跟次序先出（保證全部睇到；新加嘅結局下一次就會出），之後隨機（唔會連續同一個）
@@ -291,7 +327,7 @@ python -m http.server 8765
 
 ---
 
-## 錄音清單（398 個檔）
+## 錄音清單（501 個檔）
 
 放喺 `audio/` folder，**檔名要一模一樣**（細楷、底線、`.mp3`）。唔使一次錄晒，錄咗邊個就用邊個，未錄嘅照用內置語音。
 
@@ -864,6 +900,139 @@ python -m http.server 8765
 | `sab_go.mp3` | English | Jedi Luca, rainbow saber! |
 | `sab_good.mp3` | English | I want to be good! Can I be a Jedi too? |
 | `sab_win.mp3` | English | Yes! Welcome, friend! |
+
+**Mecha-Rex：生字（VCe + 陷阱圖 + magic e）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `w_kite.mp3` | English | kite |
+| `w_plane.mp3` | English | plane |
+| `w_phone.mp3` | English | phone |
+| `w_snake.mp3` | English | snake |
+| `w_white.mp3` | English | white |
+| `w_nose.mp3` | English | nose |
+| `w_cake.mp3` | English | cake |
+| `w_bike.mp3` | English | bike |
+| `w_lime.mp3` | English | lime |
+| `w_mice.mp3` | English | mice |
+| `w_face.mp3` | English | face |
+| `w_helicopter.mp3` | English | helicopter |
+| `w_radio.mp3` | English | radio |
+| `w_gecko.mp3` | English | gecko |
+| `w_rabbits.mp3` | English | rabbits |
+| `w_lemon.mp3` | English | lemon |
+| `w_motorbike.mp3` | English | motorbike |
+| `w_cap.mp3` | English | cap |
+| `w_cape.mp3` | English | cape |
+| `w_tap.mp3` | English | tap |
+| `w_tape.mp3` | English | tape |
+| `w_can.mp3` | English | can |
+| `w_cane.mp3` | English | cane |
+| `w_cub.mp3` | English | cub |
+| `w_cube.mp3` | English | cube |
+
+**Mecha-Rex：句子（✓✗）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `ts_kite.mp3` | English | This is a kite. |
+| `ts_plane.mp3` | English | This is a plane. |
+| `ts_phone.mp3` | English | This is a phone. |
+| `ts_snake.mp3` | English | This is a snake. |
+| `ts_white.mp3` | English | This is white. |
+| `ts_nose.mp3` | English | This is a nose. |
+| `ts_cake.mp3` | English | This is a cake. |
+| `ts_bike.mp3` | English | This is a bike. |
+| `ts_lime.mp3` | English | This is a lime. |
+| `ts_mice.mp3` | English | These are mice. |
+| `ts_face.mp3` | English | This is a face. |
+
+**Mecha-Rex：陷阱圖改正**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `no_helicopter.mp3` | English | No! It’s a helicopter. |
+| `no_radio.mp3` | English | No! It’s a radio. |
+| `no_gecko.mp3` | English | No! It’s a gecko. |
+| `no_rabbits.mp3` | English | No! They are rabbits. |
+| `no_lemon.mp3` | English | No! It’s a lemon. |
+| `no_motorbike.mp3` | English | No! It’s a motorbike. |
+
+**Mecha-Rex：方位字 + 方位句子**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `pw_in.mp3` | English | in |
+| `pw_on.mp3` | English | on |
+| `pw_under.mp3` | English | under |
+| `pw_next.mp3` | English | next to |
+| `pw_behind.mp3` | English | behind |
+| `pw_front.mp3` | English | in front of |
+| `pw_between.mp3` | English | between |
+| `pp_in_box.mp3` | English | The droid is in the box. |
+| `pp_on_box.mp3` | English | The droid is on the box. |
+| `pp_next_box.mp3` | English | The droid is next to the box. |
+| `pp_behind_box.mp3` | English | The droid is behind the box. |
+| `pp_front_box.mp3` | English | The droid is in front of the box. |
+| `pp_on_table.mp3` | English | The droid is on the table. |
+| `pp_under_table.mp3` | English | The droid is under the table. |
+| `pp_next_table.mp3` | English | The droid is next to the table. |
+| `pp_on_rock.mp3` | English | The droid is on the rock. |
+| `pp_behind_rock.mp3` | English | The droid is behind the rock. |
+| `pp_next_rock.mp3` | English | The droid is next to the rock. |
+| `pp_front_rock.mp3` | English | The droid is in front of the rock. |
+| `pp_between_trees.mp3` | English | The droid is between the trees. |
+| `pp_next_trees.mp3` | English | The droid is next to the tree. |
+| `pp_front_trees.mp3` | English | The droid is in front of the tree. |
+
+**Mecha-Rex：旁白 + Mecha-Rex + baby droid**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `mx_hi.mp3` | English | Hello, Jedi Luca! Hello, Sith Luca! |
+| `mx_intro.mp3` | English | Oh no! Mecha-Rex took the baby droids! Let’s work together! |
+| `mx_who.mp3` | English | Who will go? Jedi or Sith? |
+| `mx_go_jedi.mp3` | English | Jedi Luca, go! |
+| `mx_go_sith.mp3` | English | Sith Luca, go! |
+| `mx_find.mp3` | English | The baby droids are hiding. Listen and find them! |
+| `mx_which.mp3` | English | Which one? |
+| `mx_read.mp3` | English | Where is the droid? Read and choose. |
+| `mx_saved.mp3` | English | You saved a baby droid! |
+| `bb_thanks.mp3` | English | Beep beep! Thank you! |
+| `mx_two.mp3` | English | Next to. Two words! |
+| `mx_two_q.mp3` | English | Two words. Which one is first? |
+| `mx_forge.mp3` | English | Now, the Magic E forge! Spell the words! |
+| `mx_magic.mp3` | English | Add the magic e! |
+| `mx_magic_wow.mp3` | English | Magic e! |
+| `mx_says_a.mp3` | English | The A says A! |
+| `mx_says_u.mp3` | English | The U says U! |
+| `mx_crystal.mp3` | English | Power crystal! |
+| `mx_ready.mp3` | English | The power crystals are ready! |
+| `mx_boss.mp3` | English | Oh no! Here comes Mecha-Rex! |
+| `mx_boss_go.mp3` | English | Answer right to beat him! |
+| `mr_laugh.mp3` | English | Roar! Try again! |
+| `mr_give.mp3` | English | Beep boop… OK! You win! |
+| `mx_win.mp3` | English | Hooray! The baby droids are safe! |
+| `mx_bye.mp3` | English | Thank you, Jedi Luca and Sith Luca! Bye bye! |
+| `mr_ouch_1.mp3` | English | Clunk! |
+| `mr_ouch_2.mp3` | English | Beep! Ouch! |
+| `mx_yes_3.mp3` | English | Super team! |
+| `mr_ouch_3.mp3` | English | Oh no, my bolts! |
+
+**Mecha-Rex 結局**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `xc_alarm.mp3` | English | Roar! I’m not done yet! |
+| `xc_go.mp3` | English | Jedi and Sith, team saber! |
+| `xc_good.mp3` | English | Beep beep! Can we be friends? |
+| `xc_win.mp3` | English | Yes! Friends! |
+| `rk_alarm.mp3` | English | You can’t catch me! Ha ha! |
+| `rk_go.mp3` | English | Jedi and Sith, fly! |
+| `rk_win.mp3` | English | Parachute! Bye bye, Mecha-Rex! |
+| `gd_alarm.mp3` | English | Mecha-Rex is back! |
+| `gd_go.mp3` | English | Baby droids, team up! |
+| `gd_win.mp3` | English | Wow! Giant droid power! |
 
 ---
 

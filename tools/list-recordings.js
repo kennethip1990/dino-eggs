@@ -1,7 +1,10 @@
 // 用法：node tools/list-recordings.js  → 印出 README 用嘅錄音清單（markdown table）
 const vm = require('vm'), fs = require('fs'), path = require('path');
 global.self = global;
-for (const f of ['words.js', 'family.js', 'animals.js', 'jedi-words.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
+for (const f of ['words.js', 'family.js', 'animals.js', 'jedi-words.js', 'mecha-words.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
+// Mecha-Rex 嘅 w_ / ts_ 同 Jedi 共用前綴，用 id 分開
+const MK = new Set(self.MECHA_UNIT.things.map((t) => t.id));
+const isMecha = (k) => MK.has(k.replace(/^(w|ts)_/, ''));
 const groups = [
   ['數數（撳蛋時）', /^(yue|en)_\d+$/],
   ['開場（每局開始）', /_intro_/],
@@ -30,17 +33,23 @@ const groups = [
   ['ABC 貪食蛇：句子 + 結局', /^snk_/],
   ['貼紙', /^(sticker|unlock|locked)_/],
   ['秘密短片：怪獸大王', /^boss_/],
-  ['Jedi Luca：生字', /^w_/],
-  ['Jedi Luca：句子（Truth Saber）', /^ts_/],
+  ['Jedi Luca：生字', /^w_/, (k) => !isMecha(k)],
+  ['Jedi Luca：句子（Truth Saber）', /^ts_/, (k) => !isMecha(k)],
   ['Jedi Luca：字母音（phonics，未錄之前讀字母名）', /^ph_/],
   ['Jedi Luca：旁白 + Sith', /^(jd|sith)_/],
-  ['Jedi Luca 結局', /^(dro|shp|sab)_/]
+  ['Jedi Luca 結局', /^(dro|shp|sab)_/],
+  ['Mecha-Rex：生字（VCe + 陷阱圖 + magic e）', /^w_/, isMecha],
+  ['Mecha-Rex：句子（✓✗）', /^ts_/, isMecha],
+  ['Mecha-Rex：陷阱圖改正', /^no_/],
+  ['Mecha-Rex：方位字 + 方位句子', /^(pw|pp)_/],
+  ['Mecha-Rex：旁白 + Mecha-Rex + baby droid', /^(mx|mr|bb)_/],
+  ['Mecha-Rex 結局', /^(xc|rk|gd)_/]
 ];
 const clips = self.VOICES.clips;
 const out = [];
-for (const [title, re] of groups) {
+for (const [title, re, keep] of groups) {
   out.push(`\n**${title}**\n`, '| 檔名 | 語言 | 要讀 |', '|---|---|---|');
-  const keys = Object.keys(clips).filter((k) => re.test(k));
+  const keys = Object.keys(clips).filter((k) => re.test(k) && (!keep || keep(k)));
   keys.sort((a, b) => {
     const na = +(a.match(/\d+$/) || [0])[0], nb = +(b.match(/\d+$/) || [0])[0];
     return na - nb || (a.startsWith('yue') ? -1 : 1);
