@@ -43,7 +43,7 @@ const groups = [
   ['Mecha-Rex：陷阱圖改正', /^no_/],
   ['Mecha-Rex：方位字 + 方位句子', /^(pw|pp)_/],
   ['Mecha-Rex：旁白 + Mecha-Rex + baby droid', /^(mx|mr|bb)_/],
-  ['Mecha-Rex 結局', /^(xc|rk|gd)_/]
+  ['Mecha-Rex 結局', /^(xc|rk|gd|df|dn|cd)_/]
 ];
 const clips = self.VOICES.clips;
 const out = [];

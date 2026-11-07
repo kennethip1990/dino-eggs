@@ -4,7 +4,7 @@
  *   → ① 救 baby droid ×4：聽句子揀場景（The droid is under the table.）×3 + 睇句子揀方位字 ×1（工作紙 Part B）
  *   → ② Magic E 鍛造爐：水晶字母砌 VCe 字 ×3（最後一格 = magic e）+ magic e 變身 ×1（cap → cape）
  *   → ③ Mecha-Rex 決鬥 ×5：✓✗ 句子（有工作紙陷阱圖）/ 聽方位 / 睇方位或「next to」兩個字，答啱打一劍
- *   → 結局短片（3 個輪流）→ 貼紙 → 拜拜
+ *   → 結局短片（6 個輪流，後 3 個要 Luca 撳：擋激光 / 撳掣跳舞 / 數糖果）→ 貼紙 → 拜拜
  * 答錯唔罰：輕輕搖 + 再講一次；錯兩次啱嗰個會發光
  */
 const MechaGame = (() => {
@@ -751,7 +751,7 @@ const MechaGame = (() => {
     fx = [];
     document.querySelectorAll('.jd-burst, .jd-laser').forEach((e) => e.remove());
     rexEl.onpointerdown = null;
-    for (const el of Object.values(heroes)) el.classList.remove('powered', 'away', 'cheer');
+    for (const el of Object.values(heroes)) el.classList.remove('powered', 'away', 'cheer', 'charged', ...DANCE);
   }
   function addFx(cls, markup) {
     const el = document.createElement('div');
@@ -780,7 +780,34 @@ const MechaGame = (() => {
     hud.className = '';
     if (id === 'rocket') return battleRocket(tk);
     if (id === 'giant') return battleGiant(tk);
+    if (id === 'deflect') return battleDeflect(tk);
+    if (id === 'dance') return battleDance(tk);
+    if (id === 'candy') return battleCandy(tk);
     return battleCombo(tk);
+  }
+
+  // 結局入面要 Luca 撳（一個或者幾個掣）：撳到 → 回傳嗰個；等夠 autoMs 就自動揀第一個（唔會卡住）；hintMs 之後第一個發光提示
+  function waitTap(tk, els, autoMs, hintMs) {
+    els = [].concat(els);
+    return new Promise((resolve) => {
+      let done = false, t1 = 0;
+      const ons = els.map((el) => {
+        const on = (e) => { e.preventDefault(); if (tk === token) finish(el); };
+        el.addEventListener('pointerdown', on);
+        return on;
+      });
+      function finish(el) {
+        if (done) return;
+        done = true;
+        clearTimeout(t1); clearTimeout(t2);
+        els.forEach((x, i) => { x.removeEventListener('pointerdown', ons[i]); x.classList.remove('tap-hint'); });
+        if (els.includes(dbg.target)) dbg.target = null;
+        resolve(el);
+      }
+      if (hintMs) t1 = setTimeout(() => restart(els[0], 'tap-hint'), hintMs);
+      const t2 = setTimeout(() => finish(els[0]), autoMs);
+      dbg.target = els[0];
+    });
   }
 
   async function teamWins(tk) {
@@ -936,6 +963,213 @@ const MechaGame = (() => {
     babies.forEach((b) => b.classList.add('cheer'));
     await teamWins(tk);
   }
+  // 結局 4：Mecha-Rex 射激光 ×3 → Luca 撳畫面（或者等）擋 → 光劍彈返去 → 激光炮壞咗，Mecha-Rex 逃走
+  async function battleDeflect(tk) {
+    await rexBack(tk, 'df_alarm');
+    if (tk !== token) return;
+    rexEl.onpointerdown = null;
+    document.body.classList.add('mecha-team');
+    Object.values(heroes).forEach((el) => el.classList.add('charged'));
+    Sound.sfx.saber();
+    await sayMin(['df_go', { pause: 100 }], 1800);
+    if (tk !== token) return;
+    const layer = addFx('mx-taplayer');
+    for (let i = 0; i < 3; i++) {
+      const who = i === 1 ? partner() : hero();       // Jedi、Sith 輪流擋
+      restart(rexEl, 'laugh');
+      Sound.sfx.zap();
+      const r = rexEl.getBoundingClientRect();
+      const a = { x: r.left + r.width * 0.14, y: r.top + r.height * 0.4 };
+      const h = center(who);
+      const ang = Math.atan2(h.y - a.y, h.x - a.x) * 180 / Math.PI;
+      const dx = (h.x - a.x) * 0.78, dy = (h.y - a.y) * 0.78;   // 最遠飛到主角前面
+      const bolt = addFx('mx-bolt');
+      bolt.style.left = a.x + 'px';
+      bolt.style.top = a.y + 'px';
+      bolt.style.transform = `rotate(${ang}deg)`;
+      const fly = bolt.animate && bolt.animate([
+        { transform: `translate(0,0) rotate(${ang}deg)` },
+        { transform: `translate(${dx}px, ${dy}px) rotate(${ang}deg)` }
+      ], { duration: 2600, easing: 'linear', fill: 'forwards' });
+      await waitTap(tk, layer, 2600);
+      if (tk !== token) return;
+      // 擋！停喺而家個位，變藍色彈返去 Mecha-Rex
+      const p = center(bolt);
+      if (fly) fly.cancel();
+      bolt.style.left = p.x + 'px';
+      bolt.style.top = p.y + 'px';
+      pose('block', 800, who);
+      Sound.sfx.clash();
+      burstAt(p);
+      bolt.classList.add('back');
+      const rc = center(rexEl);
+      if (bolt.animate) bolt.animate([
+        { transform: `rotate(${ang}deg)` },
+        { transform: `translate(${rc.x - p.x}px, ${rc.y - p.y}px) rotate(${ang}deg)` }
+      ], { duration: 320, easing: 'ease-in', fill: 'forwards' });
+      await wait(320);
+      if (tk !== token) return;
+      bolt.remove();
+      burstAt(rc, true);
+      restart(rexEl, 'hit');
+      Sound.sfx.thump();
+      await sayMin([i < 2 ? 'df_block' : 'mr_ouch_3', { pause: 150 }], 1000);
+      if (tk !== token) return;
+    }
+    layer.remove();
+    rexEl.classList.add('dizzy', 'smoke');
+    await sayMin(['df_broke', { pause: 200 }], 2400);
+    if (tk !== token) return;
+    rexEl.classList.add('flee');
+    Sound.sfx.whoosh();
+    fireworks({ x: innerWidth * 0.6, y: innerHeight * 0.32 });
+    await sayMin(['df_win', { pause: 200 }], 2200);
+    if (tk !== token) return;
+    rexEl.className = '';
+    await teamWins(tk);
+  }
+
+  // 結局 5：Mecha-Rex 3 粒掣（紅 = 轉圈、黃 = 跳、綠 = 扭屁股）→ Luca 撳 → 大家一齊跳 → disco 派對
+  const MOVES = [['spin', '#ff4d5e'], ['jump', '#ffd36e'], ['wiggle', '#7fd6a0']];
+  const DANCE = ['spin', 'jump', 'wiggle', 'groove'];
+  async function battleDance(tk) {
+    await rexBack(tk, 'dn_alarm');
+    if (tk !== token) return;
+    rexEl.onpointerdown = null;
+    document.body.classList.add('mecha-team');
+    await sayMin(['dn_go', { pause: 100 }], 1800);
+    if (tk !== token) return;
+    const pad = addFx('mx-pad');
+    const btns = MOVES.map(([move, col], i) => {
+      const b = document.createElement('button');
+      b.className = 'mx-padbtn';
+      b.dataset.move = move;
+      b.dataset.n = i + 1;
+      b.style.setProperty('--c', col);
+      b.style.animationDelay = i * 140 + 'ms';
+      b.setAttribute('aria-label', move);
+      pad.appendChild(b);
+      return b;
+    });
+    const left = btns.slice();
+    while (left.length) {
+      const b = await waitTap(tk, left, 9000, 4500);
+      if (tk !== token) return;
+      left.splice(left.indexOf(b), 1);
+      b.classList.add('used');
+      const move = b.dataset.move;
+      rexEl.classList.add('lit-' + b.dataset.n);
+      restart(rexEl, move);
+      Object.values(heroes).forEach((el) => restart(el, move));
+      if (move === 'spin') Sound.sfx.whoosh();
+      else if (move === 'jump') Sound.sfx.boing();
+      else { Sound.sfx.bubble(); setTimeout(() => Sound.sfx.bubble(), 300); }
+      await sayMin(['dn_' + move, { pause: 150 }], 1300);
+      if (tk !== token) return;
+    }
+    pad.remove();
+    // Disco！
+    put(rexEl, MechaArt.happyRex());
+    burstAt(center(rexEl));
+    addFx('mx-lights');
+    addFx('mx-disco', MechaArt.disco());
+    DANCE.slice(0, 3).forEach((m) => { rexEl.classList.remove(m); Object.values(heroes).forEach((el) => el.classList.remove(m)); });
+    [rexEl, ...Object.values(heroes)].forEach((el) => el.classList.add('groove'));
+    rexEl.onpointerdown = (e) => { e.preventDefault(); if (tk === token) { Sound.sfx.boing(); restart(rexEl.querySelector('svg'), 'boop'); } };
+    const tune = Sound.sfx.dance ? Sound.sfx.dance() : 3;
+    await sayMin(['dn_party', { pause: 200 }], Math.max(2600, tune * 1000));
+    if (tk !== token) return;
+    await sayMin(['dn_win', { pause: 200 }], 1800);
+    if (tk !== token) return;
+    await teamWins(tk);
+  }
+
+  // 結局 6：Mecha-Rex 唔肯分糖 → Luca 撳 Mecha-Rex ×3（one, two, three）→ 肚肚爆糖果 → 撳糖果數到 5 → 一齊分享
+  const CANDY_COLS = ['#ff8fb8', '#ffd36e', '#7fd6a0', '#9fb8ff', '#ffb347', '#c7a3ff', '#ff6b7a', '#6fd0ff', '#ffe680'];
+  async function battleCandy(tk) {
+    await rexBack(tk, 'cd_alarm');
+    if (tk !== token) return;
+    rexEl.onpointerdown = null;
+    document.body.classList.add('mecha-team');
+    await sayMin(['cd_go', { pause: 100 }], 1600);
+    if (tk !== token) return;
+    for (let i = 1; i <= 3; i++) {
+      await waitTap(tk, rexEl, 8000, 4000);
+      if (tk !== token) return;
+      Sound.say(['en_' + i]);
+      await lunge(tk, i === 2 ? partner() : hero());     // Jedi、Sith 輪流打
+      if (tk !== token) return;
+    }
+    // 肚肚門彈開 → 糖果飛出嚟跌落地
+    rexEl.classList.add('open');
+    const r = rexEl.getBoundingClientRect();
+    const belly = { x: r.left + r.width * 0.48, y: r.top + r.height * 0.6 };
+    burstAt(belly, true);
+    Sound.sfx.hatch();
+    const portrait = innerHeight > innerWidth;
+    const candies = CANDY_COLS.map((col, i) => {
+      const c = addFx('mx-candy', MechaArt.candy(col, i % 3 === 2));
+      c.dataset.col = col;
+      // 橫向：喺太空飄（唔遮主角 / Mecha-Rex）；直向：喺下面空位
+      const x = innerWidth * (portrait ? 0.1 + (i % 5) * 0.19 : 0.2 + (i % 5) * 0.15) + (i > 4 ? innerWidth * (portrait ? 0.09 : 0.075) : 0);
+      const y = innerHeight * (portrait ? (i > 4 ? 0.82 : 0.68) : (i > 4 ? 0.42 : 0.25));
+      c.style.setProperty('--d', (-i * 0.37) + 's');
+      c.style.left = x + 'px';
+      c.style.top = y + 'px';
+      if (c.animate) c.animate([
+        { transform: `translate(calc(-50% + ${belly.x - x}px), calc(-50% + ${belly.y - y}px)) scale(.3) rotate(0deg)` },
+        { transform: `translate(calc(-50% + ${(belly.x - x) / 2}px), calc(-50% + ${(belly.y - y) / 2 - innerHeight * 0.25}px)) scale(.9) rotate(${(i % 2 ? 1 : -1) * 240}deg)`, offset: 0.5 },
+        { transform: 'translate(-50%, -50%) scale(1) rotate(0deg)' }
+      ], { duration: 900 + i * 60, easing: 'ease-out', fill: 'backwards', delay: i * 70 });
+      return c;
+    });
+    [0, 200, 400, 600].forEach((t) => setTimeout(() => { if (tk === token) Sound.sfx.pop(); }, t));
+    await sayMin(['cd_pop', { pause: 200 }], 1800);
+    if (tk !== token) return;
+    // 糖果罐：5 格
+    const jar = addFx('mx-jar', '<i></i>'.repeat(5));
+    const slots = [...jar.querySelectorAll('i')];
+    await Sound.say(['cd_count']);
+    if (tk !== token) return;
+    for (let n = 1; n <= 5; n++) {
+      const live = candies.filter((c) => !c.classList.contains('got'));
+      const c = await waitTap(tk, live, 8000, 4500);
+      if (tk !== token) return;
+      c.classList.add('got');
+      const slot = slots[n - 1];
+      const from = center(c), to = center(slot);
+      Sound.sfx.pop();
+      if (c.animate) c.animate([
+        { transform: 'translate(-50%, -50%) scale(1)' },
+        { transform: `translate(calc(-50% + ${to.x - from.x}px), calc(-50% + ${to.y - from.y}px)) scale(.5)`, opacity: 0.4 }
+      ], { duration: 450, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
+      setTimeout(() => {
+        if (tk !== token) return;
+        c.remove();
+        put(slot, MechaArt.candy(c.dataset.col));
+        restart(slot, 'on');
+      }, 430);
+      await Sound.say(['en_' + n]);
+      if (tk !== token) return;
+    }
+    await wait(300);
+    if (tk !== token) return;
+    // Mecha-Rex 變好：一齊分享
+    put(rexEl, MechaArt.happyRex());
+    rexEl.classList.remove('open');
+    rexEl.classList.add('friendly');
+    Sound.sfx.hatch();
+    burstAt(center(rexEl));
+    await sayMin(['cd_share', { pause: 200 }], 2200);
+    if (tk !== token) return;
+    Object.values(heroes).forEach((el) => el.classList.add('cheer'));
+    rexEl.classList.add('cheer');
+    await sayMin(['cd_win', { pause: 200 }], 2000);
+    if (tk !== token) return;
+    await teamWins(tk);
+    rexEl.onpointerdown = null;
+  }
+
   function fireworks(c) {
     const cols = ['#ffd36e', '#ffb3c7', '#9fd3ff', '#a6e3a0', '#c7a3ff', '#ff8a8a'];
     for (let i = 0; i < 14; i++) {

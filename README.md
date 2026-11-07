@@ -1,6 +1,6 @@
 # 🦕 恐龍搵蛋（Dino Eggs）
 
-一個 app 七個 game（每個 game 3–5 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文）、🐍 **ABC 貪食蛇**（學英文字母）、🎂 **恐龍生日派對**（學認字 + 升小面試練習）、⚔️ **Jedi Luca 大戰 Sith**（英文句子 ✓✗ + 砌字）、⚔️🦖 **Jedi + Sith 大戰 Mecha-Rex**（VCe 字 + magic e + 方位字），後六個見下面。主選單 4 + 3 排（直向 3 + 3 + 1）。
+一個 app 七個 game（每個 game 3–6 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文）、🐍 **ABC 貪食蛇**（學英文字母）、🎂 **恐龍生日派對**（學認字 + 升小面試練習）、⚔️ **Jedi Luca 大戰 Sith**（英文句子 ✓✗ + 砌字）、⚔️🦖 **Jedi + Sith 大戰 Mecha-Rex**（VCe 字 + magic e + 方位字），後六個見下面。主選單 4 + 3 排（直向 3 + 3 + 1）。
 
 **恐龍搵蛋：** 幫恐龍媽媽搵蛋：每撳一隻蛋，蛋就飛入巢，遊戲先用廣東話、再用英文讀出數字（「一……one」）。搵齊之後蛋會孵出恐龍 BB，再讀出總數同一句讚佢嘅說話。
 
@@ -45,7 +45,7 @@ js/jedi.js              Jedi Luca 大戰 Sith 遊戲流程（Truth Saber / Force
 js/jedi-art.js          Jedi Luca、Sith 機械人、Sith Lord、23 樣嘢、黑暗星、戰機 SVG（全部原創）
 css/jedi.css            Jedi 畫面
 js/mecha-words.js       ★ Mecha-Rex 嘅字表（VCe 砌字 / ✓✗ / 陷阱圖 / magic e / 方位字）
-js/mecha.js             Jedi + Sith 大戰 Mecha-Rex 遊戲流程（揀 hero / 救 droid / 鍛造爐 / 決鬥 / 3 個結局）
+js/mecha.js             Jedi + Sith 大戰 Mecha-Rex 遊戲流程（揀 hero / 救 droid / 鍛造爐 / 決鬥 / 6 個結局）
 js/mecha-art.js         Sith Luca、Mecha-Rex、baby droid、方位場景、25 樣嘢 SVG（全部原創）
 css/mecha.css           Mecha-Rex 畫面 + 主選單 7 張卡排位（4 + 3）
 fonts/                  楷書 + Andika 字體（只抽咗用到嘅字）
@@ -227,7 +227,7 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 - 角色全部原創 SVG（Sith Luca = Jedi Luca 換黑袍紅光劍）；Mecha-Rex 輸咗係逃走 / 變 BB 做朋友，冇斬人
 - **家長區「Mecha-Rex 英文記錄」**：方位字（聽 / 睇 / 兩個字）+ VCe 字（砌字 / ✓✗）第一下就啱 / 次數
 - Mecha-Rex 貼紙唔計入秘密短片
-- 開發測試：`#demo=mechaplay`（由頭玩）、`#demo=mechaplay:2`（由鍛造爐開始）、`#demo=mechaplay:3`（直接決鬥）、`#demo=mecha:combo`（`rocket` / `giant`）；`MechaGame._dbg.target` = 下一下應該撳嘅掣
+- 開發測試：`#demo=mechaplay`（由頭玩）、`#demo=mechaplay:2`（由鍛造爐開始）、`#demo=mechaplay:3`（直接決鬥）、`#demo=mecha:combo`（`rocket` / `giant` / `deflect` / `dance` / `candy`）；`MechaGame._dbg.target` = 下一下應該撳嘅掣
 
 ### 換英文字 / 方位
 - 改 `js/mecha-words.js`：`spell`（VCe 砌字）、`truth`（圖 + 同元音大話）、`traps`（陷阱圖）、`magic`（magic e 對）、`preps` + `places`（方位 + 每樣物件擺得邊啲位）。新圖要畫 SVG（`js/mecha-art.js`）→ 叫 Claude 做會最快
@@ -237,19 +237,20 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 
 ## 🎬 結局短片 + 貼紙簿
 
-每個 game 有 3 個唔同結局（英雄裝備站有 5 個），等 Luca 有動力玩多幾次：
+每個 game 有 3 個唔同結局（英雄裝備站有 5 個、Mecha-Rex 有 6 個），等 Luca 有動力玩多幾次：
 
-| Game | 結局 1 | 結局 2 | 結局 3 | 結局 4 | 結局 5 |
-|---|---|---|---|---|---|
+| Game | 結局 1 | 結局 2 | 結局 3 | 結局 4 | 結局 5 | 結局 6 |
+|---|---|---|---|---|---|---|
 | 🦖 恐龍搵蛋 | 🌈 彩虹恐龍BB | 👑 金色恐龍BB | ✨ 星星恐龍BB |
 | 🤖 英雄裝備站 | 紫色怪獸（愛心炮） | ☁️ 黑雲怪落大雨 → 太陽光 → 白雲 + 彩虹 | 🛸 外星人吸走大廈 → 磁力手拉返落嚟 → 外星人拜拜 | 🌋 火山怪噴火球 → 水炮 ×3 → 火山冷靜、開滿花 | 🐙 大八爪魚捉走巴士同私家車 → 笑笑光 ×3 → 痕到放手、揮手游走 |
 | 🦖🦸 Super Rex | 紫色怪獸（大吼） | 🌪️ 龍捲風吹起動物 → 擰尾 → 動物「boing」跌返落嚟 | ☄️ 大隕石 → Super Rex 跳上去頂爆 → 變星星 |
 | 🐍 ABC 貪食蛇 | 💗 畫大心心 | 🐉 金色飛龍 | 👾 字母炮打怪獸 |
 | 🎂 生日派對 | 👾 怪獸偷蛋糕 | 🎈 氣球飛上天 | 🕯 吹蠟燭 + 生日歌 |
 | ⚔️ Jedi Luca | 🤖 機械人大軍（Force push ×3） | 🌑 黑暗星 → 戰機射 ×3 → 煙花 | 🌈 Sith Lord 返嚟 → 彩虹光劍 ×3 → 佢變好人做 Jedi |
-| ⚔️🦖 Mecha-Rex | 💜 Jedi + Sith 交叉光劍 ×3 → Mecha-Rex 縮細變 BB 機械恐龍做朋友 | 🚀 Mecha-Rex 着火箭飛走 → 藍 + 紅戰機射 ×3 → 開降落傘飄走 | 🤖 4 隻 baby droid 疊高變巨型機械人 → Force 波 → Mecha-Rex 嚇走 + 煙花 |
+| ⚔️🦖 Mecha-Rex | 💜 Jedi + Sith 交叉光劍 ×3 → Mecha-Rex 縮細變 BB 機械恐龍做朋友 | 🚀 Mecha-Rex 着火箭飛走 → 藍 + 紅戰機射 ×3 → 開降落傘飄走 | 🤖 4 隻 baby droid 疊高變巨型機械人 → Force 波 → Mecha-Rex 嚇走 + 煙花 | 🛡 Mecha-Rex 射激光 ×3 → **Luca 撳畫面**擋 → 光劍彈返去 → 激光炮壞咗冒煙、逃走 | 🕺 Mecha-Rex 3 粒掣 → **Luca 撳**紅（轉圈）/ 黃（跳）/ 綠（扭屁股），大家跟住跳 → disco 派對 | 🍬 Mecha-Rex 唔肯分糖 → **Luca 撳 Mecha-Rex ×3**（one, two, three）→ 爆糖果 → **撳糖果數到 5** → Mecha-Rex 講 sorry 一齊分享 |
 
 - 恐龍搵蛋：一節完咗會出一隻金色大蛋，搖三下孵出特別恐龍BB，之後佢會喺巢中間一齊瞓覺
+- **Mecha-Rex 結局 4–6 要 Luca 撳**：撳唔撳都得，等一陣（約 4 秒）會發光提示，再等就自動行落去，唔會卡住
 - **次序**：未睇過嘅結局跟次序先出（保證全部睇到；新加嘅結局下一次就會出），之後隨機（唔會連續同一個）
 - **貼紙簿**：主選單每張卡下面每個結局一格，未攞到係「?」。睇完一個新結局 → 大貼紙彈出嚟 +「你攞到一張新貼紙！」。撳已攞到嘅貼紙 = 再睇嗰段短片
 - **秘密短片**：英雄 + Super Rex 6 張貼紙集齊，主選單頂部嘅怪獸大王掣解鎖 → 機械人英雄同 Super Rex 合體大戰怪獸大王（約 30 秒，廣東話 + 英文）。未解鎖撳落去會講「集齊六張…就可以睇」
@@ -1033,6 +1034,24 @@ python -m http.server 8765
 | `gd_alarm.mp3` | English | Mecha-Rex is back! |
 | `gd_go.mp3` | English | Baby droids, team up! |
 | `gd_win.mp3` | English | Wow! Giant droid power! |
+| `df_alarm.mp3` | English | Roar! Laser time! Pew pew! |
+| `df_go.mp3` | English | Tap to block the lasers! |
+| `df_block.mp3` | English | Block! |
+| `df_broke.mp3` | English | Beep… my laser is broken! |
+| `df_win.mp3` | English | Super saber block! |
+| `dn_alarm.mp3` | English | Roar! Fight me! |
+| `dn_go.mp3` | English | Wait! Push his buttons! |
+| `dn_spin.mp3` | English | Spin! |
+| `dn_jump.mp3` | English | Jump! |
+| `dn_wiggle.mp3` | English | Wiggle wiggle! |
+| `dn_party.mp3` | English | Beep boop! Dance party! |
+| `dn_win.mp3` | English | Mecha-Rex loves to dance! |
+| `cd_alarm.mp3` | English | Roar! My candy! You can’t have it! |
+| `cd_go.mp3` | English | Tap Mecha-Rex three times! |
+| `cd_pop.mp3` | English | Pop! Candy everywhere! |
+| `cd_count.mp3` | English | Catch five candies. Count with me! |
+| `cd_share.mp3` | English | Beep beep! Sorry. Let’s share! |
+| `cd_win.mp3` | English | Yummy! Thank you, Mecha-Rex! |
 
 ---
 

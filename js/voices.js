@@ -258,6 +258,24 @@
   clips.gd_alarm = { lang: 'en', text: 'Mecha-Rex is back!' };
   clips.gd_go    = { lang: 'en', text: 'Baby droids, team up!' };
   clips.gd_win   = { lang: 'en', text: 'Wow! Giant droid power!' };
+  clips.df_alarm = { lang: 'en', text: 'Roar! Laser time! Pew pew!' };
+  clips.df_go    = { lang: 'en', text: 'Tap to block the lasers!' };
+  clips.df_block = { lang: 'en', text: 'Block!' };
+  clips.df_broke = { lang: 'en', text: 'Beep… my laser is broken!' };
+  clips.df_win   = { lang: 'en', text: 'Super saber block!' };
+  clips.dn_alarm = { lang: 'en', text: 'Roar! Fight me!' };
+  clips.dn_go    = { lang: 'en', text: 'Wait! Push his buttons!' };
+  clips.dn_spin  = { lang: 'en', text: 'Spin!' };
+  clips.dn_jump  = { lang: 'en', text: 'Jump!' };
+  clips.dn_wiggle = { lang: 'en', text: 'Wiggle wiggle!' };
+  clips.dn_party = { lang: 'en', text: 'Beep boop! Dance party!' };
+  clips.dn_win   = { lang: 'en', text: 'Mecha-Rex loves to dance!' };
+  clips.cd_alarm = { lang: 'en', text: 'Roar! My candy! You can’t have it!' };
+  clips.cd_go    = { lang: 'en', text: 'Tap Mecha-Rex three times!' };
+  clips.cd_pop   = { lang: 'en', text: 'Pop! Candy everywhere!' };
+  clips.cd_count = { lang: 'en', text: 'Catch five candies. Count with me!' };
+  clips.cd_share = { lang: 'en', text: 'Beep beep! Sorry. Let’s share!' };
+  clips.cd_win   = { lang: 'en', text: 'Yummy! Thank you, Mecha-Rex!' };
   // ---- 結局短片 ----
   // 英雄（廣東話）
   clips.cloud_alarm = { lang: 'yue', text: '哎呀！黑雲怪落大雨，個城市濕晒！' };

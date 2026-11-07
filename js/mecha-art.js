@@ -353,6 +353,39 @@ const MechaArt = (() => {
       <path d="M8 56 L80 118 M44 56 L80 118 M116 56 L80 118 M152 56 L80 118" stroke="${INK}" stroke-width="2"/>
     </svg>`;
   }
+  // 糖果（viewBox 0 0 100 70）：包裝糖 / 波板糖
+  function candy(col, lolly) {
+    col = col || '#ff8fb8';
+    if (lolly) return `<svg viewBox="0 0 100 70" aria-hidden="true" class="candy-svg">
+      <path d="M50 44 V68" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="50" cy="26" r="23" fill="${col}" stroke="#fff" stroke-width="3"/>
+      <path d="M50 26 m-14 0 a14 14 0 1 1 14 14 a9 9 0 1 1 -9 -9 a4 4 0 1 1 4 4" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".85"/>
+    </svg>`;
+    return `<svg viewBox="0 0 100 70" aria-hidden="true" class="candy-svg">
+      <path d="M30 35 L6 16 Q2 35 6 54Z" fill="${col}" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M70 35 L94 16 Q98 35 94 54Z" fill="${col}" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
+      <ellipse cx="50" cy="35" rx="24" ry="20" fill="${col}" stroke="#fff" stroke-width="3"/>
+      <path d="M38 22 Q44 35 38 48 M50 16 Q56 35 50 54 M62 22 Q68 35 62 48" stroke="#fff" stroke-width="3.5" fill="none" opacity=".6" stroke-linecap="round"/>
+      <ellipse cx="40" cy="26" rx="6" ry="3.5" fill="#fff" opacity=".7"/>
+    </svg>`;
+  }
+  // Disco 球（viewBox 0 0 100 110）
+  function disco() {
+    let tiles = '';
+    for (let y = 30; y <= 94; y += 10) {
+      for (let x = 18; x <= 82; x += 10) {
+        if ((x - 50) ** 2 + (y - 62) ** 2 > 33 ** 2) continue;
+        const c = ['#dfe6ef', '#fff', '#b9c0cf', '#c7e8ff', '#ffe6f0'][(x * 7 + y * 3) % 5];
+        tiles += `<rect x="${x - 4.5}" y="${y - 4.5}" width="9" height="9" rx="1.5" fill="${c}"/>`;
+      }
+    }
+    return `<svg viewBox="0 0 100 110" aria-hidden="true">
+      <path d="M50 0 V26" stroke="#a7adba" stroke-width="3"/>
+      <circle cx="50" cy="62" r="36" fill="#8b93a7"/>
+      <g class="disco-tiles">${tiles}</g>
+      <circle cx="38" cy="48" r="7" fill="#fff" opacity=".9"/>
+    </svg>`;
+  }
   const redFighter = () => JediArt.fighter().replace(/#3b6fd8/g, '#c43a3f').replace(/#6fd0ff/g, '#ff8a95').replace(/#5a3a24/g, '#2b2433');
 
   // ---------- 主選單卡 + 貼紙 ----------
@@ -368,8 +401,16 @@ const MechaArt = (() => {
   function sticker(id) {
     if (id === 'combo') return nest(happyRex(), 12, 22, 76, 70) + `<path d="M72 24 C64 16 54 22 60 32 L72 42 L84 32 C90 22 80 16 72 24Z" fill="#ff5a6e"/>`;
     if (id === 'rocket') return nest(JediArt.fighter(), 8, 22, 64, 38) + nest(redFighter(), 30, 52, 64, 38);
+    if (id === 'deflect') return `<path d="M58 22 L84 30" stroke="#ff4d5e" stroke-width="7" stroke-linecap="round" opacity=".9"/>
+      <path d="M58 22 L84 30" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M30 74 L60 28" stroke="#6fd0ff" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+      <path d="M30 74 L60 28" stroke="#e8f8ff" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M22 86 L31 72" stroke="#a7adba" stroke-width="9" stroke-linecap="round"/>
+      <path d="M24 83 L29 75" stroke="#5c6375" stroke-width="3"/>` + nest(EndArt.star('#ffe680'), 46, 12, 22, 22);
+    if (id === 'dance') return nest(happyRex(), 8, 34, 66, 61) + nest(disco(), 58, 8, 32, 35);
+    if (id === 'candy') return nest(candy('#ff8fb8'), 12, 22, 44, 31) + nest(candy('#ffd36e', true), 50, 14, 38, 27) + nest(candy('#7fd6a0'), 30, 52, 44, 31);
     return nest(baby(BABY_COLS[2]), 34, 62, 32, 32) + nest(baby(BABY_COLS[1]), 34, 36, 32, 32) + nest(baby(BABY_COLS[0]), 34, 10, 32, 32);
   }
 
-  return { jedi, sith, baby, BABY_COLS, rex, happyRex, scene, thing, parachute, redFighter, icon, sticker, SPOT };
+  return { jedi, sith, baby, BABY_COLS, rex, happyRex, scene, thing, parachute, redFighter, candy, disco, icon, sticker, SPOT };
 })();
