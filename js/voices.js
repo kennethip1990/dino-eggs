@@ -276,6 +276,65 @@
   clips.cd_count = { lang: 'en', text: 'Catch five candies. Count with me!' };
   clips.cd_share = { lang: 'en', text: 'Beep beep! Sorry. Let’s share!' };
   clips.cd_win   = { lang: 'en', text: 'Yummy! Thank you, Mecha-Rex!' };
+  // ---- 機甲 Luca 出擊（全英文）----
+  if (root.ROBO_UNIT) {
+    const U = root.ROBO_UNIT;
+    const say = (t) => t.say || (t.these ? 'These are ' : 'This is a ') + t.word + '.';
+    for (const t of U.things) {
+      clips['rw_' + t.id] = { lang: 'en', text: t.word };
+      if (t.no) clips['rn_' + t.id] = { lang: 'en', text: t.no };
+      if (t.dg) clips['rs_' + t.id] = { lang: 'en', text: say(t) };
+    }
+    // digraph 嘅音：內置語音讀唔到，冇錄音就改讀字母名（s, h）
+    const DG = { sh: 'sheep', ch: 'chair', th: 'three', ph: 'phone' };
+    for (const d of U.digraphs) clips['dg_' + d] = { lang: 'en', text: d + ' 嘅音（好似 ' + DG[d] + ' 開頭嗰個音，唔好讀字母名）', noTts: true };
+  }
+  clips.rb_hi      = { lang: 'en', text: 'Hello, Robo-Luca!' };
+  clips.rb_intro   = { lang: 'en', text: 'Oh no! The space monster Gloop is coming! Power up your robot!' };
+  clips.rb_shields = { lang: 'en', text: 'You have five shields. Wrong answers break a shield. Listen first, then tap!' };
+  clips.rb_scan    = { lang: 'en', text: 'Scanner on! Look and read. Tick or cross?' };
+  clips.rb_core    = { lang: 'en', text: 'Power cores! Listen to the word. Which letters are missing?' };
+  clips.rb_core_q  = { lang: 'en', text: 'Which letters?' };
+  clips.rb_saber   = { lang: 'en', text: 'Beam saber time! Spell the words. Double E, or E A?' };
+  clips.rb_team_q  = { lang: 'en', text: 'Double E, or E A?' };
+  clips.rb_team_ee = { lang: 'en', text: 'Double E!' };
+  clips.rb_team_ea = { lang: 'en', text: 'E A!' };
+  clips.rb_ready   = { lang: 'en', text: 'Your beam saber is ready!' };
+  clips.rb_look    = { lang: 'en', text: 'Oops! Listen again.' };
+  clips.rb_ko      = { lang: 'en', text: 'Oh no! No more shields! Back to base!' };
+  clips.rb_fix     = { lang: 'en', text: 'Fixing, fixing… Recharging!' };
+  clips.rb_full    = { lang: 'en', text: 'Power full! Let’s try again. Listen carefully!' };
+  clips.rb_perfect = { lang: 'en', text: 'Perfect! No shields broken! Gold medal!' };
+  clips.rb_yes_1   = { lang: 'en', text: 'Yes!' };
+  clips.rb_yes_2   = { lang: 'en', text: 'Great job!' };
+  clips.rb_yes_3   = { lang: 'en', text: 'Robo power!' };
+  clips.rb_boss    = { lang: 'en', text: 'Here comes Gloop!' };
+  clips.rb_boss_go = { lang: 'en', text: 'Answer right to beat him!' };
+  clips.gm_laugh   = { lang: 'en', text: 'Gloop gloop! Ha ha!' };
+  clips.gm_ouch_1  = { lang: 'en', text: 'Ouch!' };
+  clips.gm_ouch_2  = { lang: 'en', text: 'Bloop!' };
+  clips.gm_ouch_3  = { lang: 'en', text: 'Oh no!' };
+  clips.gm_give    = { lang: 'en', text: 'OK, OK! You win, Robo-Luca!' };
+  clips.rb_win     = { lang: 'en', text: 'Hooray! The Earth is safe!' };
+  clips.rb_medals  = { lang: 'en', text: 'Look at your medals!' };
+  clips.rb_all_gold  = { lang: 'en', text: 'All gold! Super Robo-Luca!' };
+  clips.rb_some_gold = { lang: 'en', text: 'Gold medals! Can you get all gold next time?' };
+  clips.rb_no_gold   = { lang: 'en', text: 'Next time, listen first and get a gold medal!' };
+  clips.rb_bye     = { lang: 'en', text: 'Thank you, Robo-Luca! See you next time!' };
+  // 機甲結局
+  clips.cn_alarm = { lang: 'en', text: 'Gloop gloop! I’m back!' };
+  clips.cn_go    = { lang: 'en', text: 'Tap, tap, tap! Charge the cannon!' };
+  clips.cn_fire  = { lang: 'en', text: 'Robo cannon, fire!' };
+  clips.cn_good  = { lang: 'en', text: 'Wow, I’m small now! Can we be friends?' };
+  clips.cn_win   = { lang: 'en', text: 'Yes! Friends!' };
+  clips.pu_alarm = { lang: 'en', text: 'Gloop! You can’t catch me!' };
+  clips.pu_go    = { lang: 'en', text: 'Tap Gloop! Rocket punch!' };
+  clips.pu_win   = { lang: 'en', text: 'Bye bye, Gloop! He’s a star now!' };
+  clips.pt_alarm = { lang: 'en', text: 'Gloop gloop! I want to fight!' };
+  clips.pt_go    = { lang: 'en', text: 'Tap the power cores!' };
+  clips.pt_big   = { lang: 'en', text: 'Super Robo mode!' };
+  clips.pt_sorry = { lang: 'en', text: 'Wow, so cool! Sorry! Let’s play!' };
+  clips.pt_win   = { lang: 'en', text: 'Dance party! Hooray!' };
   // ---- 結局短片 ----
   // 英雄（廣東話）
   clips.cloud_alarm = { lang: 'yue', text: '哎呀！黑雲怪落大雨，個城市濕晒！' };

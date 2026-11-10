@@ -1,7 +1,7 @@
 // 用法：node tools/list-recordings.js  → 印出 README 用嘅錄音清單（markdown table）
 const vm = require('vm'), fs = require('fs'), path = require('path');
 global.self = global;
-for (const f of ['words.js', 'family.js', 'animals.js', 'jedi-words.js', 'mecha-words.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
+for (const f of ['words.js', 'family.js', 'animals.js', 'jedi-words.js', 'mecha-words.js', 'robo-words.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
 // Mecha-Rex 嘅 w_ / ts_ 同 Jedi 共用前綴，用 id 分開
 const MK = new Set(self.MECHA_UNIT.things.map((t) => t.id));
 const isMecha = (k) => MK.has(k.replace(/^(w|ts)_/, ''));
@@ -43,7 +43,13 @@ const groups = [
   ['Mecha-Rex：陷阱圖改正', /^no_/],
   ['Mecha-Rex：方位字 + 方位句子', /^(pw|pp)_/],
   ['Mecha-Rex：旁白 + Mecha-Rex + baby droid', /^(mx|mr|bb)_/],
-  ['Mecha-Rex 結局', /^(xc|rk|gd|df|dn|cd)_/]
+  ['Mecha-Rex 結局', /^(xc|rk|gd|df|dn|cd)_/],
+  ['機甲 Luca：生字（digraph + ee / ea + 陷阱圖）', /^rw_/],
+  ['機甲 Luca：句子（✓✗）', /^rs_/],
+  ['機甲 Luca：陷阱圖改正', /^rn_/],
+  ['機甲 Luca：digraph 音（未錄之前讀字母名）', /^dg_/],
+  ['機甲 Luca：旁白 + Gloop', /^(rb|gm)_/],
+  ['機甲 Luca 結局', /^(cn|pu|pt)_/]
 ];
 const clips = self.VOICES.clips;
 const out = [];

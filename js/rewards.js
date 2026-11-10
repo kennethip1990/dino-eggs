@@ -8,7 +8,7 @@ const Rewards = (() => {
   const $ = (s) => document.querySelector(s);
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const put = (el, markup) => el.replaceChildren(document.createRange().createContextualFragment(markup));
-  const ENDINGS = { dino: ['rainbow', 'gold', 'star'], hero: ['monster', 'cloud', 'ufo', 'volcano', 'octopus'], rex: ['monster', 'tornado', 'meteor'], snake: ['heart', 'dragon', 'monster'], party: ['monster', 'balloon', 'candle'], jedi: ['droids', 'ship', 'saber'], mecha: ['combo', 'rocket', 'giant', 'deflect', 'dance', 'candy'] };
+  const ENDINGS = { dino: ['rainbow', 'gold', 'star'], hero: ['monster', 'cloud', 'ufo', 'volcano', 'octopus'], rex: ['monster', 'tornado', 'meteor'], snake: ['heart', 'dragon', 'monster'], party: ['monster', 'balloon', 'candle'], jedi: ['droids', 'ship', 'saber'], mecha: ['combo', 'rocket', 'giant', 'deflect', 'dance', 'candy'], robo: ['cannon', 'punch', 'parts'] };
   const NAMES = {
     dino: { rainbow: '彩虹恐龍BB', gold: '金色恐龍BB', star: '星星恐龍BB' },
     hero: { monster: '紫色怪獸', cloud: '黑雲怪', ufo: '搗蛋外星人', volcano: '火山怪', octopus: '大八爪魚' },
@@ -16,11 +16,12 @@ const Rewards = (() => {
     snake: { heart: '愛心蛇', dragon: '金色飛龍', monster: '字母炮打怪獸' },
     party: { monster: '怪獸偷蛋糕', balloon: '氣球飛上天', candle: '吹蠟燭' },
     jedi: { droids: '機械人大軍', ship: '黑暗星煙花', saber: 'Sith 變好人' },
-    mecha: { combo: 'BB 機械恐龍', rocket: '火箭大追擊', giant: 'BB 機械人合體', deflect: '光劍擋激光', dance: '機械恐龍跳舞', candy: '糖果大爆發' }
+    mecha: { combo: 'BB 機械恐龍', rocket: '火箭大追擊', giant: 'BB 機械人合體', deflect: '光劍擋激光', dance: '機械恐龍跳舞', candy: '糖果大爆發' },
+    robo: { cannon: '光束炮', punch: '火箭飛拳', parts: 'Super Robo 大變身' }
   };
 
   const KEY = 'rewards.v1';
-  const fresh = () => ({ plays: { dino: 0, hero: 0, rex: 0, snake: 0, party: 0, jedi: 0, mecha: 0 }, seen: { dino: [], hero: [], rex: [], snake: [], party: [], jedi: [], mecha: [] }, last: {}, unlockShown: false });
+  const fresh = () => ({ plays: { dino: 0, hero: 0, rex: 0, snake: 0, party: 0, jedi: 0, mecha: 0, robo: 0 }, seen: { dino: [], hero: [], rex: [], snake: [], party: [], jedi: [], mecha: [], robo: [] }, last: {}, unlockShown: false });
   let st = load();
   function load() {
     try {

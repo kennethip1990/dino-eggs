@@ -1,0 +1,225 @@
+/* 機甲 Luca 出擊（英文） */
+
+/* ---------- 主選單：8 張卡 = 4 + 4（直向 3 + 3 + 2） ---------- */
+#menu-screen .card-wrap:nth-child(5) { grid-column: span 2; }
+@media (orientation: portrait) {
+  #menu-screen .card-wrap:nth-child(7) { grid-column: 2 / span 2; }
+}
+#go-robo { background: rgba(28,42,92,.8); animation-delay: -1.1s; }
+#go-robo .choose-art { margin: -6%; width: 112%; height: 112%; }
+
+/* ---------- 畫面 ---------- */
+#robo-screen { position: absolute; inset: 0; z-index: 10; display: none; overflow: hidden; }
+body[data-screen="robo"] #robo-screen { display: block; }
+#robo-bg { position: absolute; inset: 0; filter: hue-rotate(20deg) saturate(1.1); }
+#robo-bg svg { width: 100%; height: 100%; display: block; }
+
+#rb-robot { position: absolute; z-index: 5; left: 1vw; bottom: 4vh; height: 60vh; aspect-ratio: 200 / 260; --beam: #ff7ad9;
+  transition: left .6s, bottom .6s, height .6s, opacity .6s, filter .6s; }
+#rb-robot svg { width: 100%; height: 100%; display: block; overflow: visible; }
+#rb-monster { position: absolute; z-index: 4; right: 1vw; bottom: 4vh; height: 46vh; aspect-ratio: 260 / 240; display: none; transition: height .8s cubic-bezier(.3,1.5,.5,1); }
+body.robo-boss #rb-monster { display: block; }
+#rb-monster svg { width: 100%; height: 100%; display: block; overflow: visible; }
+#robo-play { position: absolute; z-index: 6; left: 30vw; right: 2vw; top: 64px; bottom: 3vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3vh; }
+body.robo-boss #robo-play { left: 25vw; right: 27vw; }
+#robo-hud { position: absolute; z-index: 7; top: max(12px, env(safe-area-inset-top)); left: 50%; translate: -50% 0; display: flex; align-items: center; gap: 1.2vmin; pointer-events: none; }
+#robo-hp { position: absolute; z-index: 8; top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); display: flex; gap: .8vmin; padding: .8vmin 1.2vmin; border-radius: 2vmin; background: rgba(0,0,0,.22); pointer-events: none; }
+#robo-hp[hidden] { display: none; }
+
+@media (orientation: portrait) {
+  #rb-robot { left: 3vw; top: 76px; bottom: auto; height: 26vh; }
+  #rb-monster { right: 3vw; top: 84px; bottom: auto; height: 22vh; }
+  #robo-play, body.robo-boss #robo-play { left: 3vw; right: 3vw; top: calc(84px + 26vh + 9vmin); bottom: 3vh; }
+  #robo-hud { top: calc(80px + 26vh); }
+}
+
+/* ---------- 護盾 HP ---------- */
+.rb-shield { width: 6.4vmin; display: block; }
+.rb-shield svg { width: 100%; display: block; }
+.rb-shield.on { animation: rbshieldon .5s cubic-bezier(.3,1.6,.5,1) both; }
+@keyframes rbshieldon { from { transform: scale(0); } }
+.rb-shield.lost { animation: rbshieldlost .7s ease-in forwards; }
+@keyframes rbshieldlost { 30% { transform: scale(1.4) rotate(-12deg); filter: brightness(2); } to { transform: translateY(4vmin) rotate(30deg) scale(.7); opacity: .15; filter: grayscale(1); } }
+#robo-hp.low .rb-shield:not(.lost) { animation: rblow .8s ease-in-out infinite; }
+@keyframes rblow { 50% { filter: drop-shadow(0 0 8px #ff4d5e) brightness(1.2); } }
+#robo-hp.perfect { animation: rbperfect 1.2s ease-out; }
+@keyframes rbperfect { 30% { transform: scale(1.15); box-shadow: 0 0 30px #ffd23e; background: rgba(255,210,62,.5); } }
+
+/* ---------- 機械人動作 ---------- */
+.rb-arm { transform-box: view-box; transform-origin: 148px 106px; }
+.rb-back { transform-box: view-box; transform-origin: 46px 112px; }
+#rb-robot.in svg { animation: rbin .9s cubic-bezier(.2,.9,.3,1.2) both; }
+@keyframes rbin { from { transform: translate(-40vw, -30vh) rotate(-20deg); } }
+#rb-robot svg { animation: rbidle 2.6s ease-in-out infinite; }
+@keyframes rbidle { 50% { transform: translateY(-1.2vh); } }
+#rb-robot.slash .rb-arm { animation: rbslash .8s ease-in-out; }
+@keyframes rbslash { 30% { transform: rotate(-60deg); } 60% { transform: rotate(40deg); } }
+#rb-robot.punch .rb-arm { animation: rbpunch .6s ease-in-out; }
+@keyframes rbpunch { 40% { transform: translateX(14px) rotate(-70deg); } }
+#rb-robot.hurt svg { animation: rbhurt .7s ease-in-out; }
+@keyframes rbhurt { 15% { transform: translateX(-3vh) rotate(-6deg); filter: brightness(1.6) sepia(1) hue-rotate(-40deg) saturate(4); } 40% { transform: translateX(1vh) rotate(3deg); } 70% { transform: translateX(-1vh); filter: none; } }
+#rb-robot.hurt .rb-eyes rect { fill: #ff4d5e; }
+#rb-robot.charged .rb-blade { filter: drop-shadow(0 0 10px var(--beam)) drop-shadow(0 0 3px #fff); }
+#rb-robot.coreflash .rb-core { animation: rbcore .8s ease-out; }
+@keyframes rbcore { 30% { r: 18; filter: drop-shadow(0 0 12px #fff); } }
+#rb-robot .rb-core { filter: drop-shadow(0 0 6px var(--core, #6fd0ff)); }
+#rb-robot.powered svg { animation: rbpower 1.4s ease-in-out; filter: drop-shadow(0 0 20px var(--core, #6fd0ff)); }
+@keyframes rbpower { 50% { transform: scale(1.06) translateY(-2vh); } }
+#rb-robot.wave .rb-arm { animation: rbwave 1.2s ease-in-out infinite; }
+@keyframes rbwave { 50% { transform: rotate(-40deg); } }
+#rb-robot.cheer svg { animation: jlcheer .6s ease-in-out infinite; }
+#rb-robot.giant { height: 84vh; bottom: 0; }
+#rb-robot.giant svg { filter: drop-shadow(0 0 22px #ffe680); animation: rbrainbow 1.6s linear infinite; }
+@keyframes rbrainbow { to { filter: drop-shadow(0 0 22px #ffe680) hue-rotate(360deg); } }
+.rb-eyes rect { animation: rbeyes 3s ease-in-out infinite; }
+@keyframes rbeyes { 0%, 90%, 100% { opacity: 1; } 95% { opacity: .2; } }
+body.robo-ko #rb-robot { left: -4vw; bottom: 2vh; height: 40vh; filter: grayscale(.8) brightness(.7); }
+@media (orientation: portrait) { #rb-robot.giant { height: 34vh; } body.robo-ko #rb-robot { height: 18vh; } }
+
+/* ---------- Gloop ---------- */
+.gm-jaw { transform-box: view-box; transform-origin: 108px 124px; animation: gmjaw 2.4s ease-in-out infinite; }
+@keyframes gmjaw { 0%, 70%, 100% { transform: none; } 80%, 90% { transform: translateY(8px); } }
+.gm-arm { transform-box: view-box; transform-origin: 52px 150px; animation: gmarm 1.6s ease-in-out infinite; }
+@keyframes gmarm { 50% { transform: rotate(-18deg); } }
+.gm-tail { transform-box: view-box; transform-origin: 196px 180px; animation: gmtail 2s ease-in-out infinite; }
+@keyframes gmtail { 50% { transform: rotate(10deg); } }
+.gm-eye { animation: eyeglow 1.4s ease-in-out infinite; }
+#rb-monster.enter svg { animation: slin 1.1s cubic-bezier(.2,.9,.3,1.2) both; }
+#rb-monster.hit svg { animation: slhit .5s ease-in-out; }
+#rb-monster.laugh svg { animation: sllaugh .8s ease-in-out; }
+#rb-monster.dizzy svg { animation: sldizzy 1s ease-in-out infinite; }
+#rb-monster.flee svg { animation: slflee 1.2s ease-in forwards; }
+#rb-monster.friendly { height: 26vh; }
+#rb-monster.cheer svg { animation: jlcheer .5s ease-in-out infinite; }
+#rb-monster.blast svg { animation: rbblast 1s ease-in forwards; }
+@keyframes rbblast { 30% { transform: translate(4vw, -6vh) rotate(40deg); } to { transform: translate(40vw, -70vh) rotate(720deg) scale(.1); opacity: 0; } }
+#rb-monster.tap-hint svg { filter: drop-shadow(0 0 18px #ffe680) brightness(1.1); }
+
+/* ---------- HUD：機械蟲 / 核心插座 / 光束劍 / 生命 ---------- */
+#robo-hud .rb-drone { width: 7vmin; }
+#robo-hud .rb-drone svg { width: 100%; display: block; }
+#robo-hud .rb-drone.zapped { animation: zapped 1s ease-in forwards; }
+#robo-hud.sockets i { width: 7.5vmin; height: 7.5vmin; border-radius: 50%; border: .6vmin dashed rgba(255,255,255,.55); display: grid; place-items: center; }
+#robo-hud.sockets i svg { width: 100%; display: block; }
+#robo-hud.sockets i.on { border-color: transparent; animation: bbon .6s cubic-bezier(.3,1.6,.5,1); }
+#robo-hud.meter i { width: 12vmin; height: 2.4vmin; border-radius: 2vmin; background: rgba(255,255,255,.22); }
+#robo-hud.meter i.on { background: linear-gradient(90deg, #fff, #ff7ad9); box-shadow: 0 0 12px #ff7ad9; animation: segon .5s ease-out; }
+#robo-hud .h-face { width: 8vmin; height: 8vmin; border-radius: 50%; background: #4a3a78; border: 4px solid #fff; overflow: hidden; }
+#robo-hud .h-face svg { width: 100%; height: 100%; display: block; }
+#robo-hud .heart { width: 5.6vmin; }
+#robo-hud .heart svg { width: 100%; display: block; }
+#robo-hud .heart.lost { animation: hlost .6s ease-in forwards; }
+
+/* ---------- 共用 ---------- */
+#robo-play .holo-text, #robo-play .wcard, #robo-play .sp-slot, #robo-play .crystal, #robo-play .rb-word, #robo-play .cb-txt { font-family: "Andika", system-ui, sans-serif; font-weight: 700; }
+#robo-play button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+#robo-play .wiggle { animation: partwiggle .6s ease-in-out; }
+#robo-play .fade { opacity: .2; transition: opacity .35s; pointer-events: none; }
+#robo-play .hint { animation: jdhint 1.4s ease-in-out infinite; }
+#robo-play .crystal.hint { animation: chint 1.2s ease-in-out infinite; }
+#robo-play.in-boss .holo-pic { height: 24vh; }
+#robo-play.in-boss .holo-text { font-size: clamp(24px, 6vh, 64px); }
+#robo-play.in-boss .tx { width: 14vh; height: 14vh; }
+#robo-play.mode-spell .sp-slots { gap: 1.4vh; }
+#robo-play.mode-spell .sp-slot { width: 9.5vh; }
+#robo-play.mode-spell .crystal { width: 13vh; height: 15.6vh; }
+#robo-play.mode-spell .sp-crystals { gap: 3vh; }
+.sp-slot.team.ee { color: #8fe4ff; text-shadow: 0 0 16px #3b9fe8, 0 0 4px #fff; border-bottom-color: #8fe4ff; }
+.sp-slot.team.ea { color: #ffd36e; text-shadow: 0 0 16px #ff8a3d, 0 0 4px #fff; border-bottom-color: #ffd36e; }
+
+/* ---------- ② 核心：字 + 空位 ---------- */
+.rb-wordwrap { display: flex; align-items: center; gap: 4vh; }
+.rb-wordwrap.in { animation: holoin .5s ease-out both; }
+.rb-pic { height: 30vh; aspect-ratio: 200 / 170; background: #fff; border-radius: 20px; padding: 1.4vh; box-shadow: 0 0 22px rgba(111,208,255,.5); }
+.rb-pic svg { width: 100%; height: 100%; display: block; }
+.rb-pic.yay { animation: yay .7s cubic-bezier(.3,1.6,.5,1); }
+.rb-word { display: flex; align-items: flex-end; font-size: clamp(40px, 12vh, 130px); line-height: 1; color: #fff; text-shadow: 0 0 12px rgba(111,208,255,.9), 0 3px 0 rgba(0,0,0,.25); }
+.rb-gap { min-width: 1.4em; margin: 0 .06em; text-align: center; border-bottom: 1.2vh solid #fff; color: var(--c, #ffe680); text-shadow: 0 0 16px var(--c, #ffe680), 0 0 4px #fff; }
+.rb-gap:empty::after { content: "\00a0"; }
+.rb-gap.filled { animation: fixed .6s cubic-bezier(.3,1.6,.5,1); }
+.rb-gap.ee { --c: #8fe4ff; } .rb-gap.ea { --c: #ffd36e; }
+.rb-cores { display: flex; gap: 3vh; }
+.rb-corebtn { position: relative; width: 17vh; height: 17vh; padding: 0; border: none; background: none; animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both; }
+.rb-corebtn .cb-art { position: absolute; inset: 0; pointer-events: none; }
+.rb-corebtn .cb-art svg { width: 100%; height: 100%; display: block; }
+.rb-corebtn .cb-txt { position: relative; font-size: clamp(30px, 8vh, 86px); color: #1e1b4b; text-shadow: 0 0 6px #fff; pointer-events: none; }
+.rb-corebtn.right { animation: cardright .6s ease-out; }
+.rb-corebtn:active { transform: scale(.94); }
+#robo-play.in-boss .rb-pic { height: 22vh; }
+#robo-play.in-boss .rb-word { font-size: clamp(32px, 9vh, 96px); }
+#robo-play.in-boss .rb-wordwrap { flex-direction: column; gap: 2vh; }
+#robo-play.in-boss .rb-corebtn { width: 13vh; height: 13vh; }
+.rb-teams { display: flex; gap: 5vh; }
+#robo-play .rb-team { min-width: 18vh; font-size: clamp(36px, 10vh, 110px); padding: .6vh 4vh; }
+#robo-play .rb-team.ee { border-color: #8fe4ff; }
+#robo-play .rb-team.ea { border-color: #ffd36e; }
+@media (orientation: portrait) {
+  .rb-wordwrap { flex-direction: column; gap: 2vh; }
+  .rb-pic, #robo-play.in-boss .rb-pic { height: 20vh; }
+  .rb-corebtn, #robo-play.in-boss .rb-corebtn { width: 20vw; height: 20vw; }
+  .rb-cores { gap: 3vw; }
+  #robo-play.mode-spell .crystal { width: min(11vh, 14vw); height: min(13vh, 16.8vw); font-size: min(9vh, 11vw); }
+  #robo-play.mode-spell .sp-crystals { gap: 1.6vw; height: 18vh; }
+  #robo-play.mode-spell .sp-slot { width: 7vh; }
+}
+
+/* ---------- 勳章 ---------- */
+.rb-medals { display: flex; gap: 3vh; }
+.rb-medal { width: 16vh; animation: rbmedal .7s cubic-bezier(.3,1.6,.5,1) both; }
+.rb-medal svg { width: 100%; display: block; }
+.rb-medal.gold svg { filter: drop-shadow(0 0 14px #ffd23e); animation: rbshine 1.6s ease-in-out infinite; }
+@keyframes rbmedal { from { transform: translateY(-40vh) rotate(-30deg); opacity: 0; } }
+@keyframes rbshine { 50% { filter: drop-shadow(0 0 24px #fff6c8) brightness(1.15); } }
+@media (orientation: portrait) { .rb-medal { width: 18vw; } .rb-medals { gap: 3vw; } }
+
+/* ---------- 維修站 ---------- */
+.rb-bay { position: absolute; z-index: 9; left: 50%; top: 50%; translate: -50% -50%; display: flex; flex-direction: column; align-items: center; gap: 3vh; padding: 3vh 5vh; border-radius: 4vh;
+  background: rgba(20,28,60,.75); border: .6vh solid #7fd6a0; box-shadow: 0 0 30px rgba(127,214,160,.5); animation: holoin .5s ease-out both; }
+.rb-mech { width: 24vh; cursor: pointer; }
+.rb-mech svg { width: 100%; display: block; }
+.rb-mech.fix .mc-wrench { animation: rbwrench .5s ease-in-out; transform-box: view-box; transform-origin: 88px 78px; }
+@keyframes rbwrench { 50% { transform: rotate(-60deg); } }
+.rb-mech.boop svg { animation: bbhop .4s ease-in-out; }
+.rb-battery { display: flex; gap: 1vh; padding: 1vh; border: .6vh solid #fff; border-radius: 1.6vh; position: relative; }
+.rb-battery::after { content: ""; position: absolute; right: -2.2vh; top: 50%; width: 1.4vh; height: 4vh; margin-top: -2vh; border-radius: 0 .6vh .6vh 0; background: #fff; }
+.rb-battery i { width: 6vh; height: 7vh; border-radius: .8vh; background: rgba(255,255,255,.15); }
+.rb-battery i.on { background: linear-gradient(#b8ffcf, #36b37e); box-shadow: 0 0 10px #7fd6a0; animation: bbon .4s ease-out; }
+
+/* ---------- 打中特效 ---------- */
+.jd-burst.zap { background: radial-gradient(circle, #fff 0 14%, #ffe680 28%, rgba(255,77,94,.5) 50%, transparent 70%); }
+.jd-burst.goo { background: radial-gradient(circle, #e9ffd8 0 14%, #9be07f 30%, rgba(141,95,214,.45) 52%, transparent 70%); }
+.rb-goo { position: fixed; z-index: 30; width: 9vh; height: 9vh; border-radius: 50% 46% 54% 48%; background: radial-gradient(circle at 35% 30%, #e9ffd8, #8bd86a 55%, #5fae45); box-shadow: 0 0 14px #9be07f; pointer-events: none; }
+
+/* ---------- 結局 ---------- */
+body.robo-battle #robo-play { visibility: hidden; }
+#robo-again {
+  position: absolute; z-index: 12; left: 50%; top: 40%;
+  width: 140px; height: 140px; margin: -70px 0 0 -70px;
+  border-radius: 50%; border: 7px solid #fff;
+  background: radial-gradient(circle at 35% 30%, #a6e3a0, #6cc067 60%, #52a64e);
+  padding: 26px; opacity: 0; pointer-events: none; transition: opacity 1s;
+}
+#robo-again svg { width: 100%; height: 100%; display: block; }
+body.robo-done #robo-again { opacity: 1; pointer-events: auto; }
+.rb-taplayer { position: absolute; inset: 0; z-index: 9; }
+.rb-gauge { position: absolute; z-index: 8; top: max(12px, env(safe-area-inset-top)); left: 50%; translate: -50% 0; display: flex; gap: 1.4vh; padding: 1vh 2vh; border-radius: 3vh; background: rgba(255,255,255,.15); border: .5vh solid rgba(255,255,255,.6); pointer-events: none; }
+.rb-gauge i { width: 11vh; height: 4vh; border-radius: 2vh; background: rgba(255,255,255,.18); }
+.rb-gauge i.on { background: linear-gradient(90deg, #6fd0ff, #ff7ad9); box-shadow: 0 0 14px #ff7ad9; animation: segon .5s ease-out; }
+.rb-taplayer.tap-hint { animation: none; background: radial-gradient(circle at 50% 50%, rgba(255,230,128,.18), transparent 60%); }
+.rb-ray { position: absolute; z-index: 6; height: 4vh; margin-top: -2vh; border-radius: 2vh; transform-origin: 0 50%; pointer-events: none;
+  background: linear-gradient(90deg, #fff, var(--beam, #ff7ad9)); box-shadow: 0 0 22px #ff7ad9, inset 0 0 0 .8vh rgba(255,255,255,.7); animation: mxbeam .9s ease-out forwards; }
+.rb-ray.big { height: 9vh; margin-top: -4.5vh; background: linear-gradient(90deg, #fff, #6fd0ff 30%, #ffd36e 60%, #ff7ad9); }
+.rb-fist { position: fixed; z-index: 30; width: 18vh; pointer-events: none; }
+.rb-fist svg { width: 100%; display: block; }
+.rb-twinkle { position: absolute; z-index: 3; right: 20vw; top: 6vh; width: 9vh; animation: twinkle .8s ease-in-out infinite; }
+.rb-twinkle svg { width: 100%; display: block; }
+.rb-floatcore { position: absolute; z-index: 9; width: 16vh; cursor: pointer; animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both, cfloat 2.4s ease-in-out infinite; }
+.rb-floatcore svg { width: 100%; display: block; pointer-events: none; }
+.rb-floatcore.tap-hint { animation: jdhint 1.1s ease-in-out infinite; }
+.rb-lights { position: absolute; z-index: 2; inset: -50%; pointer-events: none; mix-blend-mode: screen; opacity: .32;
+  background: conic-gradient(from 0deg at 50% 45%, #ff4d5e, transparent 8%, #ffd36e 16%, transparent 24%, #7fd6a0 33%, transparent 41%, #6fd0ff 50%, transparent 58%, #c78bff 66%, transparent 74%, #ff8fb8 83%, transparent 91%, #ff4d5e);
+  animation: lightsspin 6s linear infinite; }
+@media (orientation: portrait) { .rb-floatcore { width: 18vw; } }
+
+/* 主選單：機甲 3 張貼紙 */
+.stickers[data-game="robo"] .stk { width: calc(var(--card) * .22); }

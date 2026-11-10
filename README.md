@@ -1,6 +1,6 @@
 # 🦕 恐龍搵蛋（Dino Eggs）
 
-一個 app 七個 game（每個 game 3–6 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文）、🐍 **ABC 貪食蛇**（學英文字母）、🎂 **恐龍生日派對**（學認字 + 升小面試練習）、⚔️ **Jedi Luca 大戰 Sith**（英文句子 ✓✗ + 砌字）、⚔️🦖 **Jedi + Sith 大戰 Mecha-Rex**（VCe 字 + magic e + 方位字），後六個見下面。主選單 4 + 3 排（直向 3 + 3 + 1）。
+一個 app 八個 game（每個 game 3–6 個結局短片 + 貼紙簿 + 秘密短片），開 app 先喺主選單揀：🦖 **恐龍搵蛋**（學數數）、🤖 **英雄裝備站**（學認字）、🦖🦸 **Super Rex 救動物**（學英文）、🐍 **ABC 貪食蛇**（學英文字母）、🎂 **恐龍生日派對**（學認字 + 升小面試練習）、⚔️ **Jedi Luca 大戰 Sith**（英文句子 ✓✗ + 砌字）、⚔️🦖 **Jedi + Sith 大戰 Mecha-Rex**（VCe 字 + magic e + 方位字）、🤖 **機甲 Luca 出擊**（digraph sh/ch/th/ph + Long ee/ea，第一個有護盾 HP 嘅 game），後七個見下面。主選單 4 + 4 排（直向 3 + 3 + 2）。
 
 **恐龍搵蛋：** 幫恐龍媽媽搵蛋：每撳一隻蛋，蛋就飛入巢，遊戲先用廣東話、再用英文讀出數字（「一……one」）。搵齊之後蛋會孵出恐龍 BB，再讀出總數同一句讚佢嘅說話。
 
@@ -47,7 +47,11 @@ css/jedi.css            Jedi 畫面
 js/mecha-words.js       ★ Mecha-Rex 嘅字表（VCe 砌字 / ✓✗ / 陷阱圖 / magic e / 方位字）
 js/mecha.js             Jedi + Sith 大戰 Mecha-Rex 遊戲流程（揀 hero / 救 droid / 鍛造爐 / 決鬥 / 6 個結局）
 js/mecha-art.js         Sith Luca、Mecha-Rex、baby droid、方位場景、25 樣嘢 SVG（全部原創）
-css/mecha.css           Mecha-Rex 畫面 + 主選單 7 張卡排位（4 + 3）
+css/mecha.css           Mecha-Rex 畫面 + 主選單排位（半格 grid）
+js/robo-words.js        ★ 機甲 Luca 嘅字表（digraph ✓✗ / 陷阱圖 / 能量核心 / ee-ea 砌字）
+js/robo.js              機甲 Luca 出擊遊戲流程（護盾 HP / 雷達 / 核心 / 光束劍 / Gloop 決鬥 / 勳章 / 3 個結局）
+js/robo-art.js          Robo-Luca 機甲、太空怪獸 Gloop、技師機械人、25 樣嘢 SVG（全部原創）
+css/robo.css            機甲畫面 + 主選單 8 張卡（4 + 4）
 fonts/                  楷書 + Andika 字體（只抽咗用到嘅字）
 sw.js                   Service Worker（離線）
 manifest.webmanifest    加入主畫面 / 安裝 app
@@ -235,6 +239,36 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 
 ---
 
+## 🤖 機甲 Luca 出擊（英文，全英文，有護盾 HP）
+
+跟 Yorkland Tutorial **Starters R&W Part 1（Digraphs）+ Part 3（Long ee and ea words）** 工作紙（2026-11-10）。Kenneth 想要高達咁嘅機械人做主角，但個 app 係 public，所以係**原創機甲**（白藍裝甲、黃色 V 角、紅盾、粉紅光束劍、胸口駕駛艙見到 Luca），冇用任何官方名或者設計。壞蛋係原創太空怪獸 **Gloop**。一局大約 5–6 分鐘：
+
+1. **雷達掃描（5 條 ✓✗ = Part 1）**：上面 5 隻機械蟲，答啱一條打走一隻
+   - 2 條講真、1 條同 digraph 大話（shell 配「This is a fish.」之類）、**2 條工作紙陷阱圖**：山羊配「This is a sheep.」、老鼠配 mouth、梳化配 chair、**T-shirt 配 shirt**、蛋糕配 lunch → 一定係 ✗，之後講返「No! It’s a goat.」
+2. **能量核心（4 條）**：圖 + 字有個空位（「__eep」「bea__」）→ 揀 **sh / ch / th / ph** 四粒核心 → 核心飛入胸口變色。15 個字平均輪流（sheep, shell, shorts, fish, chair, lunch, beach, chick, mouth, teeth, bath, three, phone, photo, clothes）
+3. **光束劍砌字（3 條 = Part 3）**：跟次序撳水晶字母，**多一粒干擾字母**（ee 字畀 a、ea 字畀多粒 e）。砌完 ee 兩格變藍（「Double E!」）、ea 兩格變黃（「E A!」）。**★ 工作紙 4 個字（meat, peas, feet, green）第一下就啱 2 次之前排先**，之後同 bee, tree, sea, tea 輪流
+4. **Gloop 決鬥（5 條）**：✓✗ ×2（一條陷阱圖）+ 核心 ×1 + **ee 定 ea** ×2（「m__t」→ 撳 ee / ea）。答啱 Robo-Luca 衝過去斬一劍；答錯 Gloop 噴 goo
+5. 結局短片 + 貼紙 → **勳章**（每關一個）→「Thank you, Robo-Luca!」
+
+### 🛡 護盾 HP（呢個 game 先有，舊 game 照舊答錯冇懲罰）
+- 左上角 **5 格護盾**，每關開始補滿。**答錯扣一格**（機械人震 + 眼變紅），**掣會鎖住、讀多次題目先畀再答** → 亂估會好慢，要聽清楚先撳
+- 新題目出咗頭 0.6 秒唔收撳（上一題撳多下唔會誤中新題）；鎖住嗰陣撳嘢唔扣護盾
+- 錯兩次啱嗰個會發光（唔會卡死）；砌字每格只係錯第一下先扣（逐粒扣會太快冇晒）
+- **護盾冇晒 → 返基地**：技師機械人用扳手維修、電池 5 格每秒叉一格（可以撳技師玩）→「Power full! Let’s try again!」→ **淨係重玩嗰一關**（新題目），前面打咗嘅唔使重來
+- **一格都冇扣過到關 = 金勳章**（「Perfect! No shields broken!」），否則銀勳章；完場排晒 4 個出嚟
+- 家長區「機甲 Luca 英文記錄」：每個字 ✓✗ / 核心 / 砌字 / ee-ea 第一下就啱 / 次數 + 每關玩咗幾多次、返基地幾多次、幾多個金勳章
+
+- 角色全部原創 SVG；Gloop 輸咗係逃走 / 縮細做朋友 / 飛去變星星，冇斬人
+- 機甲貼紙唔計入秘密短片
+- 開發測試：`#demo=roboplay`（由頭玩）、`#demo=roboplay:2`（由核心開始）、`:3`（光束劍）、`:4`（直接決鬥）、`#demo=robo:cannon`（`punch` / `parts`）；`RoboGame._dbg.target` = 下一下應該撳嘅掣，`RoboGame._dbg.hp()` = 而家幾格護盾
+
+### 換英文字
+- 改 `js/robo-words.js`：`truth`（圖 + 同 digraph 大話）、`traps`（陷阱圖）、`core`（能量核心字）、`spell`（ee / ea 字，`focus` = 排先）。新圖要畫 SVG（`js/robo-art.js`）
+- `dg_sh` / `dg_ch` / `dg_th` / `dg_ph` 係 digraph 嘅音：內置語音讀唔到，**冇錄音就改讀字母名**（「S, H」），錄咗就會用
+- 改完記得 `js/version.js` +1
+
+---
+
 ## 🎬 結局短片 + 貼紙簿
 
 每個 game 有 3 個唔同結局（英雄裝備站有 5 個、Mecha-Rex 有 6 個），等 Luca 有動力玩多幾次：
@@ -247,6 +281,7 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 | 🐍 ABC 貪食蛇 | 💗 畫大心心 | 🐉 金色飛龍 | 👾 字母炮打怪獸 |
 | 🎂 生日派對 | 👾 怪獸偷蛋糕 | 🎈 氣球飛上天 | 🕯 吹蠟燭 + 生日歌 |
 | ⚔️ Jedi Luca | 🤖 機械人大軍（Force push ×3） | 🌑 黑暗星 → 戰機射 ×3 → 煙花 | 🌈 Sith Lord 返嚟 → 彩虹光劍 ×3 → 佢變好人做 Jedi |
+| 🤖 機甲 Luca | 💥 **Luca 撳畫面 ×3** 叉滿光束炮 → 發射 → Gloop 縮細做朋友 | 👊 **Luca 撳 Gloop ×3** = 火箭飛拳 ×3 → Gloop 飛去太空變星星 | 🌈 **Luca 撳 3 粒能量核心** → Super Robo 大變身（變大 + 彩虹光）→ Gloop 話好型、講 sorry → 一齊跳舞 |
 | ⚔️🦖 Mecha-Rex | 💜 Jedi + Sith 交叉光劍 ×3 → Mecha-Rex 縮細變 BB 機械恐龍做朋友 | 🚀 Mecha-Rex 着火箭飛走 → 藍 + 紅戰機射 ×3 → 開降落傘飄走 | 🤖 4 隻 baby droid 疊高變巨型機械人 → Force 波 → Mecha-Rex 嚇走 + 煙花 | 🛡 Mecha-Rex 射激光 ×3 → **Luca 撳畫面**擋 → 光劍彈返去 → 激光炮壞咗冒煙、逃走 | 🕺 Mecha-Rex 3 粒掣 → **Luca 撳**紅（轉圈）/ 黃（跳）/ 綠（扭屁股），大家跟住跳 → disco 派對 | 🍬 Mecha-Rex 唔肯分糖 → **Luca 撳 Mecha-Rex ×3**（one, two, three）→ 爆糖果 → **撳糖果數到 5** → Mecha-Rex 講 sorry 一齊分享 |
 
 - 恐龍搵蛋：一節完咗會出一隻金色大蛋，搖三下孵出特別恐龍BB，之後佢會喺巢中間一齊瞓覺
@@ -328,7 +363,7 @@ python -m http.server 8765
 
 ---
 
-## 錄音清單（501 個檔）
+## 錄音清單（618 個檔）
 
 放喺 `audio/` folder，**檔名要一模一樣**（細楷、底線、`.mp3`）。唔使一次錄晒，錄咗邊個就用邊個，未錄嘅照用內置語音。
 
@@ -1052,6 +1087,135 @@ python -m http.server 8765
 | `cd_count.mp3` | English | Catch five candies. Count with me! |
 | `cd_share.mp3` | English | Beep beep! Sorry. Let’s share! |
 | `cd_win.mp3` | English | Yummy! Thank you, Mecha-Rex! |
+
+**機甲 Luca：生字（digraph + ee / ea + 陷阱圖）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `rw_sheep.mp3` | English | sheep |
+| `rw_shell.mp3` | English | shell |
+| `rw_shorts.mp3` | English | shorts |
+| `rw_shirt.mp3` | English | shirt |
+| `rw_fish.mp3` | English | fish |
+| `rw_chair.mp3` | English | chair |
+| `rw_lunch.mp3` | English | lunch |
+| `rw_beach.mp3` | English | beach |
+| `rw_chick.mp3` | English | chick |
+| `rw_mouth.mp3` | English | mouth |
+| `rw_clothes.mp3` | English | clothes |
+| `rw_teeth.mp3` | English | teeth |
+| `rw_bath.mp3` | English | bath |
+| `rw_three.mp3` | English | three |
+| `rw_phone.mp3` | English | phone |
+| `rw_photo.mp3` | English | photo |
+| `rw_goat.mp3` | English | goat |
+| `rw_mouse.mp3` | English | mouse |
+| `rw_sofa.mp3` | English | sofa |
+| `rw_tshirt.mp3` | English | T-shirt |
+| `rw_cake.mp3` | English | cake |
+| `rw_meat.mp3` | English | meat |
+| `rw_peas.mp3` | English | peas |
+| `rw_feet.mp3` | English | feet |
+| `rw_green.mp3` | English | green |
+| `rw_bee.mp3` | English | bee |
+| `rw_tree.mp3` | English | tree |
+| `rw_sea.mp3` | English | sea |
+| `rw_tea.mp3` | English | tea |
+
+**機甲 Luca：句子（✓✗）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `rs_sheep.mp3` | English | This is a sheep. |
+| `rs_shell.mp3` | English | This is a shell. |
+| `rs_shorts.mp3` | English | These are shorts. |
+| `rs_shirt.mp3` | English | This is a shirt. |
+| `rs_fish.mp3` | English | This is a fish. |
+| `rs_chair.mp3` | English | This is a chair. |
+| `rs_lunch.mp3` | English | This is lunch. |
+| `rs_beach.mp3` | English | This is a beach. |
+| `rs_chick.mp3` | English | This is a chick. |
+| `rs_mouth.mp3` | English | This is a mouth. |
+| `rs_clothes.mp3` | English | These are clothes. |
+| `rs_teeth.mp3` | English | These are teeth. |
+| `rs_bath.mp3` | English | This is a bath. |
+| `rs_three.mp3` | English | This is three. |
+| `rs_phone.mp3` | English | This is a phone. |
+| `rs_photo.mp3` | English | This is a photo. |
+
+**機甲 Luca：陷阱圖改正**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `rn_goat.mp3` | English | No! It’s a goat. |
+| `rn_mouse.mp3` | English | No! It’s a mouse. |
+| `rn_sofa.mp3` | English | No! It’s a sofa. |
+| `rn_tshirt.mp3` | English | No! It’s a T-shirt. |
+| `rn_cake.mp3` | English | No! It’s cake. Cake is not lunch! |
+
+**機甲 Luca：digraph 音（未錄之前讀字母名）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `dg_sh.mp3` | English | sh 嘅音（好似 sheep 開頭嗰個音，唔好讀字母名） |
+| `dg_ch.mp3` | English | ch 嘅音（好似 chair 開頭嗰個音，唔好讀字母名） |
+| `dg_th.mp3` | English | th 嘅音（好似 three 開頭嗰個音，唔好讀字母名） |
+| `dg_ph.mp3` | English | ph 嘅音（好似 phone 開頭嗰個音，唔好讀字母名） |
+
+**機甲 Luca：旁白 + Gloop**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `rb_hi.mp3` | English | Hello, Robo-Luca! |
+| `rb_intro.mp3` | English | Oh no! The space monster Gloop is coming! Power up your robot! |
+| `rb_shields.mp3` | English | You have five shields. Wrong answers break a shield. Listen first, then tap! |
+| `rb_scan.mp3` | English | Scanner on! Look and read. Tick or cross? |
+| `rb_core.mp3` | English | Power cores! Listen to the word. Which letters are missing? |
+| `rb_core_q.mp3` | English | Which letters? |
+| `rb_saber.mp3` | English | Beam saber time! Spell the words. Double E, or E A? |
+| `rb_team_q.mp3` | English | Double E, or E A? |
+| `rb_team_ee.mp3` | English | Double E! |
+| `rb_team_ea.mp3` | English | E A! |
+| `rb_ready.mp3` | English | Your beam saber is ready! |
+| `rb_look.mp3` | English | Oops! Listen again. |
+| `rb_ko.mp3` | English | Oh no! No more shields! Back to base! |
+| `rb_fix.mp3` | English | Fixing, fixing… Recharging! |
+| `rb_full.mp3` | English | Power full! Let’s try again. Listen carefully! |
+| `rb_perfect.mp3` | English | Perfect! No shields broken! Gold medal! |
+| `rb_boss.mp3` | English | Here comes Gloop! |
+| `rb_boss_go.mp3` | English | Answer right to beat him! |
+| `gm_laugh.mp3` | English | Gloop gloop! Ha ha! |
+| `gm_give.mp3` | English | OK, OK! You win, Robo-Luca! |
+| `rb_win.mp3` | English | Hooray! The Earth is safe! |
+| `rb_medals.mp3` | English | Look at your medals! |
+| `rb_all_gold.mp3` | English | All gold! Super Robo-Luca! |
+| `rb_some_gold.mp3` | English | Gold medals! Can you get all gold next time? |
+| `rb_no_gold.mp3` | English | Next time, listen first and get a gold medal! |
+| `rb_bye.mp3` | English | Thank you, Robo-Luca! See you next time! |
+| `rb_yes_1.mp3` | English | Yes! |
+| `gm_ouch_1.mp3` | English | Ouch! |
+| `rb_yes_2.mp3` | English | Great job! |
+| `gm_ouch_2.mp3` | English | Bloop! |
+| `rb_yes_3.mp3` | English | Robo power! |
+| `gm_ouch_3.mp3` | English | Oh no! |
+
+**機甲 Luca 結局**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `cn_alarm.mp3` | English | Gloop gloop! I’m back! |
+| `cn_go.mp3` | English | Tap, tap, tap! Charge the cannon! |
+| `cn_fire.mp3` | English | Robo cannon, fire! |
+| `cn_good.mp3` | English | Wow, I’m small now! Can we be friends? |
+| `cn_win.mp3` | English | Yes! Friends! |
+| `pu_alarm.mp3` | English | Gloop! You can’t catch me! |
+| `pu_go.mp3` | English | Tap Gloop! Rocket punch! |
+| `pu_win.mp3` | English | Bye bye, Gloop! He’s a star now! |
+| `pt_alarm.mp3` | English | Gloop gloop! I want to fight! |
+| `pt_go.mp3` | English | Tap the power cores! |
+| `pt_big.mp3` | English | Super Robo mode! |
+| `pt_sorry.mp3` | English | Wow, so cool! Sorry! Let’s play! |
+| `pt_win.mp3` | English | Dance party! Hooray! |
 
 ---
 
