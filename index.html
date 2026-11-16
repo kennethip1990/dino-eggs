@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="css/jedi.css">
   <link rel="stylesheet" href="css/mecha.css">
   <link rel="stylesheet" href="css/robo.css">
+  <link rel="stylesheet" href="css/light.css">
 </head>
 <body data-screen="menu">
   <div id="scene">
@@ -36,6 +37,7 @@
       <div class="card-wrap"><button id="go-jedi" class="choose" aria-label="Jedi Luca"></button><div class="stickers" data-game="jedi"></div></div>
       <div class="card-wrap"><button id="go-mecha" class="choose" aria-label="Jedi + Sith 大戰 Mecha-Rex"></button><div class="stickers" data-game="mecha"></div></div>
       <div class="card-wrap"><button id="go-robo" class="choose" aria-label="機甲 Luca 出擊"></button><div class="stickers" data-game="robo"></div></div>
+      <div class="card-wrap"><button id="go-light" class="choose" aria-label="光之巨人 Luca 救援隊"></button><div class="stickers" data-game="light"></div></div>
       <!-- 秘密短片：集齊英雄 + Super Rex 6 張貼紙先開到 -->
       <button id="go-boss" class="locked" aria-label="秘密短片"></button>
     </div>
@@ -118,6 +120,18 @@
       <div id="robo-hud"></div>
       <div id="robo-play"></div>
       <button id="robo-again" aria-label="返主選單"></button>
+    </div>
+
+    <!-- 光之巨人 Luca 救援隊（英文：Starters R&W Part 3 W-controlled + R-controlled vowels；冇打交、光能量只加唔扣） -->
+    <div id="light-screen">
+      <div id="light-bg"></div>
+      <div id="lg-mama"></div>
+      <div id="lg-baby"></div>
+      <div id="lg-hero"></div>
+      <div id="light-meter" hidden></div>
+      <div id="light-hud"></div>
+      <div id="light-play"></div>
+      <button id="light-again" aria-label="返主選單"></button>
     </div>
 
     <!-- 開始畫面：揀恐龍（撳邊隻就開始，同時解鎖聲音） -->
@@ -208,6 +222,14 @@
       </section>
 
       <section>
+        <h3>光之巨人英文記錄（第一下就啱 / 次數）</h3>
+        <table class="stats"><thead><tr><th>字</th><th>✓✗ 句子</th><th>光球</th><th>砌字</th><th>似 cow / bowl</th></tr></thead><tbody id="p-light-stats"></tbody></table>
+        <div class="row" id="p-light-info"></div>
+        <p class="note">跟 Yorkland Part 3 W-controlled（cow / new / bowl / prawn）+ R-controlled（horse / arm / bird / skirt）。「✓✗ 句子」有陷阱圖（杯 ≠ bowl、裙 ≠ skirt、腳 ≠ arm、蟹 ≠ prawn、舊梳化 ≠ new、綠色 ≠ brown）；「光球」= 聽字揀 ow / ew / aw 或 or / ar / ir；「砌字」★ = 工作紙 8 個字（第一下就啱 2 次之前排先），多一粒干擾字母；「似 cow / bowl」= ow 嘅兩個音（brown / owl 似 cow；snow / yellow 似 bowl）。冇扣血：第一下就啱先加一粒光，答錯要聽多次先畀再撳；一關光儲滿 = 金勳章，四關都金 = 金色貼紙。</p>
+        <div class="row"><button id="p-light-reset" class="danger">重設光之巨人記錄</button></div>
+      </section>
+
+      <section>
         <h3>ABC 貪食蛇</h3>
         <div class="row">下一局字母 <select id="p-snake-group"></select>　字款 <select id="p-snake-mode"></select></div>
         <div class="row" id="p-snake-info"></div>
@@ -218,7 +240,7 @@
       <section>
         <h3>短片同貼紙簿</h3>
         <div class="row" id="p-stickers"></div>
-        <p class="note">每個 game 3 個結局（英雄 5 個）：未睇過嘅先出（全部睇到），之後隨機。睇完新結局攞貼紙；主選單撳貼紙可以再睇。英雄 3 張 + Super Rex 3 張 → 主選單頂嘅秘密短片解鎖（貪食蛇 / 派對 / Jedi / Mecha-Rex / 機甲貼紙唔計）。</p>
+        <p class="note">每個 game 3 個結局（英雄 5 個）：未睇過嘅先出（全部睇到），之後隨機。睇完新結局攞貼紙；主選單撳貼紙可以再睇。英雄 3 張 + Super Rex 3 張 → 主選單頂嘅秘密短片解鎖（貪食蛇 / 派對 / Jedi / Mecha-Rex / 機甲 / 光之巨人貼紙唔計）。光之巨人第 4 張金色貼紙要四關都攞金勳章先有。</p>
         <div class="row"><select id="p-video"></select> <button id="p-video-play">▶ 播</button></div>
         <div class="row"><button id="p-stickers-reset" class="danger">重設貼紙簿</button></div>
       </section>
@@ -258,6 +280,7 @@
   <script src="js/jedi-words.js"></script>
   <script src="js/mecha-words.js"></script>
   <script src="js/robo-words.js"></script>
+  <script src="js/light-words.js"></script>
   <script src="js/voices.js"></script>
   <script src="js/art.js"></script>
   <script src="js/audio.js"></script>
@@ -268,6 +291,7 @@
   <script src="js/jedi-art.js"></script>
   <script src="js/mecha-art.js"></script>
   <script src="js/robo-art.js"></script>
+  <script src="js/light-art.js"></script>
   <script src="js/endings-art.js"></script>
   <script src="js/rewards.js"></script>
   <script src="js/hero.js"></script>
@@ -277,6 +301,7 @@
   <script src="js/jedi.js"></script>
   <script src="js/mecha.js"></script>
   <script src="js/robo.js"></script>
+  <script src="js/light.js"></script>
   <script src="js/boss.js"></script>
   <script src="js/game.js"></script>
 </body>

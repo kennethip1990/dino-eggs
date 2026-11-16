@@ -335,6 +335,62 @@
   clips.pt_big   = { lang: 'en', text: 'Super Robo mode!' };
   clips.pt_sorry = { lang: 'en', text: 'Wow, so cool! Sorry! Let’s play!' };
   clips.pt_win   = { lang: 'en', text: 'Dance party! Hooray!' };
+  // ---- 光之巨人 Luca 救援隊（全英文：Starters R&W Part 3 W-controlled + R-controlled vowels）----
+  if (root.LIGHT_UNIT) {
+    const U = root.LIGHT_UNIT;
+    for (const t of U.things) {
+      clips['lw_' + t.id] = { lang: 'en', text: t.word };
+      if (t.no) clips['ln_' + t.id] = { lang: 'en', text: t.no };
+      if (t.team || t.say) clips['ls_' + t.id] = { lang: 'en', text: t.say || 'This is a ' + t.word + '.' };
+    }
+    // 字母拍檔嘅音：內置語音讀唔到，冇錄音就改讀字母名（o, w）
+    const EX = { ow: 'cow', ew: 'new', aw: 'prawn', or: 'horse', ar: 'arm', ir: 'bird' };
+    for (const tm of [...U.families.w, ...U.families.r]) clips['lo_' + tm] = { lang: 'en', text: tm + ' 嘅音（好似 ' + EX[tm] + ' 入面嗰個音，唔好讀字母名）', noTts: true };
+  }
+  clips.li_hi        = { lang: 'en', text: 'Hello, Light Luca!' };
+  clips.li_intro     = { lang: 'en', text: 'Oh no! A big storm hit the town! People need help!' };
+  clips.li_transform = { lang: 'en', text: 'Light Luca, transform!' };
+  clips.li_light     = { lang: 'en', text: 'Right the first time? You get a light! Listen first, then tap!' };
+  clips.li_type_q    = { lang: 'en', text: 'Choose your type!' };
+  clips.li_sky       = { lang: 'en', text: 'Sky Type! Fast and high!' };
+  clips.li_power     = { lang: 'en', text: 'Power Type! Super strong!' };
+  clips.li_multi     = { lang: 'en', text: 'Multi Type! Ready for anything!' };
+  clips.li_scan      = { lang: 'en', text: 'The houses are dark! Look and read. Tick or cross?' };
+  clips.li_orb       = { lang: 'en', text: 'Sound orbs! Listen to the word. Which letters are missing?' };
+  clips.li_orb_q     = { lang: 'en', text: 'Which letters?' };
+  clips.li_bridge    = { lang: 'en', text: 'The bridge is broken! Spell the words to build a light bridge!' };
+  clips.li_bridge_ok = { lang: 'en', text: 'The bridge is fixed! Go, go, bus!' };
+  clips.li_baby      = { lang: 'en', text: 'Look! A baby monster is lost. He wants his mummy!' };
+  clips.li_baby_go   = { lang: 'en', text: 'Let’s help him go home!' };
+  clips.li_sort_q    = { lang: 'en', text: 'Like cow, or like bowl?' };
+  clips.li_sort_cow  = { lang: 'en', text: 'Ow, like cow!' };
+  clips.li_sort_bowl = { lang: 'en', text: 'Oh, like bowl!' };
+  clips.li_mummy     = { lang: 'en', text: 'Mummy! Thank you, Light Luca!' };
+  clips.li_look      = { lang: 'en', text: 'Hmm. Listen again.' };
+  clips.li_full      = { lang: 'en', text: 'Full light! Super Light Luca!' };
+  clips.li_good      = { lang: 'en', text: 'Great rescue!' };
+  clips.li_yes_1     = { lang: 'en', text: 'Yes!' };
+  clips.li_yes_2     = { lang: 'en', text: 'Great job!' };
+  clips.li_yes_3     = { lang: 'en', text: 'Light power!' };
+  clips.li_win       = { lang: 'en', text: 'Hooray! Everyone is safe!' };
+  clips.li_medals    = { lang: 'en', text: 'Look at your medals!' };
+  clips.li_all_gold  = { lang: 'en', text: 'All gold! Golden Light Luca!' };
+  clips.li_some_gold = { lang: 'en', text: 'Gold medals! Can you get all gold next time?' };
+  clips.li_no_gold   = { lang: 'en', text: 'Next time, listen first and fill your light!' };
+  clips.li_bye       = { lang: 'en', text: 'Thank you, Light Luca! See you next time!' };
+  // 光之巨人結局（救援，唔打交）
+  clips.lb_alarm = { lang: 'en', text: 'Oh no! The bus is falling!' };
+  clips.lb_go    = { lang: 'en', text: 'Tap the bus! Lift it up!' };
+  clips.lb_win   = { lang: 'en', text: 'Safe! Thank you, Light Luca!' };
+  clips.lv_alarm = { lang: 'en', text: 'Oh no! The volcano is too hot!' };
+  clips.lv_go    = { lang: 'en', text: 'Tap the clouds! Make rain!' };
+  clips.lv_win   = { lang: 'en', text: 'The volcano is happy now!' };
+  clips.lc_alarm = { lang: 'en', text: 'The lights went out! It’s so dark!' };
+  clips.lc_go    = { lang: 'en', text: 'Tap the buildings! Light them up!' };
+  clips.lc_win   = { lang: 'en', text: 'Fireworks! Hooray!' };
+  clips.lg_go    = { lang: 'en', text: 'Golden Light Luca, fly!' };
+  clips.lg_tap   = { lang: 'en', text: 'Tap the stars!' };
+  clips.lg_win   = { lang: 'en', text: 'Wow! A rainbow sky!' };
   // ---- 結局短片 ----
   // 英雄（廣東話）
   clips.cloud_alarm = { lang: 'yue', text: '哎呀！黑雲怪落大雨，個城市濕晒！' };

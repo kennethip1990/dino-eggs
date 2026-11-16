@@ -51,7 +51,11 @@ css/mecha.css           Mecha-Rex 畫面 + 主選單排位（半格 grid）
 js/robo-words.js        ★ 機甲 Luca 嘅字表（digraph ✓✗ / 陷阱圖 / 能量核心 / ee-ea 砌字）
 js/robo.js              機甲 Luca 出擊遊戲流程（護盾 HP / 雷達 / 核心 / 光束劍 / Gloop 決鬥 / 勳章 / 3 個結局）
 js/robo-art.js          Robo-Luca 機甲、太空怪獸 Gloop、技師機械人、25 樣嘢 SVG（全部原創）
-css/robo.css            機甲畫面 + 主選單 8 張卡（4 + 4）
+css/robo.css            機甲畫面
+js/light-words.js       ★ 光之巨人嘅字表（W-controlled / R-controlled ✓✗ / 陷阱圖 / 光球 / 砌字 / ow 似 cow 定 bowl）
+js/light.js             光之巨人 Luca 救援隊遊戲流程（揀 Type / 光能量只加唔扣 / 點燈 / 光球 / 光之橋 / 送 BB 怪獸返屋企 / 勳章 / 3 + 1 個結局）
+js/light-art.js         光之巨人 Luca、BB 怪獸 Pip + 媽媽、小鎮背景、15 樣嘢 SVG（全部原創）
+css/light.css           光之巨人畫面 + 主選單 9 張卡（5 + 4；直向 3 + 3 + 3）
 fonts/                  楷書 + Andika 字體（只抽咗用到嘅字）
 sw.js                   Service Worker（離線）
 manifest.webmanifest    加入主畫面 / 安裝 app
@@ -269,6 +273,36 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 
 ---
 
+## 🌟 光之巨人 Luca 救援隊（英文，全英文，冇打交、冇扣血）
+
+跟 Yorkland Tutorial **Starters R&W Part 3 W-controlled vowels（cow, new, bowl, prawn；例子 brown）+ R-controlled vowels（horse, arm, bird, skirt；例子 car）** 工作紙（2026-11-16）。Kenneth 想用光之巨人做主角，但**唔要打交**；個 app 係 public，所以係**原創光之巨人**（銀色身、紅 + 紫、胸口光能燈、3 個 Type），冇用任何官方名或者設計。成個 game 係**救援**：大風暴吹親個小鎮。一局大約 5–6 分鐘：
+
+0. 「Light Luca, transform!」一道光變身。**每關開頭自己揀 Type**：Sky（紫，飛得快）/ Power（紅，大力）/ Multi（紅紫）→ 冇啱錯，淨係換顏色 + 動作（俾 Luca 有選擇權；家長區記低佢揀邊個多）
+1. **點燈（5 條 ✓✗ = Part 1 句子）**：上面 5 間黑咗燈嘅屋，答啱一條着返一間
+   - 2 條講真、1 條同類大話（cow 配「This is a horse.」、skirt 配「This is a shirt.」之類）、**2 條陷阱圖**：杯配「This is a bowl.」、連身裙配 skirt、腳配 arm、蟹配 prawn、**舊梳化配「This is new.」**（工作紙新舊梳化）、綠色配 brown → 一定係 ✗
+2. **聲音光球（4 條）**：圖 + 字有個空位（「c__」「b__d」）→ 揀 **ow / ew / aw**（W 組）或者 **or / ar / ir**（R 組），一半一半
+3. **光之橋（3 條砌字 = Part 3）**：撳水晶字母，**多一粒干擾字母**（ow 字畀 a、ir 字畀 u …）。砌完個字母拍檔兩格發光。**★ 工作紙 8 個字第一下就啱 2 次之前排先**，之後同 brown, car, owl, snow 輪流。砌完 3 塊橋 → 巴士過橋
+4. **送 BB 怪獸返屋企（5 條）**：BB 怪獸 Pip 蕩失路喊緊 → **ow 似 cow 定似 bowl？** ×3（brown / owl 似 cow；snow / yellow 似 bowl —— 工作紙 cow 同 bowl 兩個 ow 讀法唔同）+ ✓✗ 陷阱圖 ×1 + R 組光球 ×1 → 行一步近一步 → 怪獸媽媽嚟接、心心
+5. 結局短片 + 貼紙 → **勳章**（每關一個）→ 四個都金 = **金色光之巨人短片 + 金色貼紙** →「Thank you, Light Luca!」
+
+### ✨ 光能量（只加唔扣 —— Luca 驚扣血，所以唔用機甲嗰套護盾）
+- 左上角每關有一排**光格（星）**，開始係空嘅。**第一下就答啱 = 一粒光由個答案飛上去 +1**，胸口光能燈愈嚟愈光
+- **答錯唔扣任何嘢，只係冇加**：個掣郁一郁 →「Hmm. Listen again.」→ **讀多次題目，讀完先畀再撳**（亂撞會好慢，又儲唔到光）
+- 新題目出咗頭 0.6 秒唔收撳；錯兩次啱嗰個會發光；**冇 game over，每關一定救到人**
+- **一關光儲滿 = 金勳章**（「Full light! Super Light Luca!」+ 金光），否則係銀勳章（「Great rescue!」）
+- 家長區「光之巨人英文記錄」：每個字 ✓✗ / 光球 / 砌字 / 似 cow-bowl 第一下就啱 / 次數 + 每關玩咗幾多次、幾多個金 + 揀 Type 次數
+
+- 角色全部原創 SVG；冇壞人、冇打交，結局全部係救援
+- 光之巨人貼紙唔計入秘密短片
+- 開發測試：`#demo=lightplay`（由頭玩）、`#demo=lightplay:2`（由光球開始）、`:3`（光之橋）、`:4`（送 BB 返屋企）、`#demo=light:bus`（`volcano` / `city` / `gold`）；`LightGame._dbg.target` = 下一下應該撳嘅掣，`LightGame._dbg.lights()` = 而家幾粒光
+
+### 換英文字
+- 改 `js/light-words.js`：`things`（`team` = 字母拍檔、`ow` = 似 cow 定 bowl、`no` = 陷阱圖改正）、`truth`、`traps`、`gap`（光球字）、`spell`（`focus` = 排先）、`decoy`（干擾字母）、`sort`。新圖要畫 SVG（`js/light-art.js`）
+- `lo_ow` / `lo_ew` / … 係字母拍檔嘅音：內置語音讀唔到，**冇錄音就改讀字母名**（「O, W」），錄咗就會用
+- 改完記得 `js/version.js` +1
+
+---
+
 ## 🎬 結局短片 + 貼紙簿
 
 每個 game 有 3 個唔同結局（英雄裝備站有 5 個、Mecha-Rex 有 6 個），等 Luca 有動力玩多幾次：
@@ -281,6 +315,7 @@ tools/list-recordings.js  由 voices.js 印出錄音清單
 | 🐍 ABC 貪食蛇 | 💗 畫大心心 | 🐉 金色飛龍 | 👾 字母炮打怪獸 |
 | 🎂 生日派對 | 👾 怪獸偷蛋糕 | 🎈 氣球飛上天 | 🕯 吹蠟燭 + 生日歌 |
 | ⚔️ Jedi Luca | 🤖 機械人大軍（Force push ×3） | 🌑 黑暗星 → 戰機射 ×3 → 煙花 | 🌈 Sith Lord 返嚟 → 彩虹光劍 ×3 → 佢變好人做 Jedi |
+| 🌟 光之巨人 | 🚌 巴士跌落橋 → **Luca 撳巴士 ×3** → 一下一下托返上嚟、安全落地 | 🌋 火山太熱 → **Luca 撳 3 朵雲** → 落雨 → 火山笑返、開花 | 🌃 停電 → **Luca 撳 3 棟大廈** → 着燈 → 放煙花 | ⭐ **金色貼紙**（四關全金先有）：金色光之巨人飛上天 → 撳 3 粒星 → 彩虹天空 |
 | 🤖 機甲 Luca | 💥 **Luca 撳畫面 ×3** 叉滿光束炮 → 發射 → Gloop 縮細做朋友 | 👊 **Luca 撳 Gloop ×3** = 火箭飛拳 ×3 → Gloop 飛去太空變星星 | 🌈 **Luca 撳 3 粒能量核心** → Super Robo 大變身（變大 + 彩虹光）→ Gloop 話好型、講 sorry → 一齊跳舞 |
 | ⚔️🦖 Mecha-Rex | 💜 Jedi + Sith 交叉光劍 ×3 → Mecha-Rex 縮細變 BB 機械恐龍做朋友 | 🚀 Mecha-Rex 着火箭飛走 → 藍 + 紅戰機射 ×3 → 開降落傘飄走 | 🤖 4 隻 baby droid 疊高變巨型機械人 → Force 波 → Mecha-Rex 嚇走 + 煙花 | 🛡 Mecha-Rex 射激光 ×3 → **Luca 撳畫面**擋 → 光劍彈返去 → 激光炮壞咗冒煙、逃走 | 🕺 Mecha-Rex 3 粒掣 → **Luca 撳**紅（轉圈）/ 黃（跳）/ 綠（扭屁股），大家跟住跳 → disco 派對 | 🍬 Mecha-Rex 唔肯分糖 → **Luca 撳 Mecha-Rex ×3**（one, two, three）→ 爆糖果 → **撳糖果數到 5** → Mecha-Rex 講 sorry 一齊分享 |
 
@@ -363,7 +398,7 @@ python -m http.server 8765
 
 ---
 
-## 錄音清單（618 個檔）
+## 錄音清單（708 個檔）
 
 放喺 `audio/` folder，**檔名要一模一樣**（細楷、底線、`.mp3`）。唔使一次錄晒，錄咗邊個就用邊個，未錄嘅照用內置語音。
 
@@ -1217,7 +1252,125 @@ python -m http.server 8765
 | `pt_sorry.mp3` | English | Wow, so cool! Sorry! Let’s play! |
 | `pt_win.mp3` | English | Dance party! Hooray! |
 
----
+**光之巨人：生字**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `lw_cow.mp3` | English | cow |
+| `lw_brown.mp3` | English | brown |
+| `lw_owl.mp3` | English | owl |
+| `lw_bowl.mp3` | English | bowl |
+| `lw_snow.mp3` | English | snow |
+| `lw_yellow.mp3` | English | yellow |
+| `lw_new.mp3` | English | new |
+| `lw_prawn.mp3` | English | prawn |
+| `lw_horse.mp3` | English | horse |
+| `lw_arm.mp3` | English | arm |
+| `lw_car.mp3` | English | car |
+| `lw_bird.mp3` | English | bird |
+| `lw_skirt.mp3` | English | skirt |
+| `lw_shirt.mp3` | English | shirt |
+| `lw_old.mp3` | English | old |
+| `lw_cup.mp3` | English | cup |
+| `lw_dress.mp3` | English | dress |
+| `lw_leg.mp3` | English | leg |
+| `lw_crab.mp3` | English | crab |
+| `lw_green.mp3` | English | green |
+
+**光之巨人：句子（✓✗）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `ls_cow.mp3` | English | This is a cow. |
+| `ls_brown.mp3` | English | This is brown. |
+| `ls_owl.mp3` | English | This is an owl. |
+| `ls_bowl.mp3` | English | This is a bowl. |
+| `ls_snow.mp3` | English | This is snow. |
+| `ls_yellow.mp3` | English | This is yellow. |
+| `ls_new.mp3` | English | This is new. |
+| `ls_prawn.mp3` | English | This is a prawn. |
+| `ls_horse.mp3` | English | This is a horse. |
+| `ls_arm.mp3` | English | This is an arm. |
+| `ls_car.mp3` | English | This is a car. |
+| `ls_bird.mp3` | English | This is a bird. |
+| `ls_skirt.mp3` | English | This is a skirt. |
+| `ls_shirt.mp3` | English | This is a shirt. |
+| `ls_old.mp3` | English | This is old. |
+
+**光之巨人：陷阱圖改正**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `ln_old.mp3` | English | No! It’s old. It’s not new. |
+| `ln_cup.mp3` | English | No! It’s a cup. |
+| `ln_dress.mp3` | English | No! It’s a dress. |
+| `ln_leg.mp3` | English | No! It’s a leg. |
+| `ln_crab.mp3` | English | No! It’s a crab. |
+| `ln_green.mp3` | English | No! It’s green. |
+
+**光之巨人：字母拍檔音（未錄之前讀字母名）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `lo_ow.mp3` | English | ow 嘅音（好似 cow 入面嗰個音，唔好讀字母名） |
+| `lo_ew.mp3` | English | ew 嘅音（好似 new 入面嗰個音，唔好讀字母名） |
+| `lo_aw.mp3` | English | aw 嘅音（好似 prawn 入面嗰個音，唔好讀字母名） |
+| `lo_or.mp3` | English | or 嘅音（好似 horse 入面嗰個音，唔好讀字母名） |
+| `lo_ar.mp3` | English | ar 嘅音（好似 arm 入面嗰個音，唔好讀字母名） |
+| `lo_ir.mp3` | English | ir 嘅音（好似 bird 入面嗰個音，唔好讀字母名） |
+
+**光之巨人：旁白**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `li_hi.mp3` | English | Hello, Light Luca! |
+| `li_intro.mp3` | English | Oh no! A big storm hit the town! People need help! |
+| `li_transform.mp3` | English | Light Luca, transform! |
+| `li_light.mp3` | English | Right the first time? You get a light! Listen first, then tap! |
+| `li_type_q.mp3` | English | Choose your type! |
+| `li_sky.mp3` | English | Sky Type! Fast and high! |
+| `li_power.mp3` | English | Power Type! Super strong! |
+| `li_multi.mp3` | English | Multi Type! Ready for anything! |
+| `li_scan.mp3` | English | The houses are dark! Look and read. Tick or cross? |
+| `li_orb.mp3` | English | Sound orbs! Listen to the word. Which letters are missing? |
+| `li_orb_q.mp3` | English | Which letters? |
+| `li_bridge.mp3` | English | The bridge is broken! Spell the words to build a light bridge! |
+| `li_bridge_ok.mp3` | English | The bridge is fixed! Go, go, bus! |
+| `li_baby.mp3` | English | Look! A baby monster is lost. He wants his mummy! |
+| `li_baby_go.mp3` | English | Let’s help him go home! |
+| `li_sort_q.mp3` | English | Like cow, or like bowl? |
+| `li_sort_cow.mp3` | English | Ow, like cow! |
+| `li_sort_bowl.mp3` | English | Oh, like bowl! |
+| `li_mummy.mp3` | English | Mummy! Thank you, Light Luca! |
+| `li_look.mp3` | English | Hmm. Listen again. |
+| `li_full.mp3` | English | Full light! Super Light Luca! |
+| `li_good.mp3` | English | Great rescue! |
+| `li_win.mp3` | English | Hooray! Everyone is safe! |
+| `li_medals.mp3` | English | Look at your medals! |
+| `li_all_gold.mp3` | English | All gold! Golden Light Luca! |
+| `li_some_gold.mp3` | English | Gold medals! Can you get all gold next time? |
+| `li_no_gold.mp3` | English | Next time, listen first and fill your light! |
+| `li_bye.mp3` | English | Thank you, Light Luca! See you next time! |
+| `li_yes_1.mp3` | English | Yes! |
+| `li_yes_2.mp3` | English | Great job! |
+| `li_yes_3.mp3` | English | Light power! |
+
+**光之巨人結局**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `lb_alarm.mp3` | English | Oh no! The bus is falling! |
+| `lb_go.mp3` | English | Tap the bus! Lift it up! |
+| `lb_win.mp3` | English | Safe! Thank you, Light Luca! |
+| `lv_alarm.mp3` | English | Oh no! The volcano is too hot! |
+| `lv_go.mp3` | English | Tap the clouds! Make rain! |
+| `lv_win.mp3` | English | The volcano is happy now! |
+| `lc_alarm.mp3` | English | The lights went out! It’s so dark! |
+| `lc_go.mp3` | English | Tap the buildings! Light them up! |
+| `lc_win.mp3` | English | Fireworks! Hooray! |
+| `lg_go.mp3` | English | Golden Light Luca, fly! |
+| `lg_tap.mp3` | English | Tap the stars! |
+| `lg_win.mp3` | English | Wow! A rainbow sky! |
 
 ## 技術備註
 - **聲音 queue**：所有語音同一條 queue，一段播完先播下一段；廣東話同英文之間停 300ms（`voices.js` 嘅 `gapMs`）
