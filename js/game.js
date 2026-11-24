@@ -98,6 +98,7 @@
   put($('#go-mecha'), `<div class="choose-art">${MechaArt.icon()}</div>`);
   put($('#go-robo'), `<div class="choose-art">${RoboArt.icon()}</div>`);
   put($('#go-light'), `<div class="choose-art">${LightArt.icon()}</div>`);
+  put($('#go-time'), `<div class="choose-art">${TimeArt.icon()}</div>`);
   $('#go-dino').addEventListener('click', () => { prepare(); setScreen('start'); });
   $('#go-hero').addEventListener('click', async () => {
     prepare();
@@ -116,6 +117,7 @@
     else if (game === 'mecha') MechaGame.playVideo(id);
     else if (game === 'robo') RoboGame.playVideo(id);
     else if (game === 'light') LightGame.playVideo(id);
+    else if (game === 'time') TimeGame.playVideo(id);
     else RexGame.playVideo(id);
   });
   put($('#go-boss'), EndArt.bossBadge());
@@ -165,6 +167,11 @@
     await Promise.race([Sound.loadRecordings(), wait(1500)]);
     LightGame.start();
   });
+  $('#go-time').addEventListener('click', async () => {
+    prepare();
+    await Promise.race([Sound.loadRecordings(), wait(1500)]);
+    TimeGame.start();
+  });
 
   // 撳貼紙 / 家長區預覽：淨係播特別BB 嗰段
   function playSpecial(kind) {
@@ -178,7 +185,8 @@
     MechaGame.stop();
     RoboGame.stop();
     LightGame.stop();
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done');
+    TimeGame.stop();
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done', 'time-done');
     put(mamaEl, Art.mama(progress.dino));
     goToSleep(kind);
   }
@@ -194,10 +202,11 @@
     MechaGame.stop();
     RoboGame.stop();
     LightGame.stop();
+    TimeGame.stop();
     BossGame.stop();
     Rewards.hidePop();
     clearField();
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done');
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done', 'time-done');
     scene.classList.remove('is-night');
     setScreen('menu');
     Rewards.renderMenu();
@@ -531,7 +540,7 @@
   }
   function releaseAwake() { try { if (wakeLock) wakeLock.release(); } catch (e) {} wakeLock = null; }
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && /^(play|hero|rex|boss|snake|party|jedi|mecha|robo|light)$/.test(document.body.dataset.screen)) keepAwake();
+    if (document.visibilityState === 'visible' && /^(play|hero|rex|boss|snake|party|jedi|mecha|robo|light|time)$/.test(document.body.dataset.screen)) keepAwake();
   });
   let trapped = false;
   function trapBack() {
@@ -581,7 +590,7 @@
   });
   // 短片預覽（唔計貼紙）
   const vsel = $('#p-video');
-  for (const [game, label] of [['dino', '恐龍'], ['hero', '英雄'], ['rex', 'Super Rex'], ['snake', '貪食蛇'], ['party', '派對'], ['jedi', 'Jedi'], ['mecha', 'Mecha-Rex'], ['robo', '機甲'], ['light', '光之巨人']]) {
+  for (const [game, label] of [['dino', '恐龍'], ['hero', '英雄'], ['rex', 'Super Rex'], ['snake', '貪食蛇'], ['party', '派對'], ['jedi', 'Jedi'], ['mecha', 'Mecha-Rex'], ['robo', '機甲'], ['light', '光之巨人'], ['time', '時光機']]) {
     for (const id of Rewards.ENDINGS[game]) {
       const o = document.createElement('option');
       o.value = game + ':' + id;
@@ -604,9 +613,10 @@
     MechaGame.stop();
     RoboGame.stop();
     LightGame.stop();
+    TimeGame.stop();
     BossGame.stop();
     scene.classList.remove('is-night');
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done');
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done', 'time-done');
     if (game === 'dino') playSpecial(id);
     else if (game === 'hero') HeroGame.playVideo(id);
     else if (game === 'rex') RexGame.playVideo(id);
@@ -616,6 +626,7 @@
     else if (game === 'mecha') MechaGame.playVideo(id);
     else if (game === 'robo') RoboGame.playVideo(id);
     else if (game === 'light') LightGame.playVideo(id);
+    else if (game === 'time') TimeGame.playVideo(id);
     else BossGame.play();
   });
   $('#p-stickers-reset').addEventListener('click', () => {
@@ -655,6 +666,11 @@
     LightGame.resetStats();
     renderPanel();
   });
+  $('#p-time-reset').addEventListener('click', () => {
+    if (!confirm('重設時光機認字記錄？')) return;
+    TimeGame.resetStats();
+    renderPanel();
+  });
   $('#p-robo-reset').addEventListener('click', () => {
     if (!confirm('重設機甲英文記錄？')) return;
     RoboGame.resetStats();
@@ -682,9 +698,10 @@
     MechaGame.renderStats($('#p-mecha-stats'));
     RoboGame.renderStats($('#p-robo-stats'), $('#p-robo-info'));
     LightGame.renderStats($('#p-light-stats'), $('#p-light-info'));
+    TimeGame.renderStats($('#p-time-stats'), $('#p-time-info'));
     PartyGame.renderVoices($('#p-party-voices'));
     SnakeGame.renderPanel($('#p-snake-group'), $('#p-snake-mode'), $('#p-snake-info'));
-    const NAME = { dino: '恐龍', hero: '英雄', rex: 'Super Rex', snake: '貪食蛇', party: '派對', jedi: 'Jedi', mecha: 'Mecha-Rex', robo: '機甲', light: '光之巨人' };
+    const NAME = { dino: '恐龍', hero: '英雄', rex: 'Super Rex', snake: '貪食蛇', party: '派對', jedi: 'Jedi', mecha: 'Mecha-Rex', robo: '機甲', light: '光之巨人', time: '時光機' };
     $('#p-stickers').textContent = Rewards.summary().map((r) => NAME[r.game] + ' ' + r.seen + '/' + r.total + '（玩咗 ' + r.plays + ' 次）').join('　') +
       (Rewards.bossReady() ? '　· 秘密短片已解鎖' : '');
     $('#p-yue').textContent = st.yueVoice ? '✅ ' + st.yueVoice : '⚠️ 搵唔到廣東話語音';
@@ -765,6 +782,8 @@
     else if (g === 'roboplay') RoboGame.start({ from: +id || 1 });
     else if (g === 'light') LightGame.playVideo(id);
     else if (g === 'lightplay') LightGame.start({ from: +id || 1 });
+    else if (g === 'time') TimeGame.playVideo(id);
+    else if (g === 'timeplay') TimeGame.start({ from: +id || 1 });
     else if (g === 'sticker') Rewards.celebrate('hero', id || 'cloud', 'yue');
     else if (g.startsWith('stk_')) Rewards.celebrate(g.slice(4), id, 'en');
   }, 300);

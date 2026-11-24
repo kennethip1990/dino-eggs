@@ -391,6 +391,47 @@
   clips.lg_go    = { lang: 'en', text: 'Golden Light Luca, fly!' };
   clips.lg_tap   = { lang: 'en', text: 'Tap the stars!' };
   clips.lg_win   = { lang: 'en', text: 'Wow! A rainbow sky!' };
+  // ---- 恐龍時光機（單元六：其他，淨係廣東話；化石只加唔扣）----
+  if (root.TIME_UNIT) {
+    for (const w of root.TIME_UNIT.words) clips['tw_' + w.id] = { lang: 'yue', text: w.text };
+    for (const [id, ch] of Object.entries(root.TIME_UNIT.chars)) clips['tc_' + id] = { lang: 'yue', text: ch };
+  }
+  clips.tm_hi       = { lang: 'yue', text: '嘩！時光機嚟咗！' };
+  clips.tm_intro    = { lang: 'yue', text: '哎呀！BB恐龍坐時光機去玩，蕩失咗路，返唔到屋企！我哋開時光機去搵佢！' };
+  clips.tm_rule     = { lang: 'yue', text: '第一下就揀啱，就有一粒化石！聽清楚先撳呀！' };
+  clips.tm_pick_q   = { lang: 'yue', text: '揀一隻恐龍，同你一齊去！' };
+  clips.tm_go       = { lang: 'yue', text: '一齊出發！' };
+  clips.tm_s1       = { lang: 'yue', text: '時光機要開機！聽吓，搵啱嗰個詞！' };
+  clips.tm_find     = { lang: 'yue', text: '幫我搵' };
+  clips.tm_s2       = { lang: 'yue', text: '時光門開咗！睇吓個圖，揀啱嘅詞！' };
+  clips.tm_pic_q    = { lang: 'yue', text: '呢個係咩呀？' };
+  clips.tm_s3       = { lang: 'yue', text: '時光機要充電！撳兩粒字，砌個詞出嚟！' };
+  clips.tm_build    = { lang: 'yue', text: '幫我砌' };
+  clips.tm_look     = { lang: 'yue', text: '咦？再聽多次。' };
+  clips.tm_yes_1    = { lang: 'yue', text: '啱喇！' };
+  clips.tm_yes_2    = { lang: 'yue', text: '好叻呀！' };
+  clips.tm_yes_3    = { lang: 'yue', text: '好犀利！' };
+  clips.tm_warp     = { lang: 'yue', text: '時光機，出發！' };
+  clips.tm_baby     = { lang: 'yue', text: '搵到BB恐龍喇！佢好掛住媽媽。' };
+  clips.tm_baby_go  = { lang: 'yue', text: '答一題，就行近一步！送佢返屋企！' };
+  clips.tm_mama     = { lang: 'yue', text: '媽媽！多謝你送我返屋企！' };
+  clips.tm_full     = { lang: 'yue', text: '化石儲滿晒！金色勳章！' };
+  clips.tm_good     = { lang: 'yue', text: '做得好！' };
+  clips.tm_medals   = { lang: 'yue', text: '睇吓你嘅勳章！' };
+  clips.tm_all_gold = { lang: 'yue', text: '全部金色！你係時光機隊長！' };
+  clips.tm_some_gold = { lang: 'yue', text: '有金色勳章！下次試吓全部都係金色！' };
+  clips.tm_no_gold  = { lang: 'yue', text: '下次聽清楚先撳，就會有金色勳章！' };
+  clips.tm_bye      = { lang: 'yue', text: '多謝你同恐龍一齊坐時光機！拜拜！' };
+  // 恐龍時光機結局（要 Luca 撳）
+  clips.tn_alarm = { lang: 'yue', text: '新年喇！時光機帶咗好多煙花返嚟！' };
+  clips.tn_go    = { lang: 'yue', text: '撳煙花，放煙花！' };
+  clips.tn_win   = { lang: 'yue', text: '新年快樂！' };
+  clips.tb_alarm = { lang: 'yue', text: '今日係BB恐龍生日！' };
+  clips.tb_go    = { lang: 'yue', text: '幫佢吹蠟燭！撳蠟燭！' };
+  clips.tb_win   = { lang: 'yue', text: '生日快樂！' };
+  clips.tx_alarm = { lang: 'yue', text: '時光機飛上太空喇！' };
+  clips.tx_go    = { lang: 'yue', text: '撳星星，儲星星！' };
+  clips.tx_win   = { lang: 'yue', text: '好嘢！好多星星呀！' };
   // ---- 結局短片 ----
   // 英雄（廣東話）
   clips.cloud_alarm = { lang: 'yue', text: '哎呀！黑雲怪落大雨，個城市濕晒！' };

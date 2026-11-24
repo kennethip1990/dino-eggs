@@ -8,7 +8,7 @@ const Rewards = (() => {
   const $ = (s) => document.querySelector(s);
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const put = (el, markup) => el.replaceChildren(document.createRange().createContextualFragment(markup));
-  const ENDINGS = { dino: ['rainbow', 'gold', 'star'], hero: ['monster', 'cloud', 'ufo', 'volcano', 'octopus'], rex: ['monster', 'tornado', 'meteor'], snake: ['heart', 'dragon', 'monster'], party: ['monster', 'balloon', 'candle'], jedi: ['droids', 'ship', 'saber'], mecha: ['combo', 'rocket', 'giant', 'deflect', 'dance', 'candy'], robo: ['cannon', 'punch', 'parts'], light: ['bus', 'volcano', 'city', 'gold'] };
+  const ENDINGS = { dino: ['rainbow', 'gold', 'star'], hero: ['monster', 'cloud', 'ufo', 'volcano', 'octopus'], rex: ['monster', 'tornado', 'meteor'], snake: ['heart', 'dragon', 'monster'], party: ['monster', 'balloon', 'candle'], jedi: ['droids', 'ship', 'saber'], mecha: ['combo', 'rocket', 'giant', 'deflect', 'dance', 'candy'], robo: ['cannon', 'punch', 'parts'], light: ['bus', 'volcano', 'city', 'gold'], time: ['newyear', 'birthday', 'space'] };
   // 特別貼紙：唔喺結局輪流入面，要另外攞（光之巨人 gold = 四關全金）
   const SPECIAL = { light: ['gold'] };
   const NAMES = {
@@ -20,11 +20,12 @@ const Rewards = (() => {
     jedi: { droids: '機械人大軍', ship: '黑暗星煙花', saber: 'Sith 變好人' },
     mecha: { combo: 'BB 機械恐龍', rocket: '火箭大追擊', giant: 'BB 機械人合體', deflect: '光劍擋激光', dance: '機械恐龍跳舞', candy: '糖果大爆發' },
     robo: { cannon: '光束炮', punch: '火箭飛拳', parts: 'Super Robo 大變身' },
-    light: { bus: '接住巴士', volcano: '火山落雨', city: '點亮城市', gold: '金色光之巨人' }
+    light: { bus: '接住巴士', volcano: '火山落雨', city: '點亮城市', gold: '金色光之巨人' },
+    time: { newyear: '新年煙花', birthday: 'BB 恐龍生日', space: '時光機飛上太空' }
   };
 
   const KEY = 'rewards.v1';
-  const fresh = () => ({ plays: { dino: 0, hero: 0, rex: 0, snake: 0, party: 0, jedi: 0, mecha: 0, robo: 0, light: 0 }, seen: { dino: [], hero: [], rex: [], snake: [], party: [], jedi: [], mecha: [], robo: [], light: [] }, last: {}, unlockShown: false });
+  const fresh = () => ({ plays: { dino: 0, hero: 0, rex: 0, snake: 0, party: 0, jedi: 0, mecha: 0, robo: 0, light: 0, time: 0 }, seen: { dino: [], hero: [], rex: [], snake: [], party: [], jedi: [], mecha: [], robo: [], light: [], time: [] }, last: {}, unlockShown: false });
   let st = load();
   function load() {
     try {

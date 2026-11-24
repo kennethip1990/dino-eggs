@@ -1,0 +1,227 @@
+/* 恐龍時光機（廣東話，單元六：其他） */
+
+/* ---------- 主選單：10 張卡 = 5 + 5（直向 3 + 3 + 3 + 1） ---------- */
+#menu-screen .card-wrap:nth-child(6) { grid-column: auto / span 2; }
+@media (orientation: portrait) {
+  #menu-screen .card-wrap:nth-child(10) { grid-column: 3 / span 2; }
+}
+#go-time { background: rgba(140,110,220,.85); animation-delay: -2.2s; }
+#go-time .choose-art { margin: -6%; width: 112%; height: 112%; }
+
+/* ---------- 畫面 ---------- */
+#time-screen { position: absolute; inset: 0; z-index: 10; display: none; overflow: hidden; }
+body[data-screen="time"] #time-screen { display: block; }
+#time-bg { position: absolute; inset: 0; transition: filter 1s; }
+#time-bg svg { width: 100%; height: 100%; display: block; }
+#time-screen.era-2 #time-bg { filter: hue-rotate(-30deg) saturate(1.2); }
+#time-screen.era-3 #time-bg { filter: hue-rotate(40deg) brightness(1.05); }
+#time-screen.era-4 #time-bg { filter: sepia(.25) saturate(1.3); }
+body.time-night #time-screen #time-bg { filter: brightness(.3) saturate(.5) hue-rotate(200deg); }
+
+#tm-machine { position: absolute; z-index: 5; left: 1vw; bottom: 6vh; height: 40vh; aspect-ratio: 220 / 200; visibility: hidden; transition: left .8s, bottom .8s, height .8s; }
+#tm-machine.in { visibility: visible; animation: tmin 1s cubic-bezier(.2,.9,.3,1.2) both; }
+#tm-machine svg { width: 100%; height: 100%; display: block; overflow: visible; animation: tmidle 3s ease-in-out infinite; }
+@keyframes tmin { from { transform: translateY(-80vh) scale(.6); } }
+@keyframes tmidle { 50% { transform: translateY(-1vh); } }
+#tm-machine .tm-hands { transform-box: view-box; transform-origin: 110px 104px; animation: tmtick 8s linear infinite; }
+@keyframes tmtick { to { transform: rotate(360deg); } }
+#tm-machine.go .tm-hands { animation-duration: .5s; }
+#tm-machine.go svg { animation: tmshake .12s linear infinite; }
+@keyframes tmshake { 25% { transform: translate(-.4vh, .2vh); } 75% { transform: translate(.4vh, -.2vh); } }
+#tm-machine .tm-jet { opacity: 0; transition: opacity .3s; }
+#tm-machine.go .tm-jet, #tm-machine.fly .tm-jet { opacity: 1; }
+#tm-machine.charge .tm-glow { animation: tmglow .7s ease-out; transform-box: fill-box; transform-origin: center; }
+@keyframes tmglow { 40% { transform: scale(1.25); opacity: 1; } }
+#tm-machine.super svg { filter: drop-shadow(0 0 18px #ffe680) drop-shadow(0 0 6px #fff); }
+#tm-machine.fly { left: 36vw; bottom: 46vh; height: 30vh; }
+#tm-machine.fly svg { animation: lgfly 1.4s ease-in-out infinite; }
+
+#tm-pal { position: absolute; z-index: 6; left: calc(1vw + 30vh); bottom: 3vh; height: 26vh; aspect-ratio: 280 / 250; visibility: hidden; }
+#tm-pal.in { visibility: visible; animation: cardin .6s cubic-bezier(.3,1.6,.5,1) .4s both; }
+#tm-pal svg { width: 100%; height: 100%; display: block; overflow: visible; }
+#tm-pal.hop svg { animation: bbhop .45s ease-in-out 2; }
+
+#time-play { position: absolute; z-index: 7; left: 32vw; right: 2vw; top: 64px; bottom: 3vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3vh; }
+body.time-home #time-play { left: 26vw; right: 22vw; }
+#time-hud { position: absolute; z-index: 7; top: max(12px, env(safe-area-inset-top)); left: 50%; translate: -50% 0; display: flex; align-items: center; gap: 1.2vmin; pointer-events: none; }
+#time-meter { position: absolute; z-index: 8; top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); display: flex; gap: .8vmin; padding: .8vmin 1.2vmin; border-radius: 2vmin; background: rgba(90,60,30,.3); pointer-events: none; }
+#time-meter[hidden] { display: none; }
+
+#tm-baby { position: absolute; z-index: 4; right: 4vw; bottom: 4vh; height: 22vh; aspect-ratio: 100 / 110; display: none; transition: right .9s cubic-bezier(.3,1.2,.5,1); }
+#tm-mama { position: absolute; z-index: 3; right: -60vh; bottom: 3vh; height: 36vh; aspect-ratio: 280 / 250; display: none; transition: right 1s cubic-bezier(.3,1.2,.5,1); }
+body.time-home #tm-baby, body.time-home #tm-mama { display: block; }
+#tm-baby svg, #tm-mama svg { width: 100%; height: 100%; display: block; overflow: visible; }
+#tm-baby.enter svg { animation: lgbabyin .9s cubic-bezier(.2,.9,.3,1.2) both; }
+#tm-baby.cry svg { animation: lgsob 1.6s ease-in-out infinite; }
+#tm-baby.hop svg { animation: bbhop .5s ease-in-out 2; }
+#tm-baby.hug { right: calc(2vw + 30vh); }
+#tm-baby.hug svg, #tm-mama.enter svg { animation: jlcheer .6s ease-in-out infinite; }
+#tm-mama.enter { right: 1vw; }
+#tm-baby.leave, #tm-mama.leave { right: -70vh; }
+
+@media (orientation: portrait) {
+  #tm-machine { left: 3vw; top: 72px; bottom: auto; height: 20vh; }
+  #tm-pal { left: 30vw; top: calc(72px + 6vh); bottom: auto; height: 14vh; }
+  #tm-baby { right: 4vw; top: 84px; bottom: auto; height: 14vh; }
+  #tm-mama { top: 72px; bottom: auto; height: 20vh; }
+  #tm-baby.hug { right: calc(4vw + 18vh); }
+  #time-play, body.time-home #time-play { left: 3vw; right: 3vw; top: calc(84px + 20vh + 9vmin); bottom: 3vh; }
+  #time-hud { top: calc(80px + 20vh); }
+  #tm-machine.fly { left: 30vw; top: 70px; bottom: auto; height: 22vh; }
+}
+
+/* ---------- HUD ---------- */
+.tm-cell { width: 5.6vmin; display: block; }
+.tm-cell svg { width: 100%; display: block; opacity: .28; filter: grayscale(1); transition: opacity .3s, filter .3s; }
+.tm-cell.in { animation: lgcellin .4s cubic-bezier(.3,1.6,.5,1) both; }
+.tm-cell.on svg { opacity: 1; filter: drop-shadow(0 0 8px #ffe680); }
+.tm-cell.on { animation: lgcellon .6s cubic-bezier(.3,1.6,.5,1); }
+#time-meter.perfect { animation: lgperfect 1.4s ease-out; }
+.tm-spark { position: fixed; z-index: 40; width: 5vh; height: 5vh; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, #fff 0 25%, #ffd9a0 45%, rgba(255,180,80,0) 72%); box-shadow: 0 0 18px #ffd9a0; }
+
+#time-hud .tm-hi { width: 6.5vmin; }
+#time-hud .tm-hi svg { width: 100%; display: block; }
+#time-hud .tm-lit { transition: fill .4s; }
+#time-hud.k-bulb .tm-hi.on .tm-lit { fill: #ffe680; }
+#time-hud.k-portal .tm-hi.on .tm-lit { fill: #c7a3ff; }
+#time-hud.k-battery .tm-hi.on .tm-lit { fill: #7fd6a0; }
+#time-hud.k-foot .tm-hi.on .tm-lit { fill: #a8744c; }
+#time-hud .tm-hi.on svg { filter: drop-shadow(0 0 8px #fff6c8); animation: bbon .6s cubic-bezier(.3,1.6,.5,1); }
+#time-hud .tm-nest { width: 11vmin; margin-left: 1vmin; }
+#time-hud .tm-nest svg { width: 100%; display: block; }
+
+/* ---------- 揀恐龍拍檔 ---------- */
+.tm-pals { display: flex; gap: 4vh; }
+.tm-palbtn { position: relative; width: 25vh; height: 30vh; padding: 1vh 1vh 7vh; border: 6px solid #fff; border-radius: 26px; box-shadow: 0 8px 0 rgba(0,0,0,.18); animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both; touch-action: manipulation; }
+.tm-palbtn.p-brachio { background: linear-gradient(#c9f0c2, #fff); }
+.tm-palbtn.p-trex { background: linear-gradient(#ffd0b0, #fff); }
+.tm-palbtn.p-trice { background: linear-gradient(#ffd0e0, #fff); }
+.tm-palbtn .pb-art { position: absolute; inset: 1vh 1vh 7vh; pointer-events: none; }
+.tm-palbtn .pb-art svg { width: 100%; height: 100%; display: block; }
+.tm-palbtn .pb-txt { position: absolute; left: 0; right: 0; bottom: .6vh; font-family: "WenKai", "Kaiti TC", "STKaiti", serif; font-weight: 700; font-size: clamp(22px, 5.4vh, 56px); color: #3b3247; pointer-events: none; }
+.tm-palbtn.right { animation: cardright .6s ease-out; }
+.tm-palbtn:active { transform: scale(.95); }
+@media (orientation: portrait) { .tm-palbtn { width: 29vw; height: 36vw; } .tm-pals { gap: 3vw; } }
+
+/* ---------- 字卡 / 圖 / 砌詞 ---------- */
+#time-play button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+#time-play .wiggle { animation: partwiggle .6s ease-in-out; }
+#time-play .fade { opacity: .2; transition: opacity .35s; pointer-events: none; }
+.tm-cards { display: flex; gap: 2.4vmin; justify-content: center; }
+#time-play .tm-card { font-size: clamp(40px, 9vmin, 100px); min-width: 0; padding: .16em .3em; }
+#time-play.mode-pic .tm-card { font-size: clamp(36px, 8vmin, 90px); }
+#time-play.in-home .tm-card { font-size: clamp(32px, 7vmin, 80px); }
+.tm-pic { height: 32vh; aspect-ratio: 200 / 170; background: #fff; border-radius: 22px; padding: 1.4vh; box-shadow: 0 6px 0 rgba(0,0,0,.12), 0 0 0 6px #c7a3ff; }
+.tm-pic svg { width: 100%; height: 100%; display: block; }
+.tm-pic.in { animation: holoin .5s ease-out both; }
+.tm-pic.yay { animation: yay .7s cubic-bezier(.3,1.6,.5,1); }
+#time-play.in-home .tm-pic { height: 22vh; }
+
+.tm-slots { display: flex; gap: 2vh; padding: 1.4vh 2.4vh; border-radius: 26px; background: rgba(255,255,255,.55); }
+.tm-slots.in { animation: holoin .5s ease-out both; }
+.tm-slots.glow { animation: tmslots 1s ease-out; }
+@keyframes tmslots { 40% { transform: scale(1.12); box-shadow: 0 0 30px #ffe680; background: rgba(255,246,200,.9); } }
+.tm-slot { width: 18vh; height: 18vh; display: grid; place-items: center; border: 6px dashed #b7aec4; border-radius: 22px; background: #fffdf6;
+  font-family: "WenKai", "Kaiti TC", "STKaiti", serif; font-weight: 700; font-size: 13vh; line-height: 1; color: #3b3247; }
+.tm-slot.now { border-color: #ffb347; animation: tmnow 1.4s ease-in-out infinite; }
+@keyframes tmnow { 50% { box-shadow: 0 0 0 8px rgba(255,179,71,.35); } }
+.tm-slot.filled { border-style: solid; border-color: #7fd6a0; }
+.tm-keys { display: flex; gap: 2.4vh; }
+.tm-key { width: 15vh; height: 15vh; border: 6px solid #fff; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff6c8, #ffd23e 70%, #f0b400);
+  box-shadow: 0 7px 0 rgba(0,0,0,.18); font-family: "WenKai", "Kaiti TC", "STKaiti", serif; font-weight: 700; font-size: 9vh; line-height: 1; color: #3b3247;
+  animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both; }
+.tm-key:active { transform: scale(.94); }
+.tm-key.used { visibility: hidden; }
+#time-play .tm-key.hint { animation: jdhint 1.2s ease-in-out infinite; }
+#time-play.in-home .tm-slot { width: 14vh; height: 14vh; font-size: 10vh; }
+#time-play.in-home .tm-key { width: 12vh; height: 12vh; font-size: 7.4vh; }
+@media (orientation: portrait) {
+  .tm-pic, #time-play.in-home .tm-pic { height: 22vh; }
+  .tm-keys { gap: 2.4vw; }
+  .tm-key, #time-play.in-home .tm-key { width: 20vw; height: 20vw; font-size: 12vw; }
+  .tm-slot, #time-play.in-home .tm-slot { width: 24vw; height: 24vw; font-size: 17vw; }
+}
+
+/* ---------- 時光機出發 ---------- */
+.tm-warp { position: absolute; inset: 0; z-index: 20; pointer-events: none; display: grid; place-items: center; animation: tmwarpbg 1.7s ease-in-out forwards; }
+.tm-warp i { position: absolute; width: 30vmin; height: 30vmin; border-radius: 50%; border: 3vmin dashed rgba(255,255,255,.85); animation: tmwarp 1.7s ease-in forwards; }
+.tm-warp i:nth-child(2) { border-color: rgba(199,163,255,.85); animation-delay: .15s; }
+.tm-warp i:nth-child(3) { border-color: rgba(255,230,128,.85); animation-delay: .3s; }
+@keyframes tmwarp { from { transform: scale(.2) rotate(0); opacity: 0; } 30% { opacity: 1; } to { transform: scale(5) rotate(540deg); opacity: 0; } }
+@keyframes tmwarpbg { 0%, 100% { background: rgba(120,90,220,0); } 45% { background: rgba(120,90,220,.55); } }
+
+/* ---------- 結局 ---------- */
+body.time-battle #time-play { visibility: hidden; }
+#time-again {
+  position: absolute; z-index: 12; left: 50%; top: 40%;
+  width: 140px; height: 140px; margin: -70px 0 0 -70px;
+  border-radius: 50%; border: 7px solid #fff;
+  background: radial-gradient(circle at 35% 30%, #a6e3a0, #6cc067 60%, #52a64e);
+  padding: 26px; opacity: 0; pointer-events: none; transition: opacity 1s;
+}
+#time-again svg { width: 100%; height: 100%; display: block; }
+body.time-done #time-again { opacity: 1; pointer-events: auto; }
+
+/* 煙花 */
+.tm-rocket { position: absolute; z-index: 9; bottom: 6vh; width: 9vh; cursor: pointer; transition: bottom .7s ease-in; animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both; }
+.tm-rocket svg { width: 100%; display: block; pointer-events: none; }
+.tm-rocket.tap-hint { animation: jdhint 1.1s ease-in-out infinite; }
+.tm-rocket.up { bottom: 70vh; pointer-events: none; }
+.tm-rocket.boom svg { opacity: 0; transition: opacity .2s; }
+.tm-rocket.boom::after { content: ""; position: absolute; left: 50%; top: 50%; width: 30vh; height: 30vh; margin: -15vh 0 0 -15vh; border-radius: 50%;
+  background: radial-gradient(circle, transparent 0 30%, var(--fc) 32% 36%, transparent 38% 52%, var(--fc) 54% 57%, transparent 60%); animation: lgfire 1.4s ease-out forwards; }
+.tm-fireworks { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.tm-fireworks i { position: absolute; width: 22vh; height: 22vh; margin: -11vh 0 0 -11vh; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, transparent 0 30%, var(--fc) 32% 36%, transparent 38% 52%, var(--fc) 54% 57%, transparent 60%); animation: lgfire 1.4s ease-out infinite; }
+.tm-fireworks i:nth-child(1) { left: 22%; top: 22%; --fc: #ff8fb8; }
+.tm-fireworks i:nth-child(2) { left: 52%; top: 14%; --fc: #ffe680; animation-delay: .35s; }
+.tm-fireworks i:nth-child(3) { left: 78%; top: 26%; --fc: #9fd3ff; animation-delay: .7s; }
+.tm-fireworks i:nth-child(4) { left: 38%; top: 36%; --fc: #b3ecc0; animation-delay: 1.05s; }
+.tm-fireworks i:nth-child(5) { left: 66%; top: 40%; --fc: #c7a3ff; animation-delay: .5s; }
+.tm-fireworks i:nth-child(6) { left: 88%; top: 12%; --fc: #ffb347; animation-delay: .9s; }
+@media (orientation: portrait) { .tm-rocket { width: 13vw; } }
+
+/* 生日蛋糕 */
+.tm-party { position: absolute; z-index: 9; left: 34vw; right: 4vw; bottom: 4vh; height: 60vh; display: flex; align-items: flex-end; justify-content: center; gap: 2vw; }
+.tm-cake { position: relative; height: 46vh; aspect-ratio: 240 / 200; }
+.tm-cake > svg { width: 100%; height: 100%; display: block; }
+.tm-cake b { position: absolute; top: -4%; width: 12%; aspect-ratio: 40 / 56; cursor: pointer; padding: 3%; margin: -3%; box-sizing: content-box; }
+.tm-cake b svg { width: 100%; display: block; pointer-events: none; transform-origin: 50% 100%; animation: tmflicker .5s ease-in-out infinite alternate; }
+.tm-cake b.f1 { left: calc(76 / 240 * 100% - 6%); }
+.tm-cake b.f2 { left: calc(120 / 240 * 100% - 6%); }
+.tm-cake b.f3 { left: calc(164 / 240 * 100% - 6%); }
+@keyframes tmflicker { to { transform: scaleY(1.12) rotate(4deg); } }
+.tm-cake b.tap-hint svg { animation: jdhint 1.1s ease-in-out infinite; }
+.tm-cake b.out { pointer-events: none; }
+.tm-cake b.out svg { animation: tmpuff .6s ease-out forwards; }
+@keyframes tmpuff { to { transform: scale(.2) translateY(-30%); opacity: 0; } }
+.tm-bday { height: 24vh; aspect-ratio: 100 / 110; }
+.tm-bday svg { width: 100%; height: 100%; display: block; }
+.tm-party.cheer .tm-bday svg { animation: jlcheer .6s ease-in-out infinite; }
+.tm-confetti { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
+.tm-confetti i { position: absolute; top: -4vh; width: 1.6vh; height: 2.6vh; border-radius: .4vh; background: #ff8fb8; animation: tmconf 2.4s linear infinite; }
+.tm-confetti i:nth-child(3n+1) { background: #ffe680; } .tm-confetti i:nth-child(3n+2) { background: #7fb0ff; }
+.tm-confetti i:nth-child(1) { left: 8%; } .tm-confetti i:nth-child(2) { left: 16%; animation-delay: .4s; } .tm-confetti i:nth-child(3) { left: 24%; animation-delay: 1.1s; }
+.tm-confetti i:nth-child(4) { left: 32%; animation-delay: .7s; } .tm-confetti i:nth-child(5) { left: 40%; animation-delay: 1.6s; } .tm-confetti i:nth-child(6) { left: 48%; animation-delay: .2s; }
+.tm-confetti i:nth-child(7) { left: 56%; animation-delay: 1.3s; } .tm-confetti i:nth-child(8) { left: 64%; animation-delay: .9s; } .tm-confetti i:nth-child(9) { left: 72%; animation-delay: 1.9s; }
+.tm-confetti i:nth-child(10) { left: 80%; animation-delay: .5s; } .tm-confetti i:nth-child(11) { left: 88%; animation-delay: 1.4s; } .tm-confetti i:nth-child(12) { left: 94%; animation-delay: .1s; }
+@keyframes tmconf { to { transform: translateY(110vh) rotate(720deg); } }
+@media (orientation: portrait) { .tm-party { left: 3vw; right: 3vw; bottom: 6vh; height: 50vh; } .tm-cake { height: 30vh; } .tm-bday { height: 16vh; } }
+
+/* 星星 + 彩虹 */
+.tm-star { position: absolute; z-index: 9; width: 12vh; cursor: pointer; animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both, cfloat 2.2s ease-in-out infinite; }
+.tm-star svg { width: 100%; display: block; pointer-events: none; }
+.tm-star.tap-hint { animation: jdhint 1.1s ease-in-out infinite; }
+.tm-star.got { animation: lgstargot .7s ease-out forwards; pointer-events: none; }
+.tm-rainbow { position: absolute; z-index: 1; left: 50%; top: 4vh; width: 84vw; translate: -50% 0; animation: lgrainbow 1.4s ease-out both; }
+.tm-rainbow svg { width: 100%; display: block; }
+@media (orientation: portrait) { .tm-star { width: 20vw; } }
+
+/* BB 恐龍搵返媽媽：心心 */
+.tm-hearts { position: absolute; z-index: 9; right: 12vw; bottom: 30vh; width: 20vh; height: 30vh; pointer-events: none; }
+.tm-hearts i { position: absolute; bottom: 0; font-style: normal; animation: lgheart 2s ease-out infinite; opacity: 0; }
+.tm-hearts i::before { content: "♥"; font-size: 6vh; color: #ff6b9a; text-shadow: 0 0 8px #fff; }
+.tm-hearts i:nth-child(1) { left: 0; } .tm-hearts i:nth-child(2) { left: 25%; animation-delay: .4s; } .tm-hearts i:nth-child(3) { left: 50%; animation-delay: .8s; }
+.tm-hearts i:nth-child(4) { left: 75%; animation-delay: 1.2s; } .tm-hearts i:nth-child(5) { left: 40%; animation-delay: 1.6s; }
+@media (orientation: portrait) { .tm-hearts { top: 84px; bottom: auto; right: 20vw; } }
