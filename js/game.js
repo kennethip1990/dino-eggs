@@ -99,6 +99,7 @@
   put($('#go-robo'), `<div class="choose-art">${RoboArt.icon()}</div>`);
   put($('#go-light'), `<div class="choose-art">${LightArt.icon()}</div>`);
   put($('#go-time'), `<div class="choose-art">${TimeArt.icon()}</div>`);
+  put($('#go-mon'), `<div class="choose-art">${MonArt.icon()}</div>`);
   $('#go-dino').addEventListener('click', () => { prepare(); setScreen('start'); });
   $('#go-hero').addEventListener('click', async () => {
     prepare();
@@ -172,6 +173,11 @@
     await Promise.race([Sound.loadRecordings(), wait(1500)]);
     TimeGame.start();
   });
+  $('#go-mon').addEventListener('click', async () => {
+    prepare();
+    await Promise.race([Sound.loadRecordings(), wait(1500)]);
+    MonGame.start();
+  });
 
   // 撳貼紙 / 家長區預覽：淨係播特別BB 嗰段
   function playSpecial(kind) {
@@ -186,7 +192,8 @@
     RoboGame.stop();
     LightGame.stop();
     TimeGame.stop();
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done', 'time-done');
+    MonGame.stop();
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done', 'time-done', 'mon-done');
     put(mamaEl, Art.mama(progress.dino));
     goToSleep(kind);
   }
@@ -203,13 +210,15 @@
     RoboGame.stop();
     LightGame.stop();
     TimeGame.stop();
+    MonGame.stop();
     BossGame.stop();
     Rewards.hidePop();
     clearField();
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done', 'time-done');
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done', 'time-done', 'mon-done');
     scene.classList.remove('is-night');
     setScreen('menu');
     Rewards.renderMenu();
+    MonGame.renderMenu();
     keepAwake();
   }
   window.App = { goHome };
@@ -540,7 +549,7 @@
   }
   function releaseAwake() { try { if (wakeLock) wakeLock.release(); } catch (e) {} wakeLock = null; }
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && /^(play|hero|rex|boss|snake|party|jedi|mecha|robo|light|time)$/.test(document.body.dataset.screen)) keepAwake();
+    if (document.visibilityState === 'visible' && /^(play|hero|rex|boss|snake|party|jedi|mecha|robo|light|time|mon)$/.test(document.body.dataset.screen)) keepAwake();
   });
   let trapped = false;
   function trapBack() {
@@ -614,9 +623,10 @@
     RoboGame.stop();
     LightGame.stop();
     TimeGame.stop();
+    MonGame.stop();
     BossGame.stop();
     scene.classList.remove('is-night');
-    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done', 'time-done');
+    document.body.classList.remove('show-again', 'hero-done', 'rex-done', 'boss-done', 'snake-done', 'party-done', 'jedi-done', 'mecha-done', 'robo-done', 'light-done', 'time-done', 'mon-done');
     if (game === 'dino') playSpecial(id);
     else if (game === 'hero') HeroGame.playVideo(id);
     else if (game === 'rex') RexGame.playVideo(id);
@@ -671,6 +681,16 @@
     TimeGame.resetStats();
     renderPanel();
   });
+  $('#p-mon-reset').addEventListener('click', () => {
+    if (!confirm('重設怪獸收集隊數學記錄？（圖鑑唔會清）')) return;
+    MonGame.resetStats();
+    renderPanel();
+  });
+  $('#p-mon-dex-reset').addEventListener('click', () => {
+    if (!confirm('清空 Luca 嘅怪獸圖鑑同拍檔進化？（清咗就冇得返）')) return;
+    MonGame.resetDex();
+    renderPanel();
+  });
   $('#p-robo-reset').addEventListener('click', () => {
     if (!confirm('重設機甲英文記錄？')) return;
     RoboGame.resetStats();
@@ -699,6 +719,7 @@
     RoboGame.renderStats($('#p-robo-stats'), $('#p-robo-info'));
     LightGame.renderStats($('#p-light-stats'), $('#p-light-info'));
     TimeGame.renderStats($('#p-time-stats'), $('#p-time-info'));
+    MonGame.renderStats($('#p-mon-stats'), $('#p-mon-info'));
     PartyGame.renderVoices($('#p-party-voices'));
     SnakeGame.renderPanel($('#p-snake-group'), $('#p-snake-mode'), $('#p-snake-info'));
     const NAME = { dino: '恐龍', hero: '英雄', rex: 'Super Rex', snake: '貪食蛇', party: '派對', jedi: 'Jedi', mecha: 'Mecha-Rex', robo: '機甲', light: '光之巨人', time: '時光機' };
@@ -784,6 +805,7 @@
     else if (g === 'lightplay') LightGame.start({ from: +id || 1 });
     else if (g === 'time') TimeGame.playVideo(id);
     else if (g === 'timeplay') TimeGame.start({ from: +id || 1 });
+    else if (g === 'monplay') MonGame.start({ from: +id || 1 });
     else if (g === 'sticker') Rewards.celebrate('hero', id || 'cloud', 'yue');
     else if (g.startsWith('stk_')) Rewards.celebrate(g.slice(4), id, 'en');
   }, 300);

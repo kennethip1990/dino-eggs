@@ -422,6 +422,40 @@
   clips.tm_some_gold = { lang: 'yue', text: '有金色勳章！下次試吓全部都係金色！' };
   clips.tm_no_gold  = { lang: 'yue', text: '下次聽清楚先撳，就會有金色勳章！' };
   clips.tm_bye      = { lang: 'yue', text: '多謝你同恐龍一齊坐時光機！拜拜！' };
+  // ---- Luca 怪獸收集隊（數學：十至十四，廣東話）----
+  // 十一至二十（數數用，同 yue_1–yue_10 一齊）
+  for (let n = 11; n <= 20; n++) clips['yue_' + n] = { lang: 'yue', text: n === 20 ? '二十' : '十' + YUE_COUNT[n - 11] };
+  clips.mn_hi       = { lang: 'yue', text: '嘩！草地有好多怪獸呀！我哋一齊去捉怪獸！' };
+  clips.mn_rule     = { lang: 'yue', text: '第一下就答啱，就有粒星星，仲有機會捉到閃閃怪獸！聽清楚先撳呀！' };
+  clips.mn_pick_q   = { lang: 'yue', text: '揀一隻怪獸拍檔，同你一齊去！' };
+  clips.mn_go       = { lang: 'yue', text: '一齊出發！' };
+  clips.mn_s1       = { lang: 'yue', text: '先執好啲星星球！撳啲球，放入球盒！' };
+  clips.mn_ten      = { lang: 'yue', text: '十！一盒裝滿晒，就係十！' };
+  clips.mn_s2       = { lang: 'yue', text: '草叢入面有怪獸！數吓有幾多粒球！' };
+  clips.mn_howmany  = { lang: 'yue', text: '一共有幾多粒球？' };
+  clips.mn_box10    = { lang: 'yue', text: '呢一盒係十。' };
+  clips.mn_count_on = { lang: 'yue', text: '我哋由十開始數：' };
+  clips.mn_look     = { lang: 'yue', text: '咦？唔係喎。' };
+  clips.mn_s3       = { lang: 'yue', text: '聽吓個數字，搵啱嗰堆球！' };
+  clips.mn_which    = { lang: 'yue', text: '邊個係' };
+  clips.mn_appear   = { lang: 'yue', text: '咦？草叢郁吓郁吓……' };
+  clips.mn_throw    = { lang: 'yue', text: '掟星星球，捉佢！' };
+  clips.mn_caught   = { lang: 'yue', text: '捉到喇！' };
+  clips.mn_new      = { lang: 'yue', text: '新怪獸！放入圖鑑！' };
+  clips.mn_shiny    = { lang: 'yue', text: '嘩！係閃閃怪獸！' };
+  clips.mn_egg      = { lang: 'yue', text: '咦？有隻怪獸蛋！' };
+  clips.mn_egg_rule = { lang: 'yue', text: '球盒入面有十粒，由十開始，撳蛋數落去！要數到' };
+  clips.mn_hatch    = { lang: 'yue', text: '孵出嚟喇！' };
+  clips.mn_daily    = { lang: 'yue', text: '今日嘅特別蛋！聽日再嚟，又有新嘅蛋！' };
+  clips.mn_dex      = { lang: 'yue', text: '睇吓你嘅怪獸圖鑑！' };
+  clips.mn_dex_left = { lang: 'yue', text: '仲有啲黑影怪獸未捉到，下次再嚟捉！' };
+  clips.mn_dex_full = { lang: 'yue', text: '全部捉晒！你係怪獸隊長！' };
+  clips.mn_all_star = { lang: 'yue', text: '星星全部儲滿！好犀利！' };
+  clips.mn_evolve   = { lang: 'yue', text: '嘩！你嘅拍檔進化喇！' };
+  clips.mn_more_1   = { lang: 'yue', text: '再同佢玩多一次，佢就會進化！' };
+  clips.mn_more_2   = { lang: 'yue', text: '再同佢玩多兩次，佢就會進化！' };
+  clips.mn_bye      = { lang: 'yue', text: '多謝你同怪獸一齊玩！拜拜！' };
+  if (root.MON_UNIT) for (const id of Object.keys(root.MON_UNIT.names)) clips['mn_n_' + id] = { lang: 'yue', text: root.MON_UNIT.names[id] };
   // 恐龍時光機結局（要 Luca 撳）
   clips.tn_alarm = { lang: 'yue', text: '新年喇！時光機帶咗好多煙花返嚟！' };
   clips.tn_go    = { lang: 'yue', text: '撳煙花，放煙花！' };

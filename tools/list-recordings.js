@@ -1,7 +1,7 @@
 // 用法：node tools/list-recordings.js  → 印出 README 用嘅錄音清單（markdown table）
 const vm = require('vm'), fs = require('fs'), path = require('path');
 global.self = global;
-for (const f of ['words.js', 'family.js', 'animals.js', 'jedi-words.js', 'mecha-words.js', 'robo-words.js', 'light-words.js', 'time-words.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
+for (const f of ['words.js', 'family.js', 'animals.js', 'jedi-words.js', 'mecha-words.js', 'robo-words.js', 'light-words.js', 'time-words.js', 'mon-data.js', 'voices.js']) vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', 'js', f), 'utf8'));
 // Mecha-Rex 嘅 w_ / ts_ 同 Jedi 共用前綴，用 id 分開
 const MK = new Set(self.MECHA_UNIT.things.map((t) => t.id));
 const isMecha = (k) => MK.has(k.replace(/^(w|ts)_/, ''));
@@ -59,7 +59,9 @@ const groups = [
   ['恐龍時光機：生詞', /^tw_/],
   ['恐龍時光機：單字（砌詞用）', /^tc_/],
   ['恐龍時光機：旁白', /^tm_/],
-  ['恐龍時光機結局', /^(tn|tb|tx)_/]
+  ['恐龍時光機結局', /^(tn|tb|tx)_/],
+  ['怪獸收集隊：怪獸名', /^mn_n_/],
+  ['怪獸收集隊：旁白', /^mn_(?!n_)/]
 ];
 const clips = self.VOICES.clips;
 const out = [];
