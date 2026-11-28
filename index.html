@@ -42,6 +42,7 @@
       <div class="card-wrap"><button id="go-light" class="choose" aria-label="光之巨人 Luca 救援隊"></button><div class="stickers" data-game="light"></div></div>
       <div class="card-wrap"><button id="go-time" class="choose" aria-label="恐龍時光機"></button><div class="stickers" data-game="time"></div></div>
       <div class="card-wrap"><button id="go-mon" class="choose" aria-label="Luca 怪獸收集隊"></button><div class="stickers" data-game="mon"></div></div>
+      <div class="card-wrap"><button id="go-shop" class="choose" aria-label="怪獸果子店"></button><div class="stickers" data-game="shop"></div></div>
       <!-- 秘密短片：集齊英雄 + Super Rex 6 張貼紙先開到 -->
       <button id="go-boss" class="locked" aria-label="秘密短片"></button>
     </div>
@@ -269,6 +270,14 @@
         <div class="row" id="p-mon-info"></div>
         <p class="note">球盒 = 十格框（一盒十粒）。「幾多粒球」= 睇一盒 + 散球揀數字；「邊個係」= 聽數字揀啱嗰堆球。「揀咗個位數」= 例如 13 揀咗 3、或者揀咗冇盒嗰堆 → 未明白「一盒 = 十」。★ = 老師提嘅 10+1、10+2，第一下就啱 2 次之前排先。答錯唔扣：幾多粒球答錯會示範「呢盒係十，十一、十二……」先畀再揀。</p>
         <div class="row"><button id="p-mon-reset" class="danger">重設數學記錄</button> <button id="p-mon-dex-reset" class="danger">清空怪獸圖鑑</button></div>
+      </section>
+
+      <section>
+        <h3>怪獸果子店數學記錄（第一下就啱 / 次數）</h3>
+        <table class="stats"><thead><tr><th>數</th><th>砌果</th><th>十加幾</th><th>第一下拎散果</th><th>揀咗個位數</th></tr></thead><tbody id="p-shop-stats"></tbody></table>
+        <div class="row" id="p-shop-info"></div>
+        <p class="note">「砌果」= 客人要 N 粒，由貨架拎一盒（十）+ 散果；放多咗會放返一個落去（冇扣），「第一下就啱」= 冇放多咗。「第一下拎散果」= 開頭冇拎盒、由散果開始 → 可能仲係由一數起。「十加幾」= 10 + 3 = ? 揀數字，「揀咗個位數」= 揀咗 3。★ = 10+1、10+2、10+3 排先。圖鑑 / 拍檔同收集隊共用。</p>
+        <div class="row"><button id="p-shop-reset" class="danger">重設果子店記錄</button></div>
       </section>
 
       <section>

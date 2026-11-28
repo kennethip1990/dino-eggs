@@ -1,15 +1,14 @@
 /* Luca 怪獸收集隊（數學：十至十四，廣東話） */
 
-/* ---------- 主選單：11 張卡 = 6 + 5（直向 3 + 3 + 3 + 2） ---------- */
+/* ---------- 主選單：12 張卡 = 6 + 6（直向 3 + 3 + 3 + 3） ---------- */
 #menu-screen { grid-template-columns: repeat(12, calc(var(--card) / 2 + 1vw)); --card: min(13.4vw, 30vh); }
-#menu-screen .card-wrap { grid-column: span 2; }
-#menu-screen .card-wrap:nth-child(5), #menu-screen .card-wrap:nth-child(6) { grid-column: auto / span 2; }
-#menu-screen .card-wrap:nth-child(7) { grid-column: 2 / span 2; }
+#menu-screen .card-wrap, #menu-screen .card-wrap:nth-child(n) { grid-column: auto / span 2; }
 @media (orientation: portrait) {
-  #menu-screen { grid-template-columns: repeat(6, calc(var(--card) / 2 + 1.5vw)); --card: min(28vw, 18.5vh); }
-  #menu-screen .card-wrap:nth-child(7) { grid-column: auto / span 2; }
-  #menu-screen .card-wrap:nth-child(10) { grid-column: 2 / span 2; }
+  #menu-screen { grid-template-columns: repeat(6, calc(var(--card) / 2 + 1.5vw)); --card: min(28vw, 17.5vh); }
 }
+#go-shop { background: rgba(255,143,184,.85); animation-delay: -.6s; }
+#go-shop .choose-art { margin: -6%; width: 112%; height: 112%; }
+.stickers[data-game="shop"] { justify-content: center; }
 #go-mon { background: rgba(60,190,170,.85); animation-delay: -1.4s; }
 #go-mon .choose-art { margin: -6%; width: 112%; height: 112%; }
 .stickers[data-game="mon"] { justify-content: center; }
@@ -187,18 +186,18 @@ body[data-screen="mon"] #mon-screen { display: block; }
   .mn-egg { width: 32vw; height: 38vw; }
 }
 
-/* ---------- 圖鑑 ---------- */
-.mn-dex { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.6vh 2vh; padding: 2.4vh; border-radius: 28px; background: rgba(255,255,255,.75); }
+/* ---------- 圖鑑（24 格：橫 8 × 3、直 6 × 4） ---------- */
+.mn-dex { display: grid; grid-template-columns: repeat(8, 1fr); gap: 1.2vh 1.4vh; padding: 2vh; border-radius: 28px; background: rgba(255,255,255,.75); }
 .mn-dexcell { display: grid; justify-items: center; gap: .4vh; padding: 1vh; border-radius: 18px; background: #fff; border: 4px solid #e6eef0; animation: cardin .4s cubic-bezier(.3,1.6,.5,1) both; }
-.mn-dexcell .dx-art { width: 13vh; height: 13vh; }
+.mn-dexcell .dx-art { width: 11vh; height: 11vh; }
 .mn-dexcell .dx-art svg { width: 100%; height: 100%; display: block; }
 .mn-dexcell.shadow .dx-art svg { filter: brightness(0); opacity: .22; }
-.mn-dexcell .dx-name { font: 800 clamp(12px, 2.4vh, 26px)/1.1 system-ui, "PingFang HK", "Noto Sans TC", sans-serif; color: #3b3247; }
+.mn-dexcell .dx-name { white-space: nowrap; font: 800 clamp(11px, 2.1vh, 24px)/1.1 system-ui, "PingFang HK", "Noto Sans TC", sans-serif; color: #3b3247; }
 .mn-dexcell.shadow .dx-name { color: #9a92a8; }
 .mn-dexcell.shiny { border-color: #ffd23e; background: #fffbe6; }
 .mn-dexcell.new { border-color: #ff8fb8; animation: cardin .4s cubic-bezier(.3,1.6,.5,1) both, mnnew 1.2s ease-in-out .6s infinite; }
 @keyframes mnnew { 50% { transform: scale(1.08); box-shadow: 0 0 22px #ffb3c7; } }
-@media (orientation: portrait) { .mn-dex { grid-template-columns: repeat(4, 1fr); gap: 1.4vh 2vw; } .mn-dexcell .dx-art { width: 16vw; height: 16vw; } }
+@media (orientation: portrait) { .mn-dex { grid-template-columns: repeat(6, 1fr); gap: 1.2vh 1.4vw; padding: 1.6vh 1.6vw; } .mn-dexcell { padding: .6vh .4vw; } .mn-dexcell .dx-art { width: 11vw; height: 11vw; } .mn-dexcell .dx-name { font-size: clamp(10px, 2.3vw, 20px); } }
 
 /* ---------- 進化 ---------- */
 .mn-evo .ev-art { width: 44vh; height: 44vh; }
@@ -231,3 +230,55 @@ body.mon-done #mon-again { opacity: 1; pointer-events: auto; }
 @keyframes mntap { 40% { transform: scale(1.18); box-shadow: 0 0 24px #ffe680; } }
 #mn-dexview .dv-close { position: fixed; top: max(14px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); width: 64px; height: 64px; border-radius: 50%; border: 5px solid #fff; background: #ff8fb8; color: #fff; font: 900 30px/1 system-ui, sans-serif; touch-action: manipulation; }
 @media (orientation: portrait) { #mn-dexview .dv-pal .dx-art { width: 15vw; height: 15vw; } #mn-dexview .dv-pals { gap: 2vw; } }
+
+/* ---------- 怪獸果子店 ---------- */
+#mon-play.mode-shop { gap: 2.2vh; }
+.sh-top { display: flex; align-items: center; gap: 2vh; }
+.sh-top.in { animation: cardin .5s cubic-bezier(.3,1.6,.5,1) both; }
+.sh-cust { width: 22vh; height: 22vh; }
+.sh-cust svg { width: 100%; height: 100%; display: block; overflow: visible; animation: cfloat 2.4s ease-in-out infinite; }
+.sh-cust.happy { animation: bbhop .45s ease-in-out 2; }
+.sh-bub { position: relative; display: flex; align-items: center; gap: 1vh; padding: 1vh 3vh; border-radius: 28px; background: #fff; border: 6px solid #ff8fb8; box-shadow: 0 6px 0 rgba(0,0,0,.12);
+  font: 900 clamp(50px, 13vh, 140px)/1 "Arial Rounded MT Bold", system-ui, sans-serif; color: #3b3247; }
+.sh-bub::before { content: ""; position: absolute; left: -22px; top: 50%; margin-top: -12px; border: 12px solid transparent; border-right: 14px solid #ff8fb8; border-left: 0; }
+.sh-bub .sh-bi { width: 9vh; height: 9vh; display: block; }
+.sh-bub .sh-bi svg { width: 100%; height: 100%; display: block; }
+.sh-tray { display: flex; align-items: center; justify-content: center; min-width: 46vh; min-height: 14vh; padding: 1.4vh 2.4vh; border-radius: 999px; background: rgba(255,255,255,.7); border: 5px dashed #ffb3c7; }
+.sh-tray .mn-box, .sh-tray .mn-loose { --s: 4.6vh; }
+.sh-tray .mn-loose { max-width: calc(var(--s) * 5.8); }
+.sh-shelf { display: flex; align-items: center; gap: 3vh; padding: 1.6vh 3vh; border-radius: 22px; background: #c08a5c; box-shadow: inset 0 -8px 0 rgba(0,0,0,.15), 0 6px 0 rgba(0,0,0,.12); }
+.sh-shelf.fade { opacity: .35; transition: opacity .4s; pointer-events: none; }
+.sh-boxbtn { padding: 0; border: 0; background: none; }
+.sh-boxbtn .mn-box { --s: 4.4vh; pointer-events: none; }
+.sh-boxbtn:active { transform: scale(.94); }
+.sh-pile { display: grid; grid-template-columns: repeat(5, 6.4vh); gap: .8vh 1vh; }
+.sh-lbtn { width: 6.4vh; height: 6.4vh; padding: 0; border: 0; background: none; }
+.sh-lbtn svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.sh-lbtn:active { transform: scale(.9); }
+.sh-boxbtn.used, .sh-lbtn.used { visibility: hidden; }
+.sh-boxbtn.back, .sh-lbtn.back { animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both; }
+#mon-play .sh-bub.wiggle { animation: partwiggle .6s ease-in-out; }
+/* ② 十加幾 */
+.sh-eq { display: flex; align-items: center; gap: 2vh; padding: .6vh 4vh; border-radius: 24px; background: #fff; border: 6px solid #3cc6c0; box-shadow: 0 6px 0 rgba(0,0,0,.12);
+  font: 900 clamp(44px, 11vh, 120px)/1.1 "Arial Rounded MT Bold", system-ui, sans-serif; color: #3b3247; }
+.sh-eq.in { animation: cardin .45s cubic-bezier(.3,1.6,.5,1) both; }
+.sh-eq i { font-style: normal; color: #ff8fb8; }
+.sh-eq .q { min-width: 1.2em; text-align: center; color: #ff8fb8; }
+.sh-eq .q.lit { animation: mnlit .5s cubic-bezier(.3,1.6,.5,1); color: #3cc6c0; }
+#mon-play.mode-count.eq { gap: 2.4vh; }
+#mon-play.mode-count.eq .mn-group.big .mn-box, #mon-play.mode-count.eq .mn-group.big .mn-loose { --s: 7vh; }
+#mon-play.mode-count.eq .mn-num { font-size: clamp(40px, 11vh, 120px); }
+@media (orientation: portrait) {
+  .sh-cust { width: 26vw; height: 26vw; }
+  .sh-bub { font-size: 15vw; }
+  .sh-bub .sh-bi { width: 10vw; height: 10vw; }
+  .sh-tray { min-width: 70vw; min-height: 12vh; }
+  .sh-tray .mn-box, .sh-tray .mn-loose { --s: 5.4vw; }
+  .sh-shelf { flex-wrap: wrap; justify-content: center; gap: 2vh 3vw; padding: 1.6vh 3vw; }
+  .sh-boxbtn .mn-box { --s: 5.2vw; }
+  .sh-pile { grid-template-columns: repeat(5, 9vw); gap: 1vw; }
+  .sh-lbtn { width: 9vw; height: 9vw; }
+  .sh-eq { font-size: 13vw; }
+  #mon-play.mode-count.eq .mn-group.big .mn-box, #mon-play.mode-count.eq .mn-group.big .mn-loose { --s: 7.5vw; }
+}
+#mon-screen[data-game="shop"] #mon-meter { background: rgba(255,255,255,.75); }

@@ -100,6 +100,7 @@
   put($('#go-light'), `<div class="choose-art">${LightArt.icon()}</div>`);
   put($('#go-time'), `<div class="choose-art">${TimeArt.icon()}</div>`);
   put($('#go-mon'), `<div class="choose-art">${MonArt.icon()}</div>`);
+  put($('#go-shop'), `<div class="choose-art">${MonArt.shopIcon()}</div>`);
   $('#go-dino').addEventListener('click', () => { prepare(); setScreen('start'); });
   $('#go-hero').addEventListener('click', async () => {
     prepare();
@@ -177,6 +178,11 @@
     prepare();
     await Promise.race([Sound.loadRecordings(), wait(1500)]);
     MonGame.start();
+  });
+  $('#go-shop').addEventListener('click', async () => {
+    prepare();
+    await Promise.race([Sound.loadRecordings(), wait(1500)]);
+    MonGame.start({ game: 'shop' });
   });
 
   // 撳貼紙 / 家長區預覽：淨係播特別BB 嗰段
@@ -686,6 +692,11 @@
     MonGame.resetStats();
     renderPanel();
   });
+  $('#p-shop-reset').addEventListener('click', () => {
+    if (!confirm('重設怪獸果子店數學記錄？（圖鑑唔會清）')) return;
+    MonGame.resetStats('shop');
+    renderPanel();
+  });
   $('#p-mon-dex-reset').addEventListener('click', () => {
     if (!confirm('清空 Luca 嘅怪獸圖鑑同拍檔進化？（清咗就冇得返）')) return;
     MonGame.resetDex();
@@ -720,6 +731,7 @@
     LightGame.renderStats($('#p-light-stats'), $('#p-light-info'));
     TimeGame.renderStats($('#p-time-stats'), $('#p-time-info'));
     MonGame.renderStats($('#p-mon-stats'), $('#p-mon-info'));
+    MonGame.renderStats($('#p-shop-stats'), $('#p-shop-info'), 'shop');
     PartyGame.renderVoices($('#p-party-voices'));
     SnakeGame.renderPanel($('#p-snake-group'), $('#p-snake-mode'), $('#p-snake-info'));
     const NAME = { dino: '恐龍', hero: '英雄', rex: 'Super Rex', snake: '貪食蛇', party: '派對', jedi: 'Jedi', mecha: 'Mecha-Rex', robo: '機甲', light: '光之巨人', time: '時光機' };
@@ -806,6 +818,7 @@
     else if (g === 'time') TimeGame.playVideo(id);
     else if (g === 'timeplay') TimeGame.start({ from: +id || 1 });
     else if (g === 'monplay') MonGame.start({ from: +id || 1 });
+    else if (g === 'shopplay') MonGame.start({ game: 'shop', from: +id || 1 });
     else if (g === 'sticker') Rewards.celebrate('hero', id || 'cloud', 'yue');
     else if (g.startsWith('stk_')) Rewards.celebrate(g.slice(4), id, 'en');
   }, 300);

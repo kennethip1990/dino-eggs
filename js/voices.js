@@ -459,6 +459,19 @@
   clips.mn_unknown  = { lang: 'yue', text: '呢隻未捉到呀，下次去草叢搵佢！' };
   clips.mn_evolve2  = { lang: 'yue', text: '嘩！你嘅拍檔再進化，變成怪獸王！' };
   clips.mn_bye      = { lang: 'yue', text: '多謝你同怪獸一齊玩！拜拜！' };
+  // 怪獸果子店（砌十幾）
+  clips.sh_hi       = { lang: 'yue', text: '歡迎嚟到怪獸果子店！今日有好多怪獸客人嚟買果！' };
+  clips.sh_rule     = { lang: 'yue', text: '客人要幾多粒果，你就畀幾多粒！第一下就啱，就有粒星星！' };
+  clips.sh_box      = { lang: 'yue', text: '一盒裝滿十粒果，一盒就係十！' };
+  clips.sh_s1       = { lang: 'yue', text: '有客人嚟喇！' };
+  clips.sh_want     = { lang: 'yue', text: '我要' };
+  clips.sh_berries  = { lang: 'yue', text: '粒果！' };
+  clips.sh_too_many = { lang: 'yue', text: '咦，太多喇！放返一個落去。' };
+  clips.sh_hint     = { lang: 'yue', text: '先拎一盒十粒，再加散果，由十開始數！' };
+  clips.sh_thanks   = { lang: 'yue', text: '多謝你！好好味呀！' };
+  clips.sh_s2       = { lang: 'yue', text: '計數時間！十加幾，係幾多？' };
+  clips.sh_eq_a     = { lang: 'yue', text: '十加' };
+  clips.sh_eq_b     = { lang: 'yue', text: '係幾多？' };
   if (root.MON_UNIT) for (const id of Object.keys(root.MON_UNIT.names)) clips['mn_n_' + id] = { lang: 'yue', text: root.MON_UNIT.names[id] };
   // 恐龍時光機結局（要 Luca 撳）
   clips.tn_alarm = { lang: 'yue', text: '新年喇！時光機帶咗好多煙花返嚟！' };

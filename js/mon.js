@@ -8,6 +8,9 @@
  *   → ④ 孵蛋 ×1：盒蓋埋 = 十，撳蛋由十一數落去，數到就孵（每日第一隻蛋一定係新怪獸）
  *   → 怪獸圖鑑（未捉到 = 黑影）→ 拍檔玩夠 3 次進化 → 拜拜
  * 即時獎勵：② ③ 每答啱一題就捉一隻怪獸（掟星星球：向上撥或者撳都得）
+ * 怪獸果子店（MonGame.start({ game: 'shop' })，同一個畫面 + 共用圖鑑 / 拍檔進度）：
+ *   → 一盒 = 十粒果 → ① 砌果 ×3：客人要 N 粒，由貨架拎盒（十）+ 散果，數到啱就畀（太多 = 放返一個落去）
+ *   → ② 十加幾 ×2：「10 + 3 = ?」揀數字卡（干擾 = 個位數）→ 每答啱一題都捉怪獸 → 孵蛋 → 圖鑑（24 格）→ 進化
  * 只加唔扣（同光之巨人 / 時光機一樣）：第一下就啱 = 一粒星 + 有機會捉到閃閃怪獸；答錯冇扣，
  *   幾多粒球答錯 → 示範一次「呢盒係十，十一、十二……」先畀再揀；邊個係答錯 → 讀多次題目；錯兩次啱嗰個發光
  */
@@ -24,21 +27,24 @@ const MonGame = (() => {
   const SHINY_ODDS = 0.25;
 
   // ---------- 記錄（localStorage） ----------
-  const STATS_KEY = 'monStats.v1', DEX_KEY = 'monDex.v1';
+  const STATS_KEY = { mon: 'monStats.v1', shop: 'shopStats.v1' }, DEX_KEY = 'monDex.v1';
   function load(k, d) { try { return JSON.parse(localStorage.getItem(k) || 'null') || d; } catch (e) { return d; } }
   function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   const freshDex = () => ({ caught: {}, pals: {}, evo: {}, eggDay: '', sessions: 0, allStars: 0 });
-  let stats = load(STATS_KEY, {});
+  let mode = 'mon';   // mon = 收集隊、shop = 果子店
+  const allStats = { mon: load(STATS_KEY.mon, {}), shop: load(STATS_KEY.shop, {}) };
+  let stats = allStats.mon;
   let dex = Object.assign(freshDex(), load(DEX_KEY, {}));
-  const blankStat = () => ({ count: 0, countOk: 0, which: 0, whichOk: 0, ones: 0 });
-  const st = (n) => Object.assign(blankStat(), stats[n]);
+  const blankStat = () => ({ count: 0, countOk: 0, which: 0, whichOk: 0, ones: 0, make: 0, makeOk: 0, add: 0, addOk: 0, loose1: 0 });
+  const st = (n, S) => Object.assign(blankStat(), (S || stats)[n]);
   function record(n, kind, firstTry) {
     const s = stats[n] = st(n);
     s[kind]++;
     if (firstTry) s[kind + 'Ok']++;
-    store(STATS_KEY, stats);
+    store(STATS_KEY[mode], stats);
   }
-  function recordOnes(n) { const s = stats[n] = st(n); s.ones++; store(STATS_KEY, stats); }
+  function recordOnes(n) { const s = stats[n] = st(n); s.ones++; store(STATS_KEY[mode], stats); }
+  function recordLoose1(n) { const s = stats[n] = st(n); s.loose1++; store(STATS_KEY[mode], stats); }
   const saveDex = () => store(DEX_KEY, dex);
   const evoLv = (sp) => dex.evo[sp] === true ? 1 : (+dex.evo[sp] || 0);   // 舊版存 true = Lv1
   const today = () => { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
@@ -52,15 +58,19 @@ const MonGame = (() => {
     return bag.slice(0, n);
   }
   function chooseNums(kind, pool, n) {
-    const pri = shuffle(pool.filter((x) => U.focus.includes(x) && st(x)[kind + 'Ok'] < 2)).slice(0, n - 1);
-    const rest = fromBag('monBag_' + kind + '.v1', pool.filter((x) => !pri.includes(x)), n - pri.length);
+    const focus = mode === 'shop' ? U.shop.focus : U.focus;
+    const pri = shuffle(pool.filter((x) => focus.includes(x) && st(x)[kind + 'Ok'] < 2)).slice(0, n - 1);
+    const rest = fromBag('monBag_' + (mode === 'shop' ? 'sh' : '') + kind + '.v1', pool.filter((x) => !pri.includes(x)), n - pri.length);
     return shuffle([...pri, ...rest]);
   }
 
   // ---------- 揀邊隻野生怪獸出現 ----------
-  const caughtWild = () => U.wild.filter((id) => dex.caught[id]);
+  // 每個 game 有自己 12 隻會出現；圖鑑 = 兩邊加埋 24 格
+  const DEX_ALL = U.wild.concat(U.wild2);
+  const POOL = () => mode === 'shop' ? U.wild2 : U.wild;
+  const caughtWild = () => POOL().filter((id) => dex.caught[id]);
   function pickNew() {
-    const left = U.wild.filter((id) => !dex.caught[id]);
+    const left = POOL().filter((id) => !dex.caught[id]);
     if (!left.length) return null;
     const bag = left.flatMap((id) => U.rare.includes(id) ? [id] : [id, id, id]);
     return pick(bag);
@@ -78,7 +88,7 @@ const MonGame = (() => {
     const nw = want ? pickNew() : null;
     if (nw) return nw;
     const old = caughtWild();
-    return old.length ? pick(old) : (pickNew() || pick(U.wild));
+    return old.length ? pick(old) : (pickNew() || pick(POOL()));
   }
 
   // ---------- DOM ----------
@@ -160,18 +170,19 @@ const MonGame = (() => {
   const meterFull = () => !meterEl.querySelector('.mn-cell:not(.on)');
 
   // ---------- 球盒（十格框 2 × 5）+ 散球 ----------
-  const BALL = MonArt.ball();
+  const BALL = MonArt.ball(), BERRY = MonArt.berry();
+  let ITEM = BALL;   // 盒入面裝咩：收集隊 = 星星球、果子店 = 果
   function boxEl(filled, cls) {
     const b = document.createElement('div');
     b.className = 'mn-box' + (cls ? ' ' + cls : '');
-    put(b, Array.from({ length: 10 }, (_, i) => `<span class="mn-slot">${i < filled ? BALL : ''}</span>`).join('') + '<b class="mn-ten">10</b>');
+    put(b, Array.from({ length: 10 }, (_, i) => `<span class="mn-slot">${i < filled ? ITEM : ''}</span>`).join('') + '<b class="mn-ten">10</b>');
     if (filled >= 10) b.classList.add('full');
     return b;
   }
   function looseEl(k, cls) {
     const t = document.createElement('div');
     t.className = 'mn-loose' + (cls ? ' ' + cls : '');
-    put(t, Array.from({ length: k }, () => `<span class="mn-lb">${BALL}</span>`).join(''));
+    put(t, Array.from({ length: k }, () => `<span class="mn-lb">${ITEM}</span>`).join(''));
     return t;
   }
   // 一堆球：有盒（= 十）+ k 粒散球
@@ -187,8 +198,13 @@ const MonGame = (() => {
   function start(opts) {
     const tk = ++token;
     Sound.clear();
+    mode = opts && opts.game === 'shop' ? 'shop' : 'mon';
+    stats = allStats[mode];
+    ITEM = mode === 'shop' ? BERRY : BALL;
+    put($('#mon-bg'), mode === 'shop' ? MonArt.shopBackground() : MonArt.background());
     reset();
-    run(tk, (opts && opts.from) || 1);
+    screen.dataset.game = mode;
+    (mode === 'shop' ? runShop : run)(tk, (opts && opts.from) || 1);
   }
 
   async function run(tk, from) {
@@ -230,6 +246,11 @@ const MonGame = (() => {
       }
     }
     if (tk !== token) return;
+    await wrapUp(tk);
+  }
+
+  // 兩個 game 共用嘅尾段：星星全滿 → 孵蛋 → 圖鑑 → 拍檔進化 → 拜拜
+  async function wrapUp(tk) {
     if (meterFull()) {
       dex.allStars++;
       saveDex();
@@ -247,6 +268,175 @@ const MonGame = (() => {
     await partnerGrow(tk);
     if (tk !== token) return;
     await finale(tk);
+  }
+
+  // ---------- 怪獸果子店 ----------
+  async function runShop(tk, from) {
+    sessionNew = [];
+    fails = 0;
+    planCatches();
+    Sound.sfx.whoosh();
+    await wait(700);
+    if (tk !== token) return;
+    await Sound.say(['sh_hi', { pause: 250 }, 'sh_rule', { pause: 300 }]);
+    if (tk !== token) return;
+    await pickPal(tk);
+    if (tk !== token) return;
+    buildMeter(STARS);
+    let ci = 0;
+    if (from <= 1) {
+      // 一盒 = 十粒果（唔使撳，睇住佢發光）
+      play.className = 'mode-fill';
+      const box = boxEl(10, 'big');
+      play.replaceChildren(box);
+      restart(box, 'in');
+      await sayMin([{ pause: 300 }, { fn: () => { restart(box, 'glow'); Sound.sfx.hatch(); } }, 'sh_box', { pause: 300 }], 2000);
+      if (tk !== token) return;
+      play.replaceChildren();
+    }
+    if (from <= 2) {
+      const nums = chooseNums('make', U.shop.make, COUNT);
+      await Sound.say([{ pause: 200 }, 'sh_s1', { pause: 200 }]);
+      for (const n of nums) {
+        if (tk !== token) return;
+        const id = nextWild(ci++);
+        const first = await makeOrder(n, tk, id);
+        if (tk !== token) return;
+        await catchOne(tk, id, first);
+      }
+    } else ci = COUNT;
+    if (tk !== token) return;
+    if (from <= 3) {
+      const nums = chooseNums('add', U.shop.add, WHICH);
+      await Sound.say([{ pause: 200 }, 'sh_s2', { pause: 250 }]);
+      for (const n of nums) {
+        if (tk !== token) return;
+        const first = await askCount(n, tk, { kind: 'add', eq: true });
+        if (tk !== token) return;
+        await catchOne(tk, nextWild(ci++), first);
+      }
+    }
+    if (tk !== token) return;
+    await wrapUp(tk);
+  }
+
+  // 托盤入面數：每盒發光讀「十、二十」→ 散果逐粒「十一、十二……」
+  function trayCount(g) {
+    const boxes = [...g.querySelectorAll('.mn-box')], lbs = [...g.querySelectorAll('.mn-lb')];
+    const items = [];
+    boxes.forEach((bx, i) => items.push({ fn: () => restart(bx, 'glow') }, 'yue_' + (10 * (i + 1)), { pause: 150 }));
+    lbs.forEach((lb, i) => items.push({ fn: () => { lbs.forEach((x) => x.classList.remove('lit')); restart(lb, 'lit'); Sound.sfx.pop(); } }, 'yue_' + (10 * boxes.length + i + 1), { pause: 120 }));
+    return items;
+  }
+
+  // ① 砌果：客人要 n 粒 → 由貨架拎盒（十）+ 散果（最多 9 粒，所以一定要用盒）；回傳 true = 第一下就啱（冇放多咗）
+  function makeOrder(n, tk, id) {
+    return new Promise((resolve) => {
+      play.className = 'mode-shop';
+      const top = document.createElement('div');
+      top.className = 'sh-top';
+      const cust = document.createElement('div');
+      cust.className = 'sh-cust';
+      put(cust, MonArt.monster(id));
+      const bub = document.createElement('div');
+      bub.className = 'sh-bub';
+      put(bub, `<b></b><span class="sh-bi">${BERRY}</span>`);
+      bub.querySelector('b').textContent = String(n);
+      top.append(cust, bub);
+      const tray = document.createElement('div');
+      tray.className = 'sh-tray';
+      const shelf = document.createElement('div');
+      shelf.className = 'sh-shelf';
+      const mk = (cls, kind, child) => {
+        const b = document.createElement('button');
+        b.className = cls;
+        b.dataset.kind = kind;
+        if (typeof child === 'string') put(b, child); else b.appendChild(child);
+        b.addEventListener('pointerdown', (ev) => { ev.preventDefault(); add(b); });
+        return b;
+      };
+      const boxBtns = [0, 1].map(() => mk('sh-boxbtn', 'box', boxEl(10)));
+      const pile = document.createElement('div');
+      pile.className = 'sh-pile';
+      const looseBtns = Array.from({ length: 9 }, () => mk('sh-lbtn', 'loose', BERRY));
+      pile.append(...looseBtns);
+      shelf.append(...boxBtns, pile);
+      play.replaceChildren(top, tray, shelf);
+      restart(top, 'in');
+      Sound.sfx.bubble();
+
+      let boxes = 0, loose = 0, misses = 0, taps = 0, idles = 0, done = false;
+      const hist = [];
+      const prompt = ['sh_want', { pause: 60 }, 'yue_' + n, { pause: 60 }, 'sh_berries'];
+      const total = () => boxes * 10 + loose;
+      const nextTarget = () => (boxes < Math.floor(n / 10) ? boxBtns : looseBtns).find((b) => !b.classList.contains('used')) || null;
+      function renderTray() {
+        const g = document.createElement('div');
+        g.className = 'mn-group';
+        for (let i = 0; i < boxes; i++) g.appendChild(boxEl(10));
+        if (loose) g.appendChild(looseEl(loose));
+        tray.replaceChildren(g);
+        return g;
+      }
+      function idle() {
+        Sound.say(prompt);
+        const t = nextTarget();
+        if (t && ++idles >= 2) restart(t, 'hint');
+      }
+      function add(btn) {
+        if (done || lock || tk !== token || btn.classList.contains('used')) return;
+        clearTimeout(idleTimer);
+        const kind = btn.dataset.kind;
+        if (taps++ === 0 && kind === 'loose') recordLoose1(n);   // 第一下拎散果 = 可能仲係由一數起
+        const from = btn.getBoundingClientRect();
+        btn.classList.add('used');
+        btn.classList.remove('hint');
+        hist.push(btn);
+        if (kind === 'box') boxes++; else loose++;
+        const g = renderTray();
+        flip(kind === 'box' ? g.querySelectorAll('.mn-box')[boxes - 1] : g.querySelectorAll('.mn-lb')[loose - 1], from, 420);
+        Sound.sfx.pop();
+        Sound.clear();
+        const t = total();
+        if (t === n) {
+          done = true;
+          dbg.target = null;
+          record(n, 'make', misses === 0);
+          if (misses === 0) gainStar(bub);
+          shelf.classList.add('fade');
+          pose(palEl, 'hop', 800);
+          Sound.say([{ pause: 300 }, ...trayCount(g), { pause: 250 }, { fn: () => { restart(cust, 'happy'); Sound.sfx.hatch(); burstAt(center(cust)); } }, 'sh_thanks', { pause: 300 }])
+            .then(() => resolve(misses === 0));
+          return;
+        }
+        if (t < n) {
+          Sound.say(['yue_' + t]);
+          dbg.target = nextTarget();
+          armIdle(idle, 10000);
+          return;
+        }
+        // 太多：冇扣，放返最後一個落去；第二次就成盤清返 + 提示「先拎一盒」
+        misses++;
+        lock = true;
+        const my = ++armId;
+        Sound.sfx.soft();
+        restart(bub, 'wiggle');
+        const back = () => {
+          const list = misses >= 2 ? hist.splice(0) : [hist.pop()];
+          list.forEach((b) => { b.classList.remove('used'); if (b.dataset.kind === 'box') boxes--; else loose--; restart(b, 'back'); });
+          renderTray();
+          const tg = nextTarget();
+          if (misses >= 2 && tg) tg.classList.add('hint');
+          dbg.target = tg;
+        };
+        Sound.say([...(t <= 20 ? ['yue_' + t, { pause: 200 }] : []), 'sh_too_many', { pause: 150 }, { fn: back }, { pause: 250 }, ...(misses >= 2 ? ['sh_hint', { pause: 250 }] : []), ...prompt])
+          .then(() => { if (armId === my) lock = false; armIdle(idle, 10000); });
+      }
+      arm();
+      dbg.target = nextTarget();
+      Sound.say([{ pause: 300 }, ...prompt]);
+      armIdle(idle, 10000);
+    });
   }
 
   // 揀拍檔：冇啱錯（俾 Luca 有選擇權）；進化咗嘅會見到進化造型
@@ -362,22 +552,33 @@ const MonGame = (() => {
   }
 
   // ② 幾多粒球：一盒 + k 粒散球 → 揀數字卡；回傳 true = 第一下就啱
-  function askCount(n, tk) {
+  // opts.eq（果子店 ② 十加幾）：上面多一行「10 + k = ?」，問「十加 k 係幾多？」
+  function askCount(n, tk, opts) {
+    opts = opts || {};
+    const kind = opts.kind || 'count';
     return new Promise((resolve) => {
       const k = n - 10;
-      play.className = 'mode-count';
+      play.className = 'mode-count' + (opts.eq ? ' eq' : '');
       const group = groupEl(true, k, 'big');
       const row = document.createElement('div');
       row.className = 'mn-nums';
-      play.replaceChildren(group, row);
+      let eqEl = null;
+      if (opts.eq) {
+        eqEl = document.createElement('div');
+        eqEl.className = 'sh-eq';
+        put(eqEl, `<span>10</span><i>+</i><span></span><i>=</i><span class="q">?</span>`);
+        eqEl.children[2].textContent = String(k);
+        play.replaceChildren(eqEl, group, row);
+        restart(eqEl, 'in');
+      } else play.replaceChildren(group, row);
       restart(group, 'in');
       const ones = k === 0 ? 1 : k;
       const near = n >= 14 ? n - 1 : n === 10 ? 11 : pick([n - 1, n + 1]);
-      const opts = shuffle([n, ones, near]);
-      const prompt = ['mn_howmany'];
+      const choices = shuffle([n, ones, near]);
+      const prompt = opts.eq ? ['sh_eq_a', { pause: 60 }, 'yue_' + k, { pause: 60 }, 'sh_eq_b'] : ['mn_howmany'];
       let misses = 0, done = false;
       arm();
-      const btns = opts.map((v, i) => {
+      const btns = choices.map((v, i) => {
         const c = document.createElement('button');
         c.className = 'mn-num';
         c.textContent = String(v);
@@ -393,8 +594,9 @@ const MonGame = (() => {
             Sound.clear();
             btns.forEach((x) => { x.classList.remove('hint'); if (x !== c) x.classList.add('fade'); });
             restart(c, 'right');
-            record(n, 'count', misses === 0);
+            record(n, kind, misses === 0);
             if (misses === 0) gainStar(c);
+            if (eqEl) { const q = eqEl.querySelector('.q'); q.textContent = String(n); restart(q, 'lit'); }
             Sound.sfx.pop();
             pose(palEl, 'hop', 800);
             Sound.say([{ pause: 200 }, 'yue_' + n, { pause: 300 }, ...countOnItems(group, n), { pause: 200 }, praise(), { pause: 250 }])
@@ -602,10 +804,10 @@ const MonGame = (() => {
 
   // ---------- ④ 孵蛋：盒（= 十）+ 撳蛋由十一數落去 ----------
   async function eggRun(tk) {
-    const n = chooseNums('egg', U.nums.filter((x) => x > 10), 1)[0] || 12;
+    const n = chooseNums('egg', (mode === 'shop' ? U.shop.make : U.nums).filter((x) => x > 10), 1)[0] || 12;
     const daily = dex.eggDay !== today();
     const nw = daily ? pickNew() : null;
-    const id = nw || (caughtWild().length ? pick(caughtWild()) : pick(U.wild));
+    const id = nw || (caughtWild().length ? pick(caughtWild()) : pick(POOL()));
     const shiny = !nw && Math.random() < 0.3;
     play.className = 'mode-egg';
     const wrap = document.createElement('div');
@@ -640,7 +842,7 @@ const MonGame = (() => {
         restart(egg, 'wob');
         const lb = document.createElement('span');
         lb.className = 'mn-lb';
-        put(lb, BALL);
+        put(lb, ITEM);
         tray.appendChild(lb);
         restart(lb, 'lit');
         Sound.sfx.pop();
@@ -679,7 +881,7 @@ const MonGame = (() => {
 
   // ---------- 圖鑑：12 格，未捉到 = 黑影 ----------
   function dexMarkup(highlight) {
-    return `<div class="mn-dex">${U.wild.map((id) => {
+    return `<div class="mn-dex">${DEX_ALL.map((id) => {
       const c = dex.caught[id];
       const cls = ['mn-dexcell', c ? 'got' : 'shadow', c && c.shiny ? 'shiny' : '', highlight && highlight.includes(id) ? 'new' : ''].join(' ');
       return `<span class="${cls}" data-id="${id}"><span class="dx-art${c && c.shiny ? ' is-shiny' : ''}">${MonArt.monster(id, { shiny: !!(c && c.shiny) })}</span><span class="dx-name">${c ? U.names[id] : '？？？'}</span></span>`;
@@ -690,7 +892,7 @@ const MonGame = (() => {
     play.className = 'mode-dex';
     put(play, dexMarkup(sessionNew));
     play.querySelectorAll('.mn-dexcell').forEach((x, i) => { x.style.animationDelay = i * 60 + 'ms'; });
-    const full = U.wild.every((id) => dex.caught[id]);
+    const full = DEX_ALL.every((id) => dex.caught[id]);
     await sayMin([{ pause: 300 }, 'mn_dex', { pause: 300 }, full ? 'mn_dex_full' : 'mn_dex_left', { pause: 400 }], 3500);
     if (tk !== token) return;
     play.replaceChildren();
@@ -745,18 +947,18 @@ const MonGame = (() => {
 
   // ---------- 主選單：圖鑑進度（撳個掣開圖鑑睇） ----------
   function renderMenu() {
-    const row = document.querySelector('.stickers[data-game="mon"]');
-    if (!row) return;
-    const got = U.wild.filter((id) => dex.caught[id]).length;
-    const shinies = U.wild.filter((id) => dex.caught[id] && dex.caught[id].shiny).length;
+    const got = DEX_ALL.filter((id) => dex.caught[id]).length;
+    const shinies = DEX_ALL.filter((id) => dex.caught[id] && dex.caught[id].shiny).length;
+    document.querySelectorAll('.stickers[data-game="mon"], .stickers[data-game="shop"]').forEach((row) => {
     row.replaceChildren();
     const pill = document.createElement('button');
     pill.className = 'mn-pill';
     pill.setAttribute('aria-label', '睇怪獸圖鑑');
     put(pill, `<span class="mp-book">📖</span><b></b>`);
-    pill.querySelector('b').textContent = got + ' / ' + U.wild.length + (shinies ? '  ✨' + shinies : '');
+    pill.querySelector('b').textContent = got + ' / ' + DEX_ALL.length + (shinies ? '  ✨' + shinies : '');
     pill.addEventListener('click', (e) => { e.stopPropagation(); openDex(); });
     row.appendChild(pill);
+    });
   }
 
   // 圖鑑睇板：上面 4 隻拍檔（見到進化程度）、下面 12 格；撳捉到嘅會讀名
@@ -791,15 +993,19 @@ const MonGame = (() => {
   // ---------- 家長區 ----------
   function stop() { token++; clearTimeout(idleTimer); closeDex(); document.querySelectorAll('.mn-fly').forEach((e) => e.remove()); }
   addEventListener('panel-open', () => { if (document.body.dataset.screen === 'mon') stop(); });
-  addEventListener('panel-close', (e) => { if (e.detail === 'mon' && !document.body.classList.contains('mon-done')) start(); });
+  addEventListener('panel-close', (e) => { if (e.detail === 'mon' && !document.body.classList.contains('mon-done')) start({ game: mode }); });
 
-  function renderStats(tbody, info) {
+  function renderStats(tbody, info, game) {
+    const shop = game === 'shop', S = allStats[shop ? 'shop' : 'mon'];
     tbody.replaceChildren();
     const f = (s, k) => s[k] ? s[k + 'Ok'] + ' / ' + s[k] : '—';
-    for (const n of U.nums) {
-      const s = st(n);
+    const times = (v) => v ? v + ' 次' : '—';
+    const focus = shop ? U.shop.focus : U.focus;
+    for (const n of shop ? U.shop.make : U.nums) {
+      const s = st(n, S);
       const tr = document.createElement('tr');
-      for (const v of [(U.focus.includes(n) ? '★ ' : '') + n, f(s, 'count'), f(s, 'which'), s.ones ? s.ones + ' 次' : '—']) {
+      const cols = shop ? [f(s, 'make'), f(s, 'add'), times(s.loose1), times(s.ones)] : [f(s, 'count'), f(s, 'which'), times(s.ones)];
+      for (const v of [(focus.includes(n) ? '★ ' : '') + n, ...cols]) {
         const td = document.createElement('td');
         td.textContent = v;
         tr.appendChild(td);
@@ -807,13 +1013,19 @@ const MonGame = (() => {
       tbody.appendChild(tr);
     }
     if (info) {
-      const got = U.wild.filter((id) => dex.caught[id]).length;
-      const sh = U.wild.filter((id) => dex.caught[id] && dex.caught[id].shiny).length;
-      info.textContent = '圖鑑 ' + got + ' / ' + U.wild.length + '（閃閃 ' + sh + '）　玩咗 ' + dex.sessions + ' 局、星星全滿 ' + dex.allStars + ' 局　｜ 拍檔：' +
+      const got = DEX_ALL.filter((id) => dex.caught[id]).length;
+      const sh = DEX_ALL.filter((id) => dex.caught[id] && dex.caught[id].shiny).length;
+      info.textContent = '圖鑑 ' + got + ' / ' + DEX_ALL.length + '（閃閃 ' + sh + '）　兩個 game 共玩咗 ' + dex.sessions + ' 局、星星全滿 ' + dex.allStars + ' 局　｜ 拍檔：' +
         U.partners.map((sp) => U.names[sp] + ' ' + (dex.pals[sp] || 0) + (evoLv(sp) ? '（進化 Lv' + evoLv(sp) + '）' : '')).join('、');
     }
   }
-  function resetStats() { stats = {}; store(STATS_KEY, stats); ['count', 'which', 'egg'].forEach((k) => store('monBag_' + k + '.v1', [])); }
+  function resetStats(game) {
+    const g = game === 'shop' ? 'shop' : 'mon';
+    allStats[g] = {};
+    if (mode === g) stats = allStats[g];
+    store(STATS_KEY[g], {});
+    (g === 'shop' ? ['shmake', 'shadd', 'shegg'] : ['count', 'which', 'egg']).forEach((k) => store('monBag_' + k + '.v1', []));
+  }
   function resetDex() { dex = freshDex(); saveDex(); renderMenu(); }
 
   renderMenu();
