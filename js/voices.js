@@ -532,6 +532,39 @@
   clips.yue_bye  = { lang: 'yue', text: '恐龍BB要瞓覺喇，拜拜！' };
   clips.en_bye   = { lang: 'en',  text: 'Good night, little dinos!' };
 
+  // ---- 赤洲化石獵人（3D，fossil.html；見龍在田展覽）----
+  clips.fs_hi      = { lang: 'yue', text: '化石獵人，出發！我哋去赤洲搵恐龍化石！' };
+  clips.fs_story1  = { lang: 'yue', text: '好耐好耐以前，赤洲有一隻好大嘅長頸恐龍。' };
+  clips.fs_story2  = { lang: 'yue', text: '恐龍好老喇，喺河邊瞓低咗。' };
+  clips.fs_story3  = { lang: 'yue', text: '落大雨，河水沖散咗啲骨頭。' };
+  clips.fs_story4  = { lang: 'yue', text: '啲沙同泥，一層一層冚住啲骨。' };
+  clips.fs_story5  = { lang: 'yue', text: '過咗好耐好耐，骨頭變成石頭，就係化石！' };
+  clips.fs_find    = { lang: 'yue', text: '化石就喺呢個島上面。撳閃閃嘅地方去搵啦！' };
+  clips.fs_dig     = { lang: 'yue', text: '撳啲石頭，掘開佢！' };
+  clips.fs_got     = { lang: 'yue', text: '搵到喇！' };
+  clips.fs_b_femur = { lang: 'yue', text: '大髀骨' };
+  clips.fs_b_tail  = { lang: 'yue', text: '尾巴骨' };
+  clips.fs_b_ilium = { lang: 'yue', text: '腰骨' };
+  clips.fs_b_pubis = { lang: 'yue', text: '盆骨' };
+  clips.fs_all     = { lang: 'yue', text: '四舊骨搵齊晒！我哋砌返隻恐龍出嚟。' };
+  clips.fs_ghost   = { lang: 'yue', text: '呢個係恐龍嘅骨架。我哋啲骨放喺邊度呢？' };
+  clips.fs_where_femur = { lang: 'yue', text: '大髀骨放喺邊度呢？' };
+  clips.fs_where_tail  = { lang: 'yue', text: '尾巴骨放喺邊度呢？' };
+  clips.fs_where_ilium = { lang: 'yue', text: '腰骨放喺邊度呢？' };
+  clips.fs_where_pubis = { lang: 'yue', text: '盆骨放喺邊度呢？' };
+  clips.fs_no      = { lang: 'yue', text: '唔係呢度喎。' };
+  clips.fs_hint_femur = { lang: 'yue', text: '大髀骨長長哋，喺後腳最上面。' };
+  clips.fs_hint_tail  = { lang: 'yue', text: '尾巴骨喺尾巴開頭，屁股後面。' };
+  clips.fs_hint_ilium = { lang: 'yue', text: '腰骨扁扁哋，喺屁股最上面。' };
+  clips.fs_hint_pubis = { lang: 'yue', text: '盆骨斜斜哋，喺肚仔後面。' };
+  clips.fs_yes     = { lang: 'yue', text: '啱喇！' };
+  clips.fs_guess   = { lang: 'yue', text: '得四舊骨，科學家都估到成隻恐龍係咩樣！' };
+  clips.fs_alive   = { lang: 'yue', text: '嘩！恐龍活返喇！' };
+  clips.fs_big     = { lang: 'yue', text: '佢好大好大，大過一架巴士！' };
+  clips.fs_walk    = { lang: 'yue', text: '撳個島，叫佢行過去啦！' };
+  clips.fs_end     = { lang: 'yue', text: '呢隻就係香港第一隻恐龍，喺赤洲發現㗎！' };
+  clips.fs_bye     = { lang: 'yue', text: '下次去展覽，記得搵返呢四舊骨呀！拜拜！' };
+
   root.VOICES = {
     audioDir: 'audio/',
     ext: '.mp3',

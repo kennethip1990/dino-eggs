@@ -9,6 +9,8 @@
 - 一節 5 局（約 3–5 分鐘），玩完恐龍們會去瞓覺
 - 純 HTML / CSS / JS，唔使 build；所有圖都係原創 SVG
 
+**🦕 赤洲化石獵人（3D）：** 跟 2026-11 香港文物探知館「見龍在田」展覽。故事（化石點嚟：瞓低 → 水沖 → 泥冚 → 變石）→ 喺 3D 赤洲島掘 4 舊骨（大髀骨 / 尾巴骨 / 腰骨 / 盆骨 = 股骨 / 尾椎 / 髂骨 / 恥骨）→ 放返入骨架（第一下就啱 = 一粒星，只加唔扣；錯咗聽提示先畀再撳）→ 恐龍活返，撳個島叫佢行。固定鏡頭 + 撳，冇搖桿。語音 key `fs_*`。記錄喺 localStorage `fossil-v1`（暫時未入家長區）。
+
 ---
 
 ## 檔案結構
@@ -56,6 +58,10 @@ js/light-words.js       ★ 光之巨人嘅字表（W-controlled / R-controlled 
 js/light.js             光之巨人 Luca 救援隊遊戲流程（揀 Type / 光能量只加唔扣 / 點燈 / 光球 / 光之橋 / 送 BB 怪獸返屋企 / 勳章 / 3 + 1 個結局）
 js/light-art.js         光之巨人 Luca、BB 怪獸 Pip + 媽媽、小鎮背景、15 樣嘢 SVG（全部原創）
 css/light.css           光之巨人畫面 + 主選單 9 張卡（5 + 4；直向 3 + 3 + 3）
+fossil.html             🦕 赤洲化石獵人（3D，獨立一頁；主選單左下角「3D」掣入）
+js/fossil.js            赤洲化石獵人流程 + 所有 3D model（code 砌，原創；ES module）；fossil.html?fast = 測試唔等語音，&stage=build 直接去砌骨
+css/fossil.css          主選單 3D 入口掣 + fossil.html 畫面
+vendor/three.module.min.js  three.js r170（MIT，licence 喺 vendor/THREE-LICENSE.txt）
 js/time-words.js        ★ 恐龍時光機嘅字表（單元六：其他；詞 / 字粒 / 圖 / 易撈亂嘅詞）
 js/time.js              恐龍時光機遊戲流程（揀恐龍拍檔 / 化石只加唔扣 / 聽字揀卡 / 睇圖揀字 / 砌詞 / 送 BB 恐龍返屋企 / 勳章 / 3 個結局）
 js/time-art.js          時光機、11 個詞語圖、化石、HUD、煙花 / 生日蛋糕 SVG（全部原創；恐龍借 art.js）
@@ -1633,6 +1639,42 @@ python -m http.server 8765
 | `sh_eq_b.mp3` | 廣東話 | 係幾多？ |
 | `sh_s1.mp3` | 廣東話 | 有客人嚟喇！ |
 | `sh_s2.mp3` | 廣東話 | 計數時間！十加幾，係幾多？ |
+
+**赤洲化石獵人（3D）**
+
+| 檔名 | 語言 | 要讀 |
+|---|---|---|
+| `fs_hi.mp3` | 廣東話 | 化石獵人，出發！我哋去赤洲搵恐龍化石！ |
+| `fs_find.mp3` | 廣東話 | 化石就喺呢個島上面。撳閃閃嘅地方去搵啦！ |
+| `fs_dig.mp3` | 廣東話 | 撳啲石頭，掘開佢！ |
+| `fs_got.mp3` | 廣東話 | 搵到喇！ |
+| `fs_b_femur.mp3` | 廣東話 | 大髀骨 |
+| `fs_b_tail.mp3` | 廣東話 | 尾巴骨 |
+| `fs_b_ilium.mp3` | 廣東話 | 腰骨 |
+| `fs_b_pubis.mp3` | 廣東話 | 盆骨 |
+| `fs_all.mp3` | 廣東話 | 四舊骨搵齊晒！我哋砌返隻恐龍出嚟。 |
+| `fs_ghost.mp3` | 廣東話 | 呢個係恐龍嘅骨架。我哋啲骨放喺邊度呢？ |
+| `fs_where_femur.mp3` | 廣東話 | 大髀骨放喺邊度呢？ |
+| `fs_where_tail.mp3` | 廣東話 | 尾巴骨放喺邊度呢？ |
+| `fs_where_ilium.mp3` | 廣東話 | 腰骨放喺邊度呢？ |
+| `fs_where_pubis.mp3` | 廣東話 | 盆骨放喺邊度呢？ |
+| `fs_no.mp3` | 廣東話 | 唔係呢度喎。 |
+| `fs_hint_femur.mp3` | 廣東話 | 大髀骨長長哋，喺後腳最上面。 |
+| `fs_hint_tail.mp3` | 廣東話 | 尾巴骨喺尾巴開頭，屁股後面。 |
+| `fs_hint_ilium.mp3` | 廣東話 | 腰骨扁扁哋，喺屁股最上面。 |
+| `fs_hint_pubis.mp3` | 廣東話 | 盆骨斜斜哋，喺肚仔後面。 |
+| `fs_yes.mp3` | 廣東話 | 啱喇！ |
+| `fs_guess.mp3` | 廣東話 | 得四舊骨，科學家都估到成隻恐龍係咩樣！ |
+| `fs_alive.mp3` | 廣東話 | 嘩！恐龍活返喇！ |
+| `fs_big.mp3` | 廣東話 | 佢好大好大，大過一架巴士！ |
+| `fs_walk.mp3` | 廣東話 | 撳個島，叫佢行過去啦！ |
+| `fs_end.mp3` | 廣東話 | 呢隻就係香港第一隻恐龍，喺赤洲發現㗎！ |
+| `fs_bye.mp3` | 廣東話 | 下次去展覽，記得搵返呢四舊骨呀！拜拜！ |
+| `fs_story1.mp3` | 廣東話 | 好耐好耐以前，赤洲有一隻好大嘅長頸恐龍。 |
+| `fs_story2.mp3` | 廣東話 | 恐龍好老喇，喺河邊瞓低咗。 |
+| `fs_story3.mp3` | 廣東話 | 落大雨，河水沖散咗啲骨頭。 |
+| `fs_story4.mp3` | 廣東話 | 啲沙同泥，一層一層冚住啲骨。 |
+| `fs_story5.mp3` | 廣東話 | 過咗好耐好耐，骨頭變成石頭，就係化石！ |
 
 ## 技術備註
 - **聲音 queue**：所有語音同一條 queue，一段播完先播下一段；廣東話同英文之間停 300ms（`voices.js` 嘅 `gapMs`）

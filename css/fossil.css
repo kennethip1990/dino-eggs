@@ -1,0 +1,115 @@
+/* 赤洲化石獵人（3D）— 主選單入口掣 + fossil.html 畫面 */
+
+/* ---- 主選單：左下角 3D 入口 ---- */
+#go-fossil {
+  position: absolute; left: max(12px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom));
+  width: 92px; height: 92px; border-radius: 50%; z-index: 12;
+  display: flex; align-items: center; justify-content: center; text-decoration: none;
+  background: radial-gradient(circle at 35% 30%, #fff3d6, #f2b56b 70%); border: 4px solid #fff;
+  box-shadow: 0 6px 0 #c9823a, 0 10px 18px rgba(0, 0, 0, .25);
+  font-size: 46px; line-height: 1; animation: fsbob 2.4s ease-in-out infinite;
+}
+#go-fossil::after {
+  content: "3D"; position: absolute; right: -8px; top: -6px; padding: 2px 8px; border-radius: 12px;
+  background: #e2553f; color: #fff; font: 800 16px/1.3 system-ui, sans-serif; border: 2px solid #fff;
+}
+#go-fossil:active { transform: translateY(4px); box-shadow: 0 2px 0 #c9823a; }
+@keyframes fsbob { 50% { transform: translateY(-5px); } }
+
+/* ---- fossil.html ---- */
+body.fossil-page {
+  margin: 0; overflow: hidden; position: fixed; inset: 0; touch-action: none;
+  -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+  font-family: system-ui, "PingFang HK", "Noto Sans HK", "Microsoft JhengHei", sans-serif;
+  background: linear-gradient(#8fd0ff, #d9f1ff 62%, #f6fbff);
+  transition: background-color .3s;
+}
+body.fossil-page::before {
+  content: ""; position: absolute; inset: 0; background: linear-gradient(#1c2350, #51407a 70%, #c98a6a);
+  opacity: 0; transition: opacity .32s; pointer-events: none;
+}
+body.fossil-page.night::before { opacity: 1; }
+#fs-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.fossil-page button, .fossil-page a { font-family: inherit; }
+
+#fs-marks { position: absolute; inset: 0; pointer-events: none; }
+.fs-mark {
+  position: absolute; left: 0; top: 0; width: 15vmin; height: 15vmin; padding: 0; border-radius: 50%;
+  border: .9vmin solid #fff; background: rgba(255, 221, 87, .35); pointer-events: auto;
+  box-shadow: 0 0 0 .5vmin rgba(255, 190, 40, .9), 0 0 4vmin rgba(255, 220, 90, .9);
+  font-size: 7vmin; line-height: 1; will-change: transform;
+}
+.fs-mark > span { display: block; animation: fspulse 1.1s ease-in-out infinite; }
+.fs-mark.slot { width: 12.5vmin; height: 12.5vmin; background: rgba(255, 255, 255, .1); border-style: dashed; box-shadow: 0 0 4vmin rgba(120, 220, 255, .9); animation: fsring 1.2s ease-in-out infinite; }
+.fs-mark.no { animation: fsshake .4s; opacity: .25; pointer-events: none; }
+.fs-mark[hidden] { display: none; }
+@keyframes fsring { 50% { box-shadow: 0 0 1.5vmin rgba(120, 220, 255, .9); border-color: #ffe27a; } }
+@keyframes fspulse { 50% { transform: scale(1.25); } }
+@keyframes fsshake { 25% { margin-left: -1.5vmin; } 75% { margin-left: 1.5vmin; } }
+
+#fs-hud[hidden], #fs-card[hidden], #fs-end[hidden], #fs-fail[hidden], #fs-skip[hidden] { display: none; }
+#fs-home {
+  position: absolute; left: max(10px, env(safe-area-inset-left)); top: max(10px, env(safe-area-inset-top));
+  width: 9vmin; height: 9vmin; min-width: 48px; min-height: 48px; border-radius: 50%; border: 3px solid #fff;
+  background: rgba(255, 255, 255, .55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 11.5 12 4l9 7.5M6 10v9h4.5v-5h3v5H18v-9' fill='none' stroke='%235a6a80' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 62% no-repeat;
+  opacity: .8;
+}
+#fs-home.hold { background-color: #ffd36e; transform: scale(1.12); transition: transform .7s linear; }
+#fs-tray {
+  position: absolute; top: max(10px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
+  display: flex; gap: 1.6vmin; padding: 1.2vmin 1.8vmin; border-radius: 3vmin;
+  background: rgba(255, 255, 255, .6); border: 3px solid #fff;
+}
+.fs-slot { width: 11vmin; height: 11vmin; border-radius: 2vmin; background: rgba(90, 106, 128, .16); display: flex; align-items: center; justify-content: center; }
+.fs-slot svg { width: 86%; height: 86%; opacity: .16; filter: grayscale(1); transition: opacity .3s, transform .3s; }
+.fs-slot.got { background: #fff6dc; }
+.fs-slot.got svg { opacity: 1; filter: none; }
+.fs-slot.used { background: #d8f5d0; }
+.fs-slot.ask { animation: fsask .7s ease-in-out infinite; background: #fff; box-shadow: 0 0 0 .7vmin #ffbe28; }
+@keyframes fsask { 50% { transform: scale(1.18) rotate(-4deg); } }
+#fs-stars { position: absolute; right: max(12px, env(safe-area-inset-right)); top: max(12px, env(safe-area-inset-top)); font-size: 6vmin; letter-spacing: .4vmin; }
+#fs-stars span, #fs-end-stars span { opacity: .22; filter: grayscale(1); display: inline-block; transition: opacity .3s, transform .3s; }
+#fs-stars span.on, #fs-end-stars span.on { opacity: 1; filter: none; transform: scale(1.15); }
+#fs-skip {
+  position: absolute; right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom));
+  width: 11vmin; height: 11vmin; border-radius: 50%; border: 3px solid #fff; background: rgba(255, 255, 255, .7); font-size: 5.5vmin;
+}
+
+#fs-cap {
+  position: absolute; left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+  max-width: 78vw; padding: 1.2vmin 3vmin; border-radius: 4vmin; text-align: center;
+  background: rgba(255, 255, 255, .82); color: #33405a; font-size: 3.6vmin; font-weight: 700; line-height: 1.35;
+  pointer-events: none; transition: opacity .25s;
+}
+#fs-cap:empty { opacity: 0; }
+
+#fs-card {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); min-width: 40vmin; padding: 3vmin 5vmin;
+  border-radius: 5vmin; background: #fffdf4; border: 1vmin solid #ffbe28; text-align: center; pointer-events: none;
+  box-shadow: 0 2vmin 5vmin rgba(0, 0, 0, .3); animation: fspop .35s cubic-bezier(.2, 1.6, .4, 1);
+}
+#fs-card-art svg { width: 26vmin; height: 26vmin; }
+#fs-card-name { font-size: 8vmin; font-weight: 800; color: #b5533c; }
+#fs-card-sub { font-size: 3.2vmin; color: #7a8599; }
+@keyframes fspop { from { transform: translate(-50%, -50%) scale(.4); opacity: 0; } }
+
+#fs-start, #fs-end {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5vmin;
+}
+#fs-start { background: rgba(143, 208, 255, .35); }
+.fs-title { font-size: 9vmin; font-weight: 800; color: #fff; text-shadow: 0 .6vmin 0 #b5533c, 0 1vmin 3vmin rgba(0, 0, 0, .35); }
+#fs-go, #fs-again {
+  width: 30vmin; height: 30vmin; border-radius: 50%; border: 1.4vmin solid #fff; background: #6cc04a; color: #fff;
+  font-size: 15vmin; line-height: 1; box-shadow: 0 1.6vmin 0 #3f8a28, 0 2.5vmin 5vmin rgba(0, 0, 0, .3); padding-left: 2.5vmin;
+  animation: fsbob 1.8s ease-in-out infinite;
+}
+#fs-again { width: 20vmin; height: 20vmin; font-size: 10vmin; padding: 0; }
+.fs-back {
+  width: 14vmin; height: 14vmin; border-radius: 50%; border: 1vmin solid #fff; background: rgba(255, 255, 255, .75);
+  display: flex; align-items: center; justify-content: center; font-size: 7vmin; text-decoration: none;
+}
+#fs-end { inset: auto 0 12vmin 0; gap: 2vmin; pointer-events: none; }
+#fs-end > * { pointer-events: auto; }
+#fs-end-stars { font-size: 11vmin; text-shadow: 0 .6vmin 2vmin rgba(0, 0, 0, .25); }
+.fs-end-row { display: flex; gap: 6vmin; align-items: center; }
+#fs-fail { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 5vmin; gap: 3vmin; background: #fff; }

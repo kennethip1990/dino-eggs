@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>赤洲化石獵人</title>
+  <meta name="theme-color" content="#bfe6ff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/fossil.css">
+</head>
+<body class="fossil-page">
+  <canvas id="fs-canvas"></canvas>
+
+  <!-- 閃閃掘骨位 / 砌骨位（跟住 3D 位置郁嘅 HTML 掣，大粒易撳） -->
+  <div id="fs-marks"></div>
+
+  <div id="fs-hud" hidden>
+    <button id="fs-home" aria-label="返主選單（撳實）"></button>
+    <div id="fs-tray"></div>
+    <div id="fs-stars"></div>
+    <button id="fs-skip" hidden aria-label="跳過故事">⏭</button>
+  </div>
+
+  <div id="fs-card" hidden><div id="fs-card-art"></div><div id="fs-card-name"></div><div id="fs-card-sub"></div></div>
+  <div id="fs-cap"></div>
+
+  <div id="fs-start">
+    <div class="fs-title">🦕 赤洲化石獵人</div>
+    <button id="fs-go" aria-label="開始">▶</button>
+    <a class="fs-back" href="index.html" aria-label="返主選單">🏠</a>
+  </div>
+
+  <div id="fs-end" hidden>
+    <div id="fs-end-stars"></div>
+    <div class="fs-end-row">
+      <button id="fs-again" aria-label="再玩">🔁</button>
+      <a class="fs-back" href="index.html" aria-label="返主選單">🏠</a>
+    </div>
+  </div>
+
+  <div id="fs-fail" hidden>呢部機開唔到 3D 😢<br><a href="index.html">返主選單</a></div>
+
+  <script src="js/version.js"></script>
+  <script src="js/words.js"></script>
+  <script src="js/family.js"></script>
+  <script src="js/animals.js"></script>
+  <script src="js/jedi-words.js"></script>
+  <script src="js/mecha-words.js"></script>
+  <script src="js/robo-words.js"></script>
+  <script src="js/light-words.js"></script>
+  <script src="js/time-words.js"></script>
+  <script src="js/mon-data.js"></script>
+  <script src="js/voices.js"></script>
+  <script src="js/audio.js"></script>
+  <script type="module" src="js/fossil.js"></script>
+</body>
+</html>

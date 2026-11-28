@@ -11,6 +11,7 @@ const CORE = [
   'js/jedi-art.js', 'js/jedi.js',
   'js/mecha-art.js', 'js/mecha.js',
   'js/robo-art.js', 'js/robo.js', 'js/light-art.js', 'js/light.js', 'js/time-art.js', 'js/time.js', 'js/mon-art.js', 'js/mon.js',
+  'fossil.html', 'css/fossil.css', 'js/fossil.js', 'vendor/three.module.min.js',
   'js/endings-art.js', 'js/rewards.js', 'js/boss.js', 'js/game.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'
 ];
