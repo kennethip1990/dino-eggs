@@ -15,6 +15,9 @@
     partners: ['cat', 'bunny', 'fish', 'bear'],
     wild: ['fire', 'snail', 'star', 'bat', 'penguin', 'sheep', 'mush', 'bee', 'turtle', 'deer', 'jelly', 'dragon'],
     rare: ['jelly', 'dragon', 'deer'],   // 出現機會細啲
-    evolveAt: 3                         // 同一隻拍檔玩夠 3 次就進化
+    evolveAt: 3,                        // 同一隻拍檔玩夠 3 次就進化（Lv1：光環 + 翼 + 金星）
+    evolve2At: 6,                       // 玩夠 6 次再進化（Lv2：彩虹光環 + 皇冠）
+    failOdds: 0.2,                      // 捉怪獸有兩成機會走甩（第二次一定捉到；第一局唔會）
+    failMax: 2                          // 每局最多走甩 2 次
   };
 })(typeof self !== 'undefined' ? self : this);

@@ -14,6 +14,9 @@
 #go-mon .choose-art { margin: -6%; width: 112%; height: 112%; }
 .stickers[data-game="mon"] { justify-content: center; }
 .mn-pill { display: inline-flex; align-items: center; gap: .6vmin; padding: .3vmin 1.2vmin; border-radius: 99px; background: rgba(255,255,255,.85); font: 800 clamp(12px, 2.2vmin, 22px)/1.2 system-ui, sans-serif; color: #3b3247; white-space: pre; }
+.mn-pill { border: 3px solid #3cc6c0; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; position: relative; z-index: 2; }
+.mn-pill:active { transform: scale(.94); }
+.mn-pill .mp-book { font-size: 1.15em; line-height: 1; }
 .mn-pill .mp-ball { width: 2.6vmin; display: block; }
 .mn-pill svg { width: 100%; display: block; }
 
@@ -63,6 +66,11 @@ body[data-screen="mon"] #mon-screen { display: block; }
 .mn-palbtn .pb-txt { position: absolute; left: 0; right: 0; bottom: .8vh; font: 800 clamp(18px, 4.4vh, 46px)/1.1 system-ui, "PingFang HK", "Noto Sans TC", sans-serif; color: #3b3247; pointer-events: none; }
 .mn-palbtn.right { animation: cardright .6s ease-out; }
 .mn-palbtn:active { transform: scale(.95); }
+/* 未進化嘅拍檔：頭頂氣泡「我都想進化！」 */
+.mn-palbtn .pb-bub { position: absolute; left: 50%; top: -3.4vh; transform: translateX(-50%); white-space: nowrap; padding: .6vh 1.6vh; border-radius: 99px; background: #fff; border: 3px solid #ff8fb8;
+  font: 800 clamp(14px, 3vh, 30px)/1.1 system-ui, "PingFang HK", "Noto Sans TC", sans-serif; color: #e0457f; pointer-events: none; animation: mnbub 1.4s ease-in-out infinite; z-index: 2; }
+.mn-palbtn .pb-bub::after { content: ""; position: absolute; left: 50%; bottom: -9px; margin-left: -7px; border: 7px solid transparent; border-top-color: #ff8fb8; border-bottom: 0; }
+@keyframes mnbub { 50% { transform: translateX(-50%) translateY(-.8vh); } }
 @media (orientation: portrait) { .mn-pals { display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; } .mn-palbtn { width: 38vw; height: 22vh; } }
 
 /* ---------- 球盒（十格框）+ 散球 ---------- */
@@ -134,6 +142,8 @@ body[data-screen="mon"] #mon-screen { display: block; }
 .mn-mon svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .mn-mon.up { z-index: 3; transform: translateY(-38%); opacity: 1; }
 .mn-mon.up svg { animation: cfloat 2s ease-in-out infinite; }
+.mn-mon.escape { animation: mnescape .7s cubic-bezier(.3,1.6,.5,1); }
+@keyframes mnescape { 0% { transform: translateY(-38%) scale(.2); } 50% { transform: translateY(-60%) scale(1.1); } 100% { transform: translateY(-38%); } }
 .mn-mon.suck { transform: translateY(-38%) scale(0); opacity: 0; transition: transform .4s ease-in, opacity .4s; }
 .mn-throw { width: 14vh; height: 14vh; padding: 0; border: 0; background: none; visibility: hidden; position: relative; z-index: 9; }
 .mn-throw.ready { visibility: visible; animation: mnbob 1s ease-in-out infinite; }
@@ -207,3 +217,17 @@ body[data-screen="mon"] #mon-screen { display: block; }
 }
 #mon-again svg { width: 100%; height: 100%; display: block; }
 body.mon-done #mon-again { opacity: 1; pointer-events: auto; }
+
+/* ---------- 主選單開圖鑑睇 ---------- */
+#mn-dexview { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 70px 2vw 3vh; background: rgba(40,110,100,.82); overflow-y: auto; animation: mnfade .3s ease-out; }
+@keyframes mnfade { from { opacity: 0; } }
+#mn-dexview .dv-wrap { display: grid; gap: 2vh; justify-items: center; }
+#mn-dexview .dv-pals { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vh; padding: 1.6vh 2.4vh; border-radius: 24px; background: rgba(255,255,255,.75); }
+#mn-dexview .dv-pal { border-color: #b8ecd8; }
+#mn-dexview .dv-pal .dx-art { width: 12vh; height: 12vh; }
+#mn-dexview .dv-pal .dx-art svg { overflow: visible; }
+#mn-dexview .mn-dexcell { cursor: pointer; }
+#mn-dexview .mn-dexcell.tap { animation: mntap .5s cubic-bezier(.3,1.6,.5,1); }
+@keyframes mntap { 40% { transform: scale(1.18); box-shadow: 0 0 24px #ffe680; } }
+#mn-dexview .dv-close { position: fixed; top: max(14px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); width: 64px; height: 64px; border-radius: 50%; border: 5px solid #fff; background: #ff8fb8; color: #fff; font: 900 30px/1 system-ui, sans-serif; touch-action: manipulation; }
+@media (orientation: portrait) { #mn-dexview .dv-pal .dx-art { width: 15vw; height: 15vw; } #mn-dexview .dv-pals { gap: 2vw; } }

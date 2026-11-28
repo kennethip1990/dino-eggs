@@ -175,13 +175,19 @@ const MonArt = (() => {
   const EVO_BACK = `<circle cx="60" cy="64" r="56" fill="#fff6c8" opacity=".55"/>
     <path d="M24 70 Q-4 40 6 22 Q20 44 36 56Z M96 70 Q124 40 114 22 Q100 44 84 56Z" fill="#fff" stroke="#ffd23e" stroke-width="3" stroke-linejoin="round"/>`;
   const EVO_FRONT = `${star5(60, 8, 9, '#ffd23e')}${star5(60, 8, 4, '#fff6c8')}`;
+  // 第二次進化（Lv2）：多一圈彩虹光環 + 頭頂皇冠（取代金星）
+  const EVO2_BACK = `<g fill="none" stroke-width="4" opacity=".6"><circle cx="60" cy="64" r="62" stroke="#ff8fb8"/><circle cx="60" cy="64" r="58" stroke="#ffd23e"/><circle cx="60" cy="64" r="54" stroke="#7fd6a0"/></g>`;
+  const CROWN = `<path d="M42 4 L44 -14 L52 -5 L60 -17 L68 -5 L76 -14 L78 4Z" fill="#ffd23e" stroke="#e8a020" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="60" cy="-3" r="3.4" fill="#ff6b9a"/><circle cx="49" cy="-1" r="2.4" fill="#7fd0ff"/><circle cx="71" cy="-1" r="2.4" fill="#7fd6a0"/>`;
   const SHINY = `<g class="mn-sparkle">${star5(16, 20, 7, '#ffe680')}${star5(104, 30, 6, '#fff')}${star5(100, 98, 6, '#ffe680')}</g>`;
 
+  // opts.evo：0 / false = 未進化、1 / true = 第一次進化、2 = 第二次進化
   function monster(id, opts) {
     opts = opts || {};
     const b = BODY[id] || BODY.cat;
-    return `<svg viewBox="0 0 120 120" aria-hidden="true" class="mn-svg${opts.shiny ? ' shiny' : ''}"${opts.evo ? ' overflow="visible"' : ''}>
-      ${opts.evo ? EVO_BACK : ''}<g class="mn-body">${b()}</g>${opts.evo ? EVO_FRONT : ''}${opts.shiny ? SHINY : ''}
+    const lv = opts.evo === true ? 1 : (+opts.evo || 0);
+    return `<svg viewBox="0 0 120 120" aria-hidden="true" class="mn-svg${opts.shiny ? ' shiny' : ''}"${lv ? ' overflow="visible"' : ''}>
+      ${lv >= 2 ? EVO2_BACK : ''}${lv ? EVO_BACK : ''}<g class="mn-body">${b()}</g>${lv >= 2 ? CROWN : lv ? EVO_FRONT : ''}${opts.shiny ? SHINY : ''}
     </svg>`;
   }
 

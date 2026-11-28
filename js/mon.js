@@ -40,6 +40,7 @@ const MonGame = (() => {
   }
   function recordOnes(n) { const s = stats[n] = st(n); s.ones++; store(STATS_KEY, stats); }
   const saveDex = () => store(DEX_KEY, dex);
+  const evoLv = (sp) => dex.evo[sp] === true ? 1 : (+dex.evo[sp] || 0);   // 舊版存 true = Lv1
   const today = () => { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
 
   // 平均輪流（bag）+ 未熟嘅數排先
@@ -87,7 +88,7 @@ const MonGame = (() => {
 
   let token = 0, idleTimer = null, lock = false, armId = 0;
   let pal = 'cat';
-  let sessionNew = [];
+  let sessionNew = [], fails = 0;
   const dbg = { target: null, stars: () => meterEl.querySelectorAll('.mn-cell.on').length };   // 開發測試
 
   function arm() {
@@ -108,7 +109,7 @@ const MonGame = (() => {
   function setPal(sp) {
     pal = sp;
     palEl.dataset.sp = sp;
-    put(palEl, MonArt.monster(sp, { evo: !!dex.evo[sp] }));
+    put(palEl, MonArt.monster(sp, { evo: evoLv(sp) }));
   }
   function center(el) { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
   function burstAt(p, big) {
@@ -192,6 +193,7 @@ const MonGame = (() => {
 
   async function run(tk, from) {
     sessionNew = [];
+    fails = 0;
     planCatches();
     Sound.sfx.whoosh();
     await wait(700);
@@ -255,12 +257,15 @@ const MonGame = (() => {
       const row = document.createElement('div');
       row.className = 'mn-pals';
       let done = false;
+      // 有拍檔進化咗、其他未 → 未進化嗰啲頭頂出氣泡，輕輕推佢試其他拍檔
+      const wantEvo = U.partners.some((sp) => evoLv(sp)) ? U.partners.filter((sp) => !evoLv(sp)) : [];
       const btns = U.partners.map((sp, i) => {
         const b = document.createElement('button');
         b.className = 'mn-palbtn p-' + sp;
         b.style.animationDelay = i * 110 + 'ms';
-        put(b, `<span class="pb-art">${MonArt.monster(sp, { evo: !!dex.evo[sp] })}</span><span class="pb-txt"></span>`);
+        put(b, `<span class="pb-art">${MonArt.monster(sp, { evo: evoLv(sp) })}</span><span class="pb-txt"></span>`);
         b.querySelector('.pb-txt').textContent = U.names[sp];
+        if (wantEvo.includes(sp)) { const bub = document.createElement('span'); bub.className = 'pb-bub'; bub.textContent = '我都想進化！'; b.appendChild(bub); }
         b.addEventListener('pointerdown', (ev) => {
           ev.preventDefault();
           if (done || tk !== token) return;
@@ -286,7 +291,7 @@ const MonGame = (() => {
       });
       play.replaceChildren(row);
       dbg.target = btns[0];
-      Sound.say(['mn_pick_q']);
+      Sound.say(['mn_pick_q', ...(wantEvo.length ? [{ pause: 400 }, ...wantEvo.flatMap((sp) => ['mn_n_' + sp, { pause: 150 }]), 'mn_want_evo'] : [])]);
       armIdle(() => Sound.say(['mn_pick_q']));
     });
   }
@@ -503,34 +508,50 @@ const MonGame = (() => {
     if (shiny) { Sound.sfx.hatch(); burstAt(center(mon), true); }
     await sayMin([{ pause: 300 }, 'mn_n_' + id, { pause: 200 }, ...(shiny ? ['mn_shiny', { pause: 200 }] : [])], 1300);
     if (tk !== token) return;
-    ball.classList.add('ready');
-    Sound.say(['mn_throw']);
-    await waitThrow(tk, ball);
-    if (tk !== token) return;
-    // 球飛去怪獸度
-    Sound.sfx.whoosh();
-    const a = center(ball), b = center(mon);
-    ball.classList.remove('ready', 'tap-hint');
-    ball.classList.add('thrown');
-    if (ball.animate) {
-      await new Promise((r) => {
-        ball.animate([{ transform: 'translate(0,0) rotate(0) scale(1)' }, { transform: `translate(${(b.x - a.x) / 2}px, ${(b.y - a.y) - 60}px) rotate(360deg) scale(.9)`, offset: 0.55 }, { transform: `translate(${b.x - a.x}px, ${b.y - a.y}px) rotate(720deg) scale(.8)` }],
-          { duration: 650, easing: 'ease-in', fill: 'forwards' }).onfinish = r;
-        setTimeout(r, 900);
-      });
-    }
-    if (tk !== token) return;
-    burstAt(b);
-    mon.classList.add('suck');
-    Sound.sfx.zap();
-    await wait(450);
-    for (let i = 0; i < 3; i++) {
+    // 有兩成機會走甩（第一局唔會、每局最多 2 次）；走甩冇扣嘢，第二次一定捉到
+    let escape = dex.sessions > 0 && fails < (U.failMax || 0) && Math.random() < (U.failOdds || 0);
+    for (;;) {
+      ball.classList.add('ready');
+      Sound.say(['mn_throw']);
+      await waitThrow(tk, ball);
       if (tk !== token) return;
-      restart(ball, 'wob');
-      Sound.sfx.click();
-      await wait(520);
+      // 球飛去怪獸度
+      Sound.sfx.whoosh();
+      const a = center(ball), b = center(mon);
+      ball.classList.remove('ready', 'tap-hint');
+      ball.classList.add('thrown');
+      if (ball.animate) {
+        await new Promise((r) => {
+          ball.animate([{ transform: 'translate(0,0) rotate(0) scale(1)' }, { transform: `translate(${(b.x - a.x) / 2}px, ${(b.y - a.y) - 60}px) rotate(360deg) scale(.9)`, offset: 0.55 }, { transform: `translate(${b.x - a.x}px, ${b.y - a.y}px) rotate(720deg) scale(.8)` }],
+            { duration: 650, easing: 'ease-in', fill: 'forwards' }).onfinish = r;
+          setTimeout(r, 900);
+        });
+      }
+      if (tk !== token) return;
+      burstAt(b);
+      mon.classList.add('suck');
+      Sound.sfx.zap();
+      await wait(450);
+      for (let i = 0; i < (escape ? 2 : 3); i++) {
+        if (tk !== token) return;
+        restart(ball, 'wob');
+        Sound.sfx.click();
+        await wait(520);
+      }
+      if (tk !== token) return;
+      if (!escape) break;
+      // 走甩：怪獸彈返出嚟，球返原位再掟
+      escape = false;
+      fails++;
+      burstAt(center(ball));
+      if (ball.getAnimations) ball.getAnimations().forEach((x) => x.cancel());
+      ball.classList.remove('thrown', 'wob');
+      mon.classList.remove('suck');
+      restart(mon, 'escape');
+      Sound.sfx.boing();
+      await sayMin([{ pause: 150 }, 'mn_almost', { pause: 200 }], 1600);
+      if (tk !== token) return;
     }
-    if (tk !== token) return;
     burstAt(center(ball), true);
     ball.classList.add('done');
     Sound.sfx.hatch();
@@ -661,7 +682,7 @@ const MonGame = (() => {
     return `<div class="mn-dex">${U.wild.map((id) => {
       const c = dex.caught[id];
       const cls = ['mn-dexcell', c ? 'got' : 'shadow', c && c.shiny ? 'shiny' : '', highlight && highlight.includes(id) ? 'new' : ''].join(' ');
-      return `<span class="${cls}"><span class="dx-art${c && c.shiny ? ' is-shiny' : ''}">${MonArt.monster(id, { shiny: !!(c && c.shiny) })}</span><span class="dx-name">${c ? U.names[id] : '？？？'}</span></span>`;
+      return `<span class="${cls}" data-id="${id}"><span class="dx-art${c && c.shiny ? ' is-shiny' : ''}">${MonArt.monster(id, { shiny: !!(c && c.shiny) })}</span><span class="dx-name">${c ? U.names[id] : '？？？'}</span></span>`;
     }).join('')}</div>`;
   }
   async function showDex(tk) {
@@ -679,12 +700,14 @@ const MonGame = (() => {
   async function partnerGrow(tk) {
     const p = dex.pals[pal] = (dex.pals[pal] || 0) + 1;
     saveDex();
-    if (dex.evo[pal]) return;
-    if (p >= U.evolveAt) {
-      dex.evo[pal] = true;
+    const lv = evoLv(pal);
+    const need = lv === 0 ? U.evolveAt : lv === 1 ? (U.evolve2At || 0) : 0;
+    if (!need) return;
+    if (p >= need) {
+      dex.evo[pal] = lv + 1;
       saveDex();
       play.className = 'mode-evo';
-      put(play, `<div class="mn-evo"><div class="ev-art">${MonArt.monster(pal)}</div></div>`);
+      put(play, `<div class="mn-evo"><div class="ev-art">${MonArt.monster(pal, { evo: lv })}</div></div>`);
       const art = play.querySelector('.ev-art');
       palEl.classList.add('hide');
       for (let i = 0; i < 3; i++) {
@@ -693,18 +716,18 @@ const MonGame = (() => {
         await wait(650);
         if (tk !== token) return;
       }
-      put(art, MonArt.monster(pal, { evo: true }));
+      put(art, MonArt.monster(pal, { evo: lv + 1 }));
       restart(art, 'grow');
       burstAt(center(art), true);
       Sound.sfx.hatch();
       setPal(pal);
-      await sayMin([{ pause: 200 }, 'mn_evolve', { pause: 250 }, 'mn_n_' + pal, { pause: 300 }], 2800);
+      await sayMin([{ pause: 200 }, lv ? 'mn_evolve2' : 'mn_evolve', { pause: 250 }, 'mn_n_' + pal, { pause: 300 }], 2800);
       if (tk !== token) return;
       play.replaceChildren();
       palEl.classList.remove('hide');
       return;
     }
-    const left = U.evolveAt - p;
+    const left = need - p;
     if (left <= 2) await Sound.say([{ pause: 200 }, left === 1 ? 'mn_more_1' : 'mn_more_2', { pause: 300 }]);
   }
 
@@ -720,22 +743,53 @@ const MonGame = (() => {
 
   againBtn.addEventListener('click', () => { if (window.App) App.goHome(); });
 
-  // ---------- 主選單：圖鑑進度 ----------
+  // ---------- 主選單：圖鑑進度（撳個掣開圖鑑睇） ----------
   function renderMenu() {
     const row = document.querySelector('.stickers[data-game="mon"]');
     if (!row) return;
     const got = U.wild.filter((id) => dex.caught[id]).length;
     const shinies = U.wild.filter((id) => dex.caught[id] && dex.caught[id].shiny).length;
     row.replaceChildren();
-    const pill = document.createElement('span');
+    const pill = document.createElement('button');
     pill.className = 'mn-pill';
-    put(pill, `<span class="mp-ball">${BALL}</span><b></b>`);
+    pill.setAttribute('aria-label', '睇怪獸圖鑑');
+    put(pill, `<span class="mp-book">📖</span><b></b>`);
     pill.querySelector('b').textContent = got + ' / ' + U.wild.length + (shinies ? '  ✨' + shinies : '');
+    pill.addEventListener('click', (e) => { e.stopPropagation(); openDex(); });
     row.appendChild(pill);
   }
 
+  // 圖鑑睇板：上面 4 隻拍檔（見到進化程度）、下面 12 格；撳捉到嘅會讀名
+  function openDex() {
+    closeDex();
+    const v = document.createElement('div');
+    v.id = 'mn-dexview';
+    const pals = U.partners.map((sp) => `<span class="mn-dexcell got dv-pal" data-pal="${sp}"><span class="dx-art">${MonArt.monster(sp, { evo: evoLv(sp) })}</span><span class="dx-name"></span></span>`).join('');
+    put(v, `<div class="dv-wrap"><div class="dv-pals">${pals}</div>${dexMarkup()}</div><button class="dv-close" aria-label="關">✕</button>`);
+    v.querySelectorAll('.dv-pal').forEach((x) => {
+      const sp = x.dataset.pal, lv = evoLv(sp);
+      x.querySelector('.dx-name').textContent = U.names[sp] + (lv ? ' ' + '★'.repeat(lv) : '');
+    });
+    v.querySelectorAll('.mn-dexcell').forEach((x, i) => { x.style.animationDelay = i * 40 + 'ms'; });
+    v.addEventListener('pointerdown', (e) => {
+      const cell = e.target.closest('.mn-dexcell');
+      if (e.target.closest('.dv-close') || e.target === v) { e.preventDefault(); closeDex(); return; }
+      if (!cell) return;
+      e.preventDefault();
+      Sound.clear();
+      restart(cell, 'tap');
+      const id = cell.dataset.pal || cell.dataset.id;
+      if (cell.classList.contains('shadow')) { Sound.sfx.click(); Sound.say(['mn_unknown']); return; }
+      Sound.sfx.pop();
+      Sound.say(['mn_n_' + id, ...(dex.caught[id] && dex.caught[id].shiny ? [{ pause: 150 }, 'mn_shiny'] : [])]);
+    });
+    document.body.appendChild(v);
+    Sound.say(['mn_dex']);
+  }
+  function closeDex() { const v = document.getElementById('mn-dexview'); if (v) { Sound.clear(); v.remove(); } }
+
   // ---------- 家長區 ----------
-  function stop() { token++; clearTimeout(idleTimer); document.querySelectorAll('.mn-fly').forEach((e) => e.remove()); }
+  function stop() { token++; clearTimeout(idleTimer); closeDex(); document.querySelectorAll('.mn-fly').forEach((e) => e.remove()); }
   addEventListener('panel-open', () => { if (document.body.dataset.screen === 'mon') stop(); });
   addEventListener('panel-close', (e) => { if (e.detail === 'mon' && !document.body.classList.contains('mon-done')) start(); });
 
@@ -756,12 +810,12 @@ const MonGame = (() => {
       const got = U.wild.filter((id) => dex.caught[id]).length;
       const sh = U.wild.filter((id) => dex.caught[id] && dex.caught[id].shiny).length;
       info.textContent = '圖鑑 ' + got + ' / ' + U.wild.length + '（閃閃 ' + sh + '）　玩咗 ' + dex.sessions + ' 局、星星全滿 ' + dex.allStars + ' 局　｜ 拍檔：' +
-        U.partners.map((sp) => U.names[sp] + ' ' + (dex.pals[sp] || 0) + (dex.evo[sp] ? '（進化咗）' : '')).join('、');
+        U.partners.map((sp) => U.names[sp] + ' ' + (dex.pals[sp] || 0) + (evoLv(sp) ? '（進化 Lv' + evoLv(sp) + '）' : '')).join('、');
     }
   }
   function resetStats() { stats = {}; store(STATS_KEY, stats); ['count', 'which', 'egg'].forEach((k) => store('monBag_' + k + '.v1', [])); }
   function resetDex() { dex = freshDex(); saveDex(); renderMenu(); }
 
   renderMenu();
-  return { start, stop, renderStats, resetStats, resetDex, renderMenu, _dbg: dbg };
+  return { start, stop, renderStats, resetStats, resetDex, renderMenu, openDex, closeDex, _dbg: dbg };
 })();

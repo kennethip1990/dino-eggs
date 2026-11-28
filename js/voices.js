@@ -454,6 +454,10 @@
   clips.mn_evolve   = { lang: 'yue', text: '嘩！你嘅拍檔進化喇！' };
   clips.mn_more_1   = { lang: 'yue', text: '再同佢玩多一次，佢就會進化！' };
   clips.mn_more_2   = { lang: 'yue', text: '再同佢玩多兩次，佢就會進化！' };
+  clips.mn_almost   = { lang: 'yue', text: '哎呀，差少少！佢走咗出嚟！再掟多次！' };
+  clips.mn_want_evo = { lang: 'yue', text: '都想進化呀！揀佢哋玩吓啦！' };
+  clips.mn_unknown  = { lang: 'yue', text: '呢隻未捉到呀，下次去草叢搵佢！' };
+  clips.mn_evolve2  = { lang: 'yue', text: '嘩！你嘅拍檔再進化，變成怪獸王！' };
   clips.mn_bye      = { lang: 'yue', text: '多謝你同怪獸一齊玩！拜拜！' };
   if (root.MON_UNIT) for (const id of Object.keys(root.MON_UNIT.names)) clips['mn_n_' + id] = { lang: 'yue', text: root.MON_UNIT.names[id] };
   // 恐龍時光機結局（要 Luca 撳）
